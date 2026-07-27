@@ -12,8 +12,10 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-dark-950 dark:text-gray-100;
+    @apply bg-white text-gray-900 dark:bg-dark-950 dark:text-gray-100;
     @apply min-h-screen;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+      "PingFang SC", "Hiragino Sans GB", system-ui, "Helvetica Neue", Arial, sans-serif;
   }
 
   /* 自定义滚动条 - 仅针对 Firefox，避免 Chrome 取消 webkit 的全局定制 */

@@ -1,0 +1,247 @@
+name: Publish Docker image (manual branch)
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch name to build (e.g. alpha, nightly)"
+        required: true
+        type: string
+
+concurrency:
+  group: docker-branch-${{ inputs.branch }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Prepare Docker tags
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.metadata.outputs.sha }}
+      tag_prefix: ${{ steps.metadata.outputs.tag_prefix }}
+      version: ${{ steps.metadata.outputs.version }}
+      build_date: ${{ steps.metadata.outputs.build_date }}
+      ghcr_repository: ${{ steps.metadata.outputs.ghcr_repository }}
+      dockerhub_enabled: ${{ steps.metadata.outputs.dockerhub_enabled }}
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 1
+          ref: ${{ inputs.branch }}
+
+      - name: Resolve Docker tags
+        id: metadata
+        env:
+          BRANCH_NAME: ${{ inputs.branch }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          TAG_PREFIX=$(printf '%s' "${BRANCH_NAME}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9_.-]+/-/g; s/^[.-]+//; s/[.-]+$//')
+          TAG_PREFIX=${TAG_PREFIX:0:105}
+          TAG_PREFIX=$(printf '%s' "${TAG_PREFIX}" | sed -E 's/[.-]+$//')
+          if [ -z "${TAG_PREFIX}" ]; then
+            echo "::error::Branch '${BRANCH_NAME}' cannot be converted to a valid Docker tag prefix"
+            exit 1
+          fi
+
+          SHA=$(git rev-parse HEAD)
+          SHORT_SHA=$(git rev-parse --short=7 HEAD)
+          BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          VERSION="${TAG_PREFIX}-$(date -u +'%Y%m%d')-${SHORT_SHA}"
+          GHCR_REPOSITORY="ghcr.io/$(printf '%s' "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+
+          echo "sha=${SHA}" >> "${GITHUB_OUTPUT}"
+          echo "tag_prefix=${TAG_PREFIX}" >> "${GITHUB_OUTPUT}"
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "build_date=${BUILD_DATE}" >> "${GITHUB_OUTPUT}"
+          echo "ghcr_repository=${GHCR_REPOSITORY}" >> "${GITHUB_OUTPUT}"
+
+          if [ -n "${DOCKERHUB_USERNAME}" ] && [ -n "${DOCKERHUB_TOKEN}" ]; then
+            echo "dockerhub_enabled=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "dockerhub_enabled=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+          echo "Prepared Docker tags for ${BRANCH_NAME} at ${SHORT_SHA}"
+
+  build-single-arch:
+    name: Build & push (${{ matrix.arch }}) [native]
+    needs: [prepare]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            platform: linux/amd64
+            runner: ubuntu-latest
+          - arch: arm64
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Check out selected revision
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 1
+          ref: ${{ needs.prepare.outputs.sha }}
+
+      - name: Prepare image tags
+        id: tags
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          DOCKERHUB_REPOSITORY="$(printf '%s' "${DOCKERHUB_USERNAME}" | tr '[:upper:]' '[:lower:]')/sub2api"
+          {
+            echo "value<<EOF"
+            echo "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.tag_prefix }}-${{ matrix.arch }}"
+            echo "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.version }}-${{ matrix.arch }}"
+            if [ "${{ needs.prepare.outputs.dockerhub_enabled }}" = "true" ]; then
+              echo "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.tag_prefix }}-${{ matrix.arch }}"
+              echo "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.version }}-${{ matrix.arch }}"
+            fi
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@c99871dec2022cc055c062a10cc1a1310835ceb4 # v4.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        if: needs.prepare.outputs.dockerhub_enabled == 'true'
+        uses: docker/login-action@c99871dec2022cc055c062a10cc1a1310835ceb4 # v4.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push single-arch image
+        id: build
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          push: true
+          tags: ${{ steps.tags.outputs.value }}
+          build-args: |
+            VERSION=${{ needs.prepare.outputs.version }}
+            COMMIT=${{ needs.prepare.outputs.sha }}
+            DATE=${{ needs.prepare.outputs.build_date }}
+          labels: |
+            org.opencontainers.image.title=Sub2API
+            org.opencontainers.image.description=AI API Gateway Platform
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ needs.prepare.outputs.sha }}
+            org.opencontainers.image.version=${{ needs.prepare.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: mode=max
+          sbom: true
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Sign images with cosign
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          cosign sign --yes "${{ needs.prepare.outputs.ghcr_repository }}@${DIGEST}"
+          if [ "${{ needs.prepare.outputs.dockerhub_enabled }}" = "true" ]; then
+            DOCKERHUB_REPOSITORY="$(printf '%s' "${DOCKERHUB_USERNAME}" | tr '[:upper:]' '[:lower:]')/sub2api"
+            cosign sign --yes "${DOCKERHUB_REPOSITORY}@${DIGEST}"
+          fi
+
+      - name: Image summary
+        run: |
+          echo "### Docker image digest (${{ matrix.arch }})" >> "${GITHUB_STEP_SUMMARY}"
+          echo "" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```text' >> "${GITHUB_STEP_SUMMARY}"
+          echo "${{ steps.tags.outputs.value }}" >> "${GITHUB_STEP_SUMMARY}"
+          echo "${{ steps.build.outputs.digest }}" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+
+  create-manifests:
+    name: Create multi-arch manifests
+    needs: [prepare, build-single-arch]
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@c99871dec2022cc055c062a10cc1a1310835ceb4 # v4.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        if: needs.prepare.outputs.dockerhub_enabled == 'true'
+        uses: docker/login-action@c99871dec2022cc055c062a10cc1a1310835ceb4 # v4.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Create and push GHCR manifests
+        run: |
+          docker buildx imagetools create \
+            -t "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.tag_prefix }}" \
+            "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.tag_prefix }}-amd64" \
+            "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.tag_prefix }}-arm64"
+          docker buildx imagetools create \
+            -t "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.version }}" \
+            "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.version }}-amd64" \
+            "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.version }}-arm64"
+
+      - name: Create and push Docker Hub manifests
+        if: needs.prepare.outputs.dockerhub_enabled == 'true'
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          DOCKERHUB_REPOSITORY="$(printf '%s' "${DOCKERHUB_USERNAME}" | tr '[:upper:]' '[:lower:]')/sub2api"
+          docker buildx imagetools create \
+            -t "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.tag_prefix }}" \
+            "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.tag_prefix }}-amd64" \
+            "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.tag_prefix }}-arm64"
+          docker buildx imagetools create \
+            -t "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.version }}" \
+            "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.version }}-amd64" \
+            "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.version }}-arm64"
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Sign manifests with cosign
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          cosign sign --yes "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.tag_prefix }}"
+          cosign sign --yes "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.version }}"
+          if [ "${{ needs.prepare.outputs.dockerhub_enabled }}" = "true" ]; then
+            DOCKERHUB_REPOSITORY="$(printf '%s' "${DOCKERHUB_USERNAME}" | tr '[:upper:]' '[:lower:]')/sub2api"
+            cosign sign --yes "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.tag_prefix }}"
+            cosign sign --yes "${DOCKERHUB_REPOSITORY}:${{ needs.prepare.outputs.version }}"
+          fi
+
+      - name: Manifest summary
+        run: |
+          echo "### Multi-arch manifests" >> "${GITHUB_STEP_SUMMARY}"
+          echo "" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```text' >> "${GITHUB_STEP_SUMMARY}"
+          docker buildx imagetools inspect "${{ needs.prepare.outputs.ghcr_repository }}:${{ needs.prepare.outputs.version }}" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"

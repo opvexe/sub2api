@@ -5,6 +5,14 @@ export default {
   },
   // Home Page
   home: {
+    nav: {
+      primary: 'Primary navigation',
+      features: 'Features',
+      comparison: 'Compare',
+      models: 'Models'
+    },
+    highlights: 'Platform highlights',
+    productTagline: 'Unified AI API Gateway',
     viewOnGithub: 'View on GitHub',
     viewDocs: 'View Documentation',
     docs: 'Docs',
@@ -16,7 +24,9 @@ export default {
     goToDashboard: 'Go to Dashboard',
     // User-focused value proposition
     heroSubtitle: 'One Key, All AI Models',
-    heroDescription: 'No need to manage multiple subscriptions. Access Claude, GPT, Gemini and more with a single API key',
+    heroTitleLead: 'One API for',
+    heroTitleAccent: 'Every Leading AI Model',
+    heroDescription: 'One key, intelligent routing, and real-time billing for Claude, GPT, Gemini, and other leading models.',
     tags: {
       subscriptionToApi: 'Subscription to API',
       stickySession: 'Session Persistence',
@@ -46,20 +56,25 @@ export default {
     },
     // Solutions section
     solutions: {
-      title: 'We Solve These Problems',
-      subtitle: 'Three simple steps to stress-free AI access'
+      title: 'One Platform from Access to Billing',
+      subtitle: 'Core Product Capabilities'
     },
     features: {
-      unifiedGateway: 'One-Click Access',
-      unifiedGatewayDesc: 'Get a single API key to call all connected AI models. No separate applications needed.',
-      multiAccount: 'Always Reliable',
-      multiAccountDesc: 'Smart routing across multiple upstream accounts with automatic failover. Say goodbye to errors.',
-      balanceQuota: 'Pay What You Use',
-      balanceQuotaDesc: 'Usage-based billing with quota limits. Full visibility into team consumption.'
+      unifiedGateway: 'Unified API Gateway',
+      unifiedGatewayDesc: 'Use one endpoint and one key for every connected model without repeatedly changing your application.',
+      multiAccount: 'Smart Routing and Failover',
+      multiAccountDesc: 'Select upstreams by health and load, then fail over automatically when a provider is unavailable.',
+      balanceQuota: 'Real-Time Billing and Control',
+      balanceQuotaDesc: 'Pay for actual usage, set quotas, and keep team spending visible with detailed records.',
+      endpoint: 'Unified endpoint',
+      openaiCompatible: 'OpenAI-compatible API',
+      poolHealthy: 'Upstream account pool is healthy'
     },
     // Comparison section
     comparison: {
+      eyebrow: 'A simpler way to access AI',
       title: 'Why Choose Us?',
+      description: 'Bring scattered subscriptions, keys, and billing into one gateway so your team can focus on building products.',
       headers: {
         feature: 'Comparison',
         official: 'Official Subscriptions',
@@ -103,11 +118,41 @@ export default {
       antigravity: 'Antigravity',
       more: 'More'
     },
+    preview: {
+      console: 'Live request',
+      status: 'Status',
+      route: 'Route',
+      latency: 'Latency',
+      smartRouting: 'Smart routing enabled',
+      smartRoutingDesc: 'Automatically selects the best upstream by health and load',
+      healthy: 'Healthy',
+      gatewayTitle: 'Unified AI Gateway',
+      gatewaySubtitle: 'Access, routing, and billing',
+      clientRequest: 'Request from your application',
+      upstreamPool: 'Available model pool',
+      available: 'available',
+      auto: 'Automatic',
+      oneKey: 'One key',
+      failover: 'Failover',
+      billing: 'Live billing'
+    },
+    liveMetrics: {
+      title: 'Model Calls Today',
+      live: 'Live',
+      unit: 'model calls and still growing',
+      updated: "Today's call trend"
+    },
+    modelStatus: {
+      title: 'Model Status',
+      description: 'See every leading model connection at a glance',
+      allOperational: 'All operational',
+      operational: 'Operational'
+    },
     // CTA section
     cta: {
       title: 'Ready to Get Started?',
-      description: 'Sign up now and get free trial credits to experience seamless AI access',
-      button: 'Sign Up Free'
+      description: 'Create an account, get one API key, and connect to multiple leading AI models.',
+      button: 'Create Account'
     },
     footer: {
       allRightsReserved: 'All rights reserved.'
@@ -191,8 +236,8 @@ export default {
 
   // Setup Wizard
   setup: {
-    title: 'Sub2API Setup',
-    description: 'Configure your Sub2API instance',
+    title: 'LLM Provider Setup',
+    description: 'Configure your LLM Provider instance',
     database: {
       title: 'Database Configuration',
       description: 'Connect to your PostgreSQL database',

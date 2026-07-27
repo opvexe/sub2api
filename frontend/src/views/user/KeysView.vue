@@ -1144,6 +1144,7 @@ import TablePageLayout from '@/components/layout/TablePageLayout.vue'
 import type { Column } from '@/components/common/types'
 import type { BatchApiKeyUsageStats } from '@/api/usage'
 import { formatDateTime } from '@/utils/format'
+import { normalizeSiteName } from '@/utils/branding'
 import { maskApiKey } from '@/utils/maskApiKey'
 import {
   buildCcSwitchImportDeeplink,
@@ -1903,7 +1904,7 @@ const executeCcsImport = (row: ApiKey, clientType: CcSwitchClientType) => {
       };
     }
   })`
-  const providerName = (publicSettings.value?.site_name || 'sub2api').trim() || 'sub2api'
+  const providerName = normalizeSiteName(publicSettings.value?.site_name)
   const deeplink = buildCcSwitchImportDeeplink({
     baseUrl,
     platform,

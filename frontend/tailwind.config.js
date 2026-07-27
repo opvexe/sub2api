@@ -50,15 +50,17 @@ export default {
       },
       fontFamily: {
         sans: [
-          'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',
+          'SF Pro Text',
+          'SF Pro Display',
+          'PingFang SC',
+          'Hiragino Sans GB',
+          'system-ui',
           'Segoe UI',
           'Roboto',
           'Helvetica Neue',
           'Arial',
-          'PingFang SC',
-          'Hiragino Sans GB',
           'Microsoft YaHei',
           'sans-serif'
         ],

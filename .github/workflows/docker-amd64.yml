@@ -1,0 +1,104 @@
+name: Build amd64 Docker image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: docker-amd64-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    if: github.event_name == 'push' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Prepare image metadata
+        id: metadata
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
+          BASE_VERSION="$(tr -d '\r\n' < backend/cmd/server/VERSION)"
+          VERSION="${BASE_VERSION}-main.${SHORT_SHA}"
+          GHCR_REPOSITORY="ghcr.io/$(printf '%s' "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          DOCKERHUB_REPOSITORY="$(printf '%s' "${DOCKERHUB_USERNAME}" | tr '[:upper:]' '[:lower:]')/sub2api"
+
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "${GITHUB_OUTPUT}"
+          echo "ghcr_repository=${GHCR_REPOSITORY}" >> "${GITHUB_OUTPUT}"
+
+          {
+            echo "tags<<EOF"
+            echo "${GHCR_REPOSITORY}:latest"
+            echo "${GHCR_REPOSITORY}:main-${SHORT_SHA}"
+            if [ -n "${DOCKERHUB_USERNAME}" ] && [ -n "${DOCKERHUB_TOKEN}" ]; then
+              echo "${DOCKERHUB_REPOSITORY}:latest"
+              echo "${DOCKERHUB_REPOSITORY}:main-${SHORT_SHA}"
+            fi
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+          if [ -n "${DOCKERHUB_USERNAME}" ] && [ -n "${DOCKERHUB_TOKEN}" ]; then
+            echo "dockerhub_enabled=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "dockerhub_enabled=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Log in to Docker Hub
+        if: steps.metadata.outputs.dockerhub_enabled == 'true'
+        uses: docker/login-action@c99871dec2022cc055c062a10cc1a1310835ceb4 # v4.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@c99871dec2022cc055c062a10cc1a1310835ceb4 # v4.3.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push amd64 image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          build-args: |
+            VERSION=${{ steps.metadata.outputs.version }}
+            COMMIT=${{ github.sha }}
+            DATE=${{ steps.metadata.outputs.date }}
+          labels: |
+            org.opencontainers.image.title=Sub2API
+            org.opencontainers.image.description=AI API Gateway Platform
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.metadata.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: mode=max
+          sbom: true
+
+      - name: Image summary
+        run: |
+          echo "### amd64 Docker image" >> "${GITHUB_STEP_SUMMARY}"
+          echo "" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```text' >> "${GITHUB_STEP_SUMMARY}"
+          echo "${{ steps.metadata.outputs.tags }}" >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"

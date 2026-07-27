@@ -5,6 +5,14 @@ export default {
   },
   // Home Page
   home: {
+    nav: {
+      primary: '主导航',
+      features: '核心能力',
+      comparison: '优势对比',
+      models: '支持模型'
+    },
+    highlights: '平台优势',
+    productTagline: '统一 AI API 网关',
     viewOnGithub: '在 GitHub 上查看',
     viewDocs: '查看文档',
     docs: '文档',
@@ -16,7 +24,9 @@ export default {
     goToDashboard: '进入控制台',
     // 新增：面向用户的价值主张
     heroSubtitle: '一个密钥，畅用多个 AI 模型',
-    heroDescription: '无需管理多个订阅账号，一站式接入 Claude、GPT、Gemini 等主流 AI 服务',
+    heroTitleLead: '一个 API，连接',
+    heroTitleAccent: '所有主流 AI 模型',
+    heroDescription: '统一密钥、智能路由与实时计费，一站式接入 Claude、GPT、Gemini 等主流模型。',
     tags: {
       subscriptionToApi: '订阅转 API',
       stickySession: '会话保持',
@@ -46,20 +56,25 @@ export default {
     },
     // 解决方案区块
     solutions: {
-      title: '我们帮你解决',
-      subtitle: '简单三步，开始省心使用 AI'
+      title: '从接入到计费，一个平台完成',
+      subtitle: '核心产品能力'
     },
     features: {
-      unifiedGateway: '一键接入',
-      unifiedGatewayDesc: '获取一个 API 密钥，即可调用所有已接入的 AI 模型，无需分别申请。',
-      multiAccount: '稳定可靠',
-      multiAccountDesc: '智能调度多个上游账号，自动切换和负载均衡，告别频繁报错。',
-      balanceQuota: '用多少付多少',
-      balanceQuotaDesc: '按实际使用量计费，支持设置配额上限，团队用量一目了然。'
+      unifiedGateway: '统一 API 网关',
+      unifiedGatewayDesc: '只需一个接口和一套密钥，即可调用所有已接入模型，现有应用无需反复改造。',
+      multiAccount: '智能路由与故障切换',
+      multiAccountDesc: '根据模型健康状态与负载自动选择上游，异常时快速切换，保持请求稳定。',
+      balanceQuota: '实时计费与用量控制',
+      balanceQuotaDesc: '按实际调用量计费，支持配额限制与消费明细，团队成本随时可查。',
+      endpoint: '统一接口地址',
+      openaiCompatible: '兼容 OpenAI 接口',
+      poolHealthy: '上游账号池运行正常'
     },
     // 优势对比
     comparison: {
+      eyebrow: '更简单的 AI 接入方式',
       title: '为什么选择我们？',
+      description: '把分散的订阅、密钥和账单统一到一个入口，减少维护成本，让团队专注于产品本身。',
       headers: {
         feature: '对比项',
         official: '官方订阅',
@@ -103,11 +118,41 @@ export default {
       antigravity: 'Antigravity',
       more: '更多'
     },
+    preview: {
+      console: '实时请求',
+      status: '状态',
+      route: '路由',
+      latency: '延迟',
+      smartRouting: '智能路由已启用',
+      smartRoutingDesc: '根据可用性与负载自动选择最佳上游',
+      healthy: '运行正常',
+      gatewayTitle: '统一 AI 网关',
+      gatewaySubtitle: '请求接入、模型路由与计费',
+      clientRequest: '你的应用发起请求',
+      upstreamPool: '可用模型池',
+      available: '可用',
+      auto: '自动调度',
+      oneKey: '统一密钥',
+      failover: '故障切换',
+      billing: '实时计费'
+    },
+    liveMetrics: {
+      title: '今日模型调用量',
+      live: '实时更新',
+      unit: '次模型调用，正在持续增长',
+      updated: '今日调用趋势'
+    },
+    modelStatus: {
+      title: '模型状态',
+      description: '主流模型连接状态一目了然',
+      allOperational: '全部正常',
+      operational: '运行正常'
+    },
     // CTA 区块
     cta: {
       title: '准备好开始了吗？',
-      description: '注册即可获得免费试用额度，体验一站式 AI 服务',
-      button: '免费注册'
+      description: '创建账号，获取统一 API 密钥，立即接入多个主流 AI 模型。',
+      button: '立即注册'
     },
     footer: {
       allRightsReserved: '保留所有权利。'
@@ -191,8 +236,8 @@ export default {
 
   // Setup Wizard
   setup: {
-    title: 'Sub2API 安装向导',
-    description: '配置您的 Sub2API 实例',
+    title: 'LLM Provider 安装向导',
+    description: '配置您的 LLM Provider 实例',
     database: {
       title: '数据库配置',
       description: '连接到您的 PostgreSQL 数据库',

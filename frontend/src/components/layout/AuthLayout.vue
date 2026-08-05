@@ -8,7 +8,7 @@
       <section class="auth-brand-panel" :aria-label="t('auth.brandEyebrow')">
         <router-link to="/home" class="auth-brand-link">
           <span class="auth-brand-mark">
-            <img :src="siteLogo || '/logo-v2.png'" :alt="siteName + ' logo'" />
+            <img :src="brandLogo" :alt="siteName + ' logo'" />
           </span>
           <span>
             <strong>LLM Provider</strong>
@@ -44,7 +44,7 @@
           <div class="auth-route">
             <span><Icon name="terminal" size="sm" /></span>
             <i></i>
-            <span class="auth-route-brand"><img :src="siteLogo || '/logo-v2.png'" alt="" /></span>
+            <span class="auth-route-brand"><img :src="brandLogo" alt="" /></span>
             <i></i>
             <span><Icon name="server" size="sm" /></span>
           </div>
@@ -55,7 +55,7 @@
       <section class="auth-form-side">
         <div class="auth-form-top">
           <div class="auth-mobile-brand">
-            <img :src="siteLogo || '/logo-v2.png'" :alt="siteName + ' logo'" />
+            <img :src="brandLogo" :alt="siteName + ' logo'" />
             <strong>LLM Provider</strong>
           </div>
           <router-link to="/home">
@@ -96,10 +96,16 @@ import { sanitizeUrl } from '@/utils/url'
 
 const { t } = useI18n()
 const appStore = useAppStore()
+const BRAND_LOGO_URL = '/logo-v2.png?v=llm-provider-20260805'
 
 const siteName = computed(() => normalizeSiteName(appStore.siteName))
 const siteLogo = computed(() =>
   sanitizeUrl(appStore.siteLogo || '', { allowRelative: true, allowDataUrl: true })
+)
+const brandLogo = computed(() =>
+  siteName.value.toLowerCase() === 'llm provider'
+    ? BRAND_LOGO_URL
+    : siteLogo.value || BRAND_LOGO_URL
 )
 const currentYear = computed(() => new Date().getFullYear())
 const trustItems = computed(() => [

@@ -87,7 +87,7 @@
       <nav class="section-inner home-nav" :aria-label="t('home.nav.primary')">
         <router-link to="/home" class="brand-link" :aria-label="siteName">
           <span class="brand-mark">
-            <img :src="siteLogo || '/logo-v2.png'" :alt="siteName + ' logo'" class="h-full w-full object-contain" />
+            <img :src="brandLogo" :alt="siteName + ' logo'" class="h-full w-full object-contain" />
           </span>
           <span class="min-w-0">
             <strong class="brand-name">LLM Provider</strong>
@@ -186,7 +186,7 @@
                 </div>
                 <div class="route-line"><span></span><Icon name="chevronRight" size="xs" /></div>
                 <div class="route-node route-node-primary">
-                  <span><img :src="siteLogo || '/logo-v2.png'" alt="" /></span>
+                  <span><img :src="brandLogo" alt="" /></span>
                   <small>LLM Provider</small>
                 </div>
                 <div class="route-line"><span></span><Icon name="chevronRight" size="xs" /></div>
@@ -262,7 +262,7 @@
       <div class="section-inner">
         <div class="footer-main">
           <div class="footer-brand">
-            <span class="brand-mark"><img :src="siteLogo || '/logo-v2.png'" :alt="siteName + ' logo'" /></span>
+            <span class="brand-mark"><img :src="brandLogo" :alt="siteName + ' logo'" /></span>
             <div><strong>LLM Provider</strong><p>{{ t('home.footer.description') }}</p></div>
           </div>
           <nav class="footer-nav" :aria-label="t('home.footer.navigation')">
@@ -334,6 +334,7 @@ import { sanitizeUrl } from '@/utils/url'
 const { t } = useI18n()
 const authStore = useAuthStore()
 const appStore = useAppStore()
+const BRAND_LOGO_URL = '/logo-v2.png?v=llm-provider-20260805'
 
 // 留空的客服渠道不会展示。
 const CONTACT = {
@@ -356,6 +357,7 @@ const siteLogo = computed(() =>
     allowDataUrl: true,
   })
 )
+const brandLogo = computed(() => BRAND_LOGO_URL)
 const siteSubtitle = computed(() => {
   const configuredSubtitle = appStore.cachedPublicSettings?.site_subtitle?.trim()
   const defaults = ['AI API Gateway Platform', 'Subscription to API Conversion Platform']

@@ -100,6 +100,34 @@ describe('HomeView compact mode', () => {
     expect(wrapper.find('.home-shell').exists()).toBe(true)
   })
 
+  it('shows the configured Telegram, Discord, and QQ support links', () => {
+    const wrapper = mountHome()
+    const links = wrapper.findAll('.support-list a')
+
+    expect(links.some((link) => link.attributes('href') === 'https://t.me/VisionCoderxhn')).toBe(true)
+    expect(links.some((link) => link.attributes('href') === 'https://discord.gg/2C6Qvd36pq')).toBe(true)
+    expect(links.some((link) => link.attributes('href')?.includes('uin=619737520'))).toBe(true)
+    expect(wrapper.get('.support-qq').text()).toBe('QQ')
+  })
+
+  it('links the ecosystem marketplace card to the VisionCoder shop', () => {
+    const wrapper = mountHome()
+
+    expect(wrapper.get('.ecosystem-card').attributes('href')).toBe('https://shop.visioncoder.ai')
+  })
+
+  it('shows OpenAI, Claude, and Gemini request formats', () => {
+    const wrapper = mountHome()
+    const requests = wrapper.findAll('.request-box')
+
+    expect(requests.map((request) => request.get('code').text())).toEqual([
+      '/v1/chat/completions',
+      '/v1/messages',
+      '/v1beta/models/{model}:generateContent',
+    ])
+    expect(requests.every((request) => request.get('.request-method').text() === 'POST')).toBe(true)
+  })
+
   it('links unauthenticated visitors to login', () => {
     expect(compactDestination(mountHome({ compact_home_enabled: true }))).toBe('/login')
   })

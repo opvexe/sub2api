@@ -9,10 +9,15 @@ export default {
       primary: 'Primary navigation',
       features: 'Features',
       comparison: 'Compare',
-      models: 'Models'
+      models: 'Models',
+      reputation: 'Reputation',
+      service: 'API Service',
+      guarantees: 'Service Assurance',
+      ecosystem: 'Marketplace'
     },
     highlights: 'Platform highlights',
-    productTagline: 'Unified AI API Gateway',
+    brandCaption: 'Trusted AI API Service',
+    productTagline: 'An AI API service platform built for long-term trust',
     viewOnGithub: 'View on GitHub',
     viewDocs: 'View Documentation',
     docs: 'Docs',
@@ -24,9 +29,15 @@ export default {
     goToDashboard: 'Go to Dashboard',
     // User-focused value proposition
     heroSubtitle: 'One Key, All AI Models',
-    heroTitleLead: 'One API for',
-    heroTitleAccent: 'Every Leading AI Model',
-    heroDescription: 'One key, intelligent routing, and real-time billing for Claude, GPT, Gemini, and other leading models.',
+    heroEyebrow: 'LLM Provider · A reliable AI API service',
+    heroTitleLead: 'A dependable AI API',
+    heroTitleAccent: 'Built for long-term trust',
+    heroDescription: 'LLM Provider brings Claude, GPT, Gemini, and other leading models behind one API—with transparent status, clear billing, and support you can actually reach.',
+    heroTrust: {
+      status: 'Transparent service status',
+      billing: 'Every charge is traceable',
+      support: 'Real people respond'
+    },
     tags: {
       subscriptionToApi: 'Subscription to API',
       stickySession: 'Session Persistence',
@@ -148,14 +159,126 @@ export default {
       allOperational: 'All operational',
       operational: 'Operational'
     },
+    servicePreview: {
+      console: 'Service operations',
+      live: 'Monitoring',
+      title: 'Reliability safeguards',
+      allHealthy: 'Stable routes, continuously protected',
+      formats: {
+        title: 'Supported API formats',
+        openai: 'OpenAI format',
+        claude: 'Claude format',
+        gemini: 'Gemini format'
+      },
+      route: 'Request route',
+      yourApp: 'Your app',
+      bestRoute: 'Smart upstream',
+      normal: 'Enabled',
+      events: {
+        health: {
+          title: 'Continuous upstream health checks',
+          description: 'Routes are evaluated against live availability'
+        },
+        routing: {
+          title: 'Smart routing and automatic failover',
+          description: 'Traffic moves when a route becomes unavailable'
+        },
+        billing: {
+          title: 'Request-level usage records',
+          description: 'Model, token, and cost details stay queryable'
+        }
+      }
+    },
+    trustBar: {
+      title: 'The foundation of a trustworthy service',
+      items: {
+        monitoring: {
+          title: 'Always on',
+          description: 'Continuous upstream health monitoring'
+        },
+        records: {
+          title: 'Per request',
+          description: 'Usage and cost are recorded'
+        },
+        failover: {
+          title: 'Multiple routes',
+          description: 'Automatic failover to available upstreams'
+        },
+        support: {
+          title: 'Multi-channel',
+          description: 'Telegram, Discord, and QQ support'
+        }
+      }
+    },
+    reputation: {
+      eyebrow: 'How trust is earned',
+      title: 'Reputation is built one dependable request at a time',
+      description: 'A service worth keeping needs more than a long model list. Status should be visible, billing clear, and help within reach.',
+      items: {
+        transparent: {
+          title: 'Service status stays visible',
+          description: 'Health, incidents, and routing outcomes are clear, so you know where every request stands.',
+          proof: 'Operational status remains queryable'
+        },
+        billing: {
+          title: 'Every charge makes sense',
+          description: 'Model, token, and cost details are recorded per request, keeping team spend accountable.',
+          proof: 'Usage details available anytime'
+        },
+        support: {
+          title: 'Help is genuinely reachable',
+          description: 'Multiple support channels cover pre-sale questions and issues after you start building.',
+          proof: 'Support through Telegram and Discord'
+        }
+      },
+      promiseEyebrow: 'Our principles',
+      promiseTitle: 'The LLM Provider service promise',
+      promiseDescription: 'Trust does not come from inflated numbers. It comes from a consistently dependable experience.',
+      commitments: {
+        status: 'Never hide service status',
+        billing: 'Never obscure how you are billed',
+        support: 'Never leave a real issue unanswered',
+        choice: 'Never lock choice behind needless rules'
+      },
+      promiseFooter: 'Built for the long term, one request at a time'
+    },
+    ecosystem: {
+      eyebrow: 'Digital goods marketplace · Ready to use',
+      title: 'Ready-to-use Claude & GPT accounts and recharge services',
+      description: 'Need a ready account or a quick recharge? Shop for Claude accounts, GPT accounts, GPT recharge services, and standard accounts with clear categories and convenient delivery.',
+      action: 'Shop now',
+      tags: {
+        subscription: 'Claude account purchase',
+        codes: 'GPT accounts & recharge',
+        delivery: 'Standard account purchase'
+      }
+    },
     // CTA section
     cta: {
-      title: 'Ready to Get Started?',
-      description: 'Create an account, get one API key, and connect to multiple leading AI models.',
-      button: 'Create Account'
+      title: 'Put your API reliability in LLM Provider’s hands',
+      description: 'Start with one key and experience an AI API service that is transparent, stable, and accountable.',
+      button: 'Create a free account'
     },
     footer: {
-      allRightsReserved: 'All rights reserved.'
+      allRightsReserved: 'All rights reserved.',
+      description: 'A stable, transparent AI API service platform built for long-term trust.',
+      contact: 'Contact us',
+      contactDescription: 'Support is available through Telegram, Discord, and QQ',
+      slogan: 'Taking every API request seriously',
+      navigation: 'Quick links'
+    },
+    community: {
+      openSupport: 'Open support channels',
+      support: 'Support',
+      title: 'Contact LLM Provider',
+      description: 'Support through Telegram, Discord, and QQ',
+      online: 'Online',
+      telegram: 'Telegram support',
+      telegramDescription: 'Fast questions and integration help',
+      discord: 'Discord community',
+      discordDescription: 'Discussion, updates, and issue reports',
+      qq: 'QQ support group',
+      qqDescription: 'Group 619737520 · Support and feedback'
     }
   },
 

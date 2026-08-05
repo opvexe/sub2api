@@ -9,10 +9,15 @@ export default {
       primary: '主导航',
       features: '核心能力',
       comparison: '优势对比',
-      models: '支持模型'
+      models: '支持模型',
+      reputation: '服务口碑',
+      service: 'API 服务',
+      guarantees: '服务保障',
+      ecosystem: '生态商城'
     },
     highlights: '平台优势',
-    productTagline: '统一 AI API 网关',
+    brandCaption: '可信赖的 AI API 服务',
+    productTagline: '值得长期信赖的 AI API 服务平台',
     viewOnGithub: '在 GitHub 上查看',
     viewDocs: '查看文档',
     docs: '文档',
@@ -24,9 +29,15 @@ export default {
     goToDashboard: '进入控制台',
     // 新增：面向用户的价值主张
     heroSubtitle: '一个密钥，畅用多个 AI 模型',
-    heroTitleLead: '一个 API，连接',
-    heroTitleAccent: '所有主流 AI 模型',
-    heroDescription: '统一密钥、智能路由与实时计费，一站式接入 Claude、GPT、Gemini 等主流模型。',
+    heroEyebrow: 'LLM Provider · 专注稳定的 AI API 服务',
+    heroTitleLead: '稳定可靠的 API',
+    heroTitleAccent: '值得长期信赖',
+    heroDescription: 'LLM Provider 统一接入 Claude、GPT、Gemini 等主流模型，以透明状态、清晰计费和可达客服，让个人开发者与团队放心长期使用。',
+    heroTrust: {
+      status: '服务状态透明',
+      billing: '每笔费用可查',
+      support: '问题有人响应'
+    },
     tags: {
       subscriptionToApi: '订阅转 API',
       stickySession: '会话保持',
@@ -148,14 +159,126 @@ export default {
       allOperational: '全部正常',
       operational: '运行正常'
     },
+    servicePreview: {
+      console: '服务运行面板',
+      live: '监测中',
+      title: '服务保障机制',
+      allHealthy: '稳定链路，持续守护',
+      formats: {
+        title: '支持的 API 格式',
+        openai: 'OpenAI 格式',
+        claude: 'Claude 格式',
+        gemini: 'Gemini 格式'
+      },
+      route: '请求路由',
+      yourApp: '你的应用',
+      bestRoute: '智能上游',
+      normal: '已启用',
+      events: {
+        health: {
+          title: '上游健康持续检查',
+          description: '根据实时可用性评估服务线路'
+        },
+        routing: {
+          title: '智能路由与自动切换',
+          description: '线路异常时选择可用上游'
+        },
+        billing: {
+          title: '请求级用量记录',
+          description: '模型、Token 与费用明细可查询'
+        }
+      }
+    },
+    trustBar: {
+      title: '值得信赖的服务基础',
+      items: {
+        monitoring: {
+          title: '全天候',
+          description: '持续检查上游健康状态'
+        },
+        records: {
+          title: '逐请求',
+          description: '用量与费用都有记录'
+        },
+        failover: {
+          title: '多线路',
+          description: '异常自动切换可用上游'
+        },
+        support: {
+          title: '多渠道',
+          description: 'Telegram、Discord、QQ 客服'
+        }
+      }
+    },
+    reputation: {
+      eyebrow: '口碑如何建立',
+      title: '口碑不是一句广告，是每次调用都让人放心',
+      description: '能长期使用的 API 服务，不只要模型多，更要状态说清楚、费用算清楚、问题有人处理。',
+      items: {
+        transparent: {
+          title: '服务状态不藏着',
+          description: '健康状态、异常与路由结果清晰可见，服务是否可用心里有数。',
+          proof: '运行状态可持续查询'
+        },
+        billing: {
+          title: '每一笔费用都讲得清',
+          description: '按请求记录模型、Token 和费用明细，团队成本不再是一笔糊涂账。',
+          proof: '用量明细随时可查'
+        },
+        support: {
+          title: '遇到问题找得到人',
+          description: '多渠道客服覆盖购买前咨询和使用中问题，不让反馈石沉大海。',
+          proof: 'Telegram 与 Discord 可联系'
+        }
+      },
+      promiseEyebrow: '我们的原则',
+      promiseTitle: 'LLM Provider 服务承诺',
+      promiseDescription: '信任不是靠夸张数字，而是靠长期一致的服务体验。',
+      commitments: {
+        status: '不隐瞒服务状态',
+        billing: '不做模糊计费',
+        support: '不让用户的问题石沉大海',
+        choice: '不用复杂规则限制选择'
+      },
+      promiseFooter: '长期主义，认真服务每一次调用'
+    },
+    ecosystem: {
+      eyebrow: '虚拟数字产品商城 · 即买即用',
+      title: 'Claude、GPT 成品号与代充服务',
+      description: '需要现成账号或快速充值？商城提供 Claude 成品号、GPT 成品号、GPT 代充及普通账号购买，产品分类清晰、下单便捷、交付快速。',
+      action: '进入商城选购',
+      tags: {
+        subscription: 'Claude 成品号购买',
+        codes: 'GPT 成品号与代充',
+        delivery: '普通账号购买'
+      }
+    },
     // CTA 区块
     cta: {
-      title: '准备好开始了吗？',
-      description: '创建账号，获取统一 API 密钥，立即接入多个主流 AI 模型。',
-      button: '立即注册'
+      title: '把稳定的 API 服务，交给 LLM Provider',
+      description: '从第一把密钥开始，体验透明、稳定、有人负责的 AI API 服务。',
+      button: '免费注册'
     },
     footer: {
-      allRightsReserved: '保留所有权利。'
+      allRightsReserved: '保留所有权利。',
+      description: '专注稳定、透明、值得长期信赖的 AI API 服务平台。',
+      contact: '联系我们',
+      contactDescription: 'Telegram、Discord 与 QQ 客服随时可达',
+      slogan: '认真服务每一次 API 调用',
+      navigation: '快速导航'
+    },
+    community: {
+      openSupport: '打开客服渠道',
+      support: '客服',
+      title: '联系 LLM Provider',
+      description: 'Telegram、Discord、QQ 三种客服渠道',
+      online: '在线',
+      telegram: 'Telegram 客服',
+      telegramDescription: '即时咨询与接入帮助',
+      discord: 'Discord 社区',
+      discordDescription: '交流、公告与问题反馈',
+      qq: 'QQ 客服群',
+      qqDescription: '群号 619737520 · 售后与问题反馈'
     }
   },
 

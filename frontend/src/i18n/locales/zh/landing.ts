@@ -206,7 +206,7 @@ export default {
         },
         support: {
           title: '多渠道',
-          description: 'Telegram、Discord、QQ 客服'
+          description: 'Telegram、Discord 客服'
         }
       }
     },
@@ -263,7 +263,7 @@ export default {
       allRightsReserved: '保留所有权利。',
       description: '专注稳定、透明、值得长期信赖的 AI API 服务平台。',
       contact: '联系我们',
-      contactDescription: 'Telegram、Discord 与 QQ 客服随时可达',
+      contactDescription: 'Telegram、Discord 客服随时可达',
       slogan: '认真服务每一次 API 调用',
       navigation: '快速导航'
     },
@@ -271,14 +271,12 @@ export default {
       openSupport: '打开客服渠道',
       support: '客服',
       title: '联系 LLM Provider',
-      description: 'Telegram、Discord、QQ 三种客服渠道',
+      description: 'Telegram、Discord 客服渠道',
       online: '在线',
       telegram: 'Telegram 客服',
       telegramDescription: '即时咨询与接入帮助',
       discord: 'Discord 社区',
-      discordDescription: '交流、公告与问题反馈',
-      qq: 'QQ 客服群',
-      qqDescription: '群号 619737520 · 售后与问题反馈'
+      discordDescription: '交流、公告与问题反馈'
     }
   },
 

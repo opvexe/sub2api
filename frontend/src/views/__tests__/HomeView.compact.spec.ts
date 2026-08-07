@@ -100,20 +100,19 @@ describe('HomeView compact mode', () => {
     expect(wrapper.find('.home-shell').exists()).toBe(true)
   })
 
-  it('shows the configured Telegram, Discord, and QQ support links', () => {
+  it('shows the configured Telegram and Discord support links', () => {
     const wrapper = mountHome()
     const links = wrapper.findAll('.support-list a')
 
-    expect(links.some((link) => link.attributes('href') === 'https://t.me/VisionCoderxhn')).toBe(true)
+    expect(links.some((link) => link.attributes('href') === 'https://t.me/origincoder998')).toBe(true)
     expect(links.some((link) => link.attributes('href') === 'https://discord.gg/2C6Qvd36pq')).toBe(true)
-    expect(links.some((link) => link.attributes('href')?.includes('uin=619737520'))).toBe(true)
-    expect(wrapper.get('.support-qq').text()).toBe('QQ')
+    expect(links).toHaveLength(2)
   })
 
-  it('links the ecosystem marketplace card to the VisionCoder shop', () => {
+  it('links the ecosystem marketplace card to the OriginCoder shop', () => {
     const wrapper = mountHome()
 
-    expect(wrapper.get('.ecosystem-card').attributes('href')).toBe('https://shop.visioncoder.ai')
+    expect(wrapper.get('.ecosystem-card').attributes('href')).toBe('https://shop.origincoder.ai')
   })
 
   it('shows OpenAI, Claude, and Gemini request formats', () => {

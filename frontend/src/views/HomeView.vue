@@ -229,7 +229,7 @@
       <section id="ecosystem" class="section ecosystem-section">
         <div class="section-inner">
           <a
-            href="https://shop.visioncoder.ai"
+            href="https://shop.origincoder.ai"
             target="_blank"
             rel="noopener noreferrer"
             class="ecosystem-card"
@@ -310,8 +310,7 @@
             rel="noopener noreferrer"
           >
             <span class="support-logo" :class="'support-' + support.key">
-              <span v-if="support.key === 'qq'" class="qq-monogram">QQ</span>
-              <svg v-else viewBox="0 0 24 24" fill="currentColor"><path :d="support.path" /></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor"><path :d="support.path" /></svg>
             </span>
             <span><strong>{{ support.label }}</strong><small>{{ support.description }}</small></span>
             <Icon name="arrowRight" size="sm" :stroke-width="2" />
@@ -338,9 +337,8 @@ const BRAND_LOGO_URL = '/logo-v2.png?v=llm-provider-20260805'
 
 // 留空的客服渠道不会展示。
 const CONTACT = {
-  telegram: 'https://t.me/VisionCoderxhn',
+  telegram: 'https://t.me/origincoder998',
   discord: 'https://discord.gg/2C6Qvd36pq',
-  qq: 'mqqapi://card/show_pslcard?src_type=internal&version=1&uin=619737520&card_type=group&source=qrcode',
 }
 
 const TELEGRAM_PATH =
@@ -451,13 +449,6 @@ const supportLinks = computed(() =>
       label: t('home.community.discord'),
       description: t('home.community.discordDescription'),
       path: DISCORD_PATH,
-    },
-    {
-      key: 'qq',
-      href: CONTACT.qq,
-      label: t('home.community.qq'),
-      description: t('home.community.qqDescription'),
-      path: '',
     },
   ].filter((item) => item.href)
 )
@@ -810,8 +801,6 @@ onMounted(() => {
 .support-logo svg { width: 18px; height: 18px; }
 .support-telegram { background: #229ed9; }
 .support-discord { background: #5865f2; }
-.support-qq { background: #12b7f5; }
-.qq-monogram { color: #fff; font-size: 11px; font-weight: 950; letter-spacing: -.06em; }
 .support-list a > span:nth-child(2) { min-width: 0; flex: 1; }
 .support-list strong { display: block; color: #115e59; font-size: 11px; font-weight: 850; }
 .support-list small { display: block; margin-top: 2px; overflow: hidden; color: #94a3b8; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }

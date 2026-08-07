@@ -206,7 +206,7 @@ export default {
         },
         support: {
           title: 'Multi-channel',
-          description: 'Telegram, Discord, and QQ support'
+          description: 'Telegram and Discord support'
         }
       }
     },
@@ -263,7 +263,7 @@ export default {
       allRightsReserved: 'All rights reserved.',
       description: 'A stable, transparent AI API service platform built for long-term trust.',
       contact: 'Contact us',
-      contactDescription: 'Support is available through Telegram, Discord, and QQ',
+      contactDescription: 'Support is available through Telegram and Discord',
       slogan: 'Taking every API request seriously',
       navigation: 'Quick links'
     },
@@ -271,14 +271,12 @@ export default {
       openSupport: 'Open support channels',
       support: 'Support',
       title: 'Contact LLM Provider',
-      description: 'Support through Telegram, Discord, and QQ',
+      description: 'Support through Telegram and Discord',
       online: 'Online',
       telegram: 'Telegram support',
       telegramDescription: 'Fast questions and integration help',
       discord: 'Discord community',
-      discordDescription: 'Discussion, updates, and issue reports',
-      qq: 'QQ support group',
-      qqDescription: 'Group 619737520 · Support and feedback'
+      discordDescription: 'Discussion, updates, and issue reports'
     }
   },
 

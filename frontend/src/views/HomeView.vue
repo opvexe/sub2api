@@ -81,7 +81,7 @@
     </footer>
   </div>
 
-  <!-- LLM Provider brand home -->
+  <!-- OriginCoder brand home -->
   <div v-else class="home-shell">
     <header class="home-header">
       <nav class="section-inner home-nav" :aria-label="t('home.nav.primary')">
@@ -90,128 +90,74 @@
             <img :src="brandLogo" :alt="siteName + ' logo'" class="h-full w-full object-contain" />
           </span>
           <span class="min-w-0">
-            <strong class="brand-name">LLM Provider</strong>
+            <strong class="brand-name">OriginCoder</strong>
             <small class="brand-caption">{{ t('home.brandCaption') }}</small>
           </span>
         </router-link>
 
         <div class="nav-links">
-          <a v-for="link in navLinks" :key="link.href" :href="link.href">{{ link.label }}</a>
+          <router-link v-for="link in navLinks" :key="link.to" :to="link.to">{{ link.label }}</router-link>
+          <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">{{ t('home.docs') }}</a>
         </div>
 
         <div class="nav-actions">
-          <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="docs-link">
-            {{ t('home.docs') }}
-          </a>
           <LocaleSwitcher class="home-locale" />
-          <router-link :to="isAuthenticated ? dashboardPath : '/login'" class="header-action">
+          <router-link :to="isAuthenticated ? dashboardPath : '/login'" class="header-ghost">
             {{ isAuthenticated ? t('home.dashboard') : t('home.login') }}
+          </router-link>
+          <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="header-action">
+            {{ isAuthenticated ? t('home.goToDashboard') : t('home.getStarted') }}
           </router-link>
         </div>
       </nav>
     </header>
 
     <main>
-      <!-- Main API relay proposition -->
+      <!-- Hero -->
       <section id="service" class="hero-section">
-        <div class="hero-grid-bg" aria-hidden="true"></div>
-        <div class="hero-glow hero-glow-one" aria-hidden="true"></div>
-        <div class="hero-glow hero-glow-two" aria-hidden="true"></div>
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-grid" aria-hidden="true"></div>
 
-        <div class="section-inner hero-layout">
-          <div class="hero-copy">
-            <div class="brand-pill">
-              <span class="brand-pill-dot"></span>
-              {{ t('home.heroEyebrow') }}
-            </div>
-
-            <h1 class="hero-title">
-              <span>{{ t('home.heroTitleLead') }}</span>
-              <span class="hero-title-accent">{{ t('home.heroTitleAccent') }}</span>
-            </h1>
-
-            <p class="hero-description">{{ t('home.heroDescription') }}</p>
-
-            <div class="hero-actions">
-              <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="primary-action">
-                {{ isAuthenticated ? t('home.goToDashboard') : t('home.getStarted') }}
-                <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
-              </router-link>
-              <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="secondary-action">
-                <Icon name="book" size="sm" :stroke-width="2" aria-hidden="true" />
-                {{ t('home.viewDocs') }}
-              </a>
-            </div>
-
-            <ul class="hero-trust-list" :aria-label="t('home.highlights')">
-              <li v-for="item in heroTrustItems" :key="item">
-                <Icon name="checkCircle" size="sm" :stroke-width="2.2" aria-hidden="true" />
-                {{ item }}
-              </li>
-            </ul>
+        <div class="section-inner hero-inner">
+          <div class="model-orbit" aria-hidden="true">
+            <span v-for="chip in modelChips" :key="chip.short" :style="{ background: chip.color }">
+              {{ chip.short }}
+            </span>
           </div>
 
-          <!-- Honest service status panel -->
-          <div class="service-console" :aria-label="t('home.servicePreview.title')">
-            <div class="console-topbar">
-              <div class="console-window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-              <span class="console-title">{{ t('home.servicePreview.console') }}</span>
-              <span class="console-live"><span></span>{{ t('home.servicePreview.live') }}</span>
-            </div>
-
-            <div class="console-body">
-              <div class="console-status-head">
-                <div>
-                  <p>{{ t('home.servicePreview.title') }}</p>
-                  <h2>{{ t('home.servicePreview.allHealthy') }}</h2>
-                </div>
-                <span class="health-orbit">
-                  <span></span>
-                  <Icon name="shield" size="lg" :stroke-width="1.8" />
-                </span>
-              </div>
-
-              <div class="request-list" :aria-label="t('home.servicePreview.formats.title')">
-                <div v-for="format in requestFormats" :key="format.key" class="request-box">
-                  <div class="request-method">POST</div>
-                  <code>{{ format.endpoint }}</code>
-                  <span>{{ format.label }}</span>
-                </div>
-              </div>
-
-              <div class="route-flow" :aria-label="t('home.servicePreview.route')">
-                <div class="route-node">
-                  <span><Icon name="terminal" size="sm" :stroke-width="2" /></span>
-                  <small>{{ t('home.servicePreview.yourApp') }}</small>
-                </div>
-                <div class="route-line"><span></span><Icon name="chevronRight" size="xs" /></div>
-                <div class="route-node route-node-primary">
-                  <span><img :src="brandLogo" alt="" /></span>
-                  <small>LLM Provider</small>
-                </div>
-                <div class="route-line"><span></span><Icon name="chevronRight" size="xs" /></div>
-                <div class="route-node">
-                  <span><Icon name="server" size="sm" :stroke-width="2" /></span>
-                  <small>{{ t('home.servicePreview.bestRoute') }}</small>
-                </div>
-              </div>
-
-              <div class="console-event-list">
-                <div v-for="event in serviceEvents" :key="event.key" class="console-event">
-                  <span class="event-check"><Icon name="check" size="xs" :stroke-width="3" /></span>
-                  <div>
-                    <strong>{{ event.title }}</strong>
-                    <small>{{ event.description }}</small>
-                  </div>
-                  <span class="event-status">{{ t('home.servicePreview.normal') }}</span>
-                </div>
-              </div>
-
-              <div class="provider-row">
-                <span v-for="provider in providers" :key="provider">{{ provider }}</span>
-              </div>
-            </div>
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            {{ t('home.landing.hero.badge') }}
           </div>
+
+          <h1 class="hero-title">{{ t('home.landing.hero.headline') }}</h1>
+          <p class="hero-lead">{{ t('home.landing.hero.lead') }}</p>
+
+          <div class="hero-actions">
+            <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="primary-action">
+              {{ isAuthenticated ? t('home.goToDashboard') : t('home.landing.hero.primaryCta') }}
+              <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
+            </router-link>
+            <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="secondary-action">
+              <Icon name="book" size="sm" :stroke-width="2" aria-hidden="true" />
+              {{ t('home.landing.hero.secondaryCta') }}
+            </a>
+            <router-link v-else to="/model-plaza" class="secondary-action">
+              <Icon name="book" size="sm" :stroke-width="2" aria-hidden="true" />
+              {{ t('home.landing.hero.secondaryCta') }}
+            </router-link>
+          </div>
+
+          <ul class="model-chip-row" :aria-label="t('home.landing.nav.models')">
+            <li v-for="chip in modelChips" :key="chip.name">{{ chip.name }}</li>
+          </ul>
+
+          <dl class="hero-stats">
+            <div v-for="stat in heroStats" :key="stat.key">
+              <dt>{{ stat.value }}</dt>
+              <dd>{{ stat.label }}</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
@@ -222,6 +168,96 @@
             <span class="trust-bar-icon"><Icon :name="item.icon" size="md" :stroke-width="2" /></span>
             <div><strong>{{ item.title }}</strong><p>{{ item.description }}</p></div>
           </article>
+        </div>
+      </section>
+
+      <!-- Pricing -->
+      <section id="pricing" class="section pricing-section">
+        <div class="section-inner">
+          <div class="section-head">
+            <p class="section-eyebrow">{{ t('home.landing.pricing.eyebrow') }}</p>
+            <h2>{{ t('home.landing.pricing.title') }}</h2>
+            <p class="section-lead">{{ t('home.landing.pricing.description') }}</p>
+            <router-link to="/model-plaza" class="section-link">
+              {{ t('home.landing.pricing.link') }}
+              <Icon name="arrowRight" size="xs" :stroke-width="2.4" aria-hidden="true" />
+            </router-link>
+          </div>
+
+          <div class="pricing-grid">
+            <article
+              v-for="plan in pricingPlans"
+              :key="plan.key"
+              class="pricing-card"
+              :class="{ 'pricing-card-featured': plan.featured }"
+            >
+              <span v-if="plan.featured" class="pricing-ribbon">
+                {{ t('home.landing.pricing.recommended') }}
+              </span>
+              <p class="pricing-eyebrow">{{ plan.eyebrow }}</p>
+              <h3>{{ plan.title }}</h3>
+              <p class="pricing-description">{{ plan.description }}</p>
+              <ul class="pricing-points">
+                <li v-for="point in plan.points" :key="point">
+                  <Icon name="checkCircle" size="sm" :stroke-width="2.2" aria-hidden="true" />
+                  {{ point }}
+                </li>
+              </ul>
+              <a v-if="plan.anchor" :href="plan.to" class="pricing-action">
+                {{ plan.action }}
+                <Icon name="arrowRight" size="xs" :stroke-width="2.4" aria-hidden="true" />
+              </a>
+              <router-link v-else :to="plan.to" class="pricing-action">
+                {{ plan.action }}
+                <Icon name="arrowRight" size="xs" :stroke-width="2.4" aria-hidden="true" />
+              </router-link>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Developer first -->
+      <section id="developers" class="section developer-section">
+        <div class="section-inner developer-grid">
+          <div class="developer-copy">
+            <p class="section-eyebrow">{{ t('home.landing.developer.eyebrow') }}</p>
+            <h2>
+              <span>{{ t('home.landing.developer.titleLead') }}</span>
+              <span class="developer-title-accent">{{ t('home.landing.developer.titleAccent') }}</span>
+            </h2>
+            <p class="section-lead">{{ t('home.landing.developer.description') }}</p>
+            <ul class="developer-points">
+              <li v-for="point in developerPoints" :key="point">
+                <Icon name="checkCircle" size="sm" :stroke-width="2.2" aria-hidden="true" />
+                {{ point }}
+              </li>
+            </ul>
+            <a
+              v-if="docUrl"
+              :href="docUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="secondary-action developer-action"
+            >
+              {{ t('home.landing.developer.action') }}
+              <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
+            </a>
+          </div>
+
+          <div class="code-card">
+            <div class="code-topbar">
+              <div class="code-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+              <span class="code-label">{{ t('home.landing.developer.codeLabel') }}</span>
+            </div>
+            <pre class="code-body"><code>{{ curlSnippet }}</code></pre>
+            <div class="code-endpoints" :aria-label="t('home.servicePreview.formats.title')">
+              <div v-for="format in requestFormats" :key="format.key">
+                <span class="code-method">POST</span>
+                <code>{{ format.endpoint }}</code>
+                <small>{{ format.label }}</small>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -256,6 +292,18 @@
         </div>
       </section>
 
+      <!-- Final CTA -->
+      <section class="final-cta">
+        <div class="section-inner final-cta-inner">
+          <p class="final-cta-eyebrow">{{ t('home.landing.finalCta.eyebrow') }}</p>
+          <h2>{{ t('home.landing.finalCta.title') }}</h2>
+          <p>{{ t('home.landing.finalCta.description') }}</p>
+          <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="primary-action">
+            {{ isAuthenticated ? t('home.goToDashboard') : t('home.landing.finalCta.action') }}
+            <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
+          </router-link>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
@@ -263,27 +311,43 @@
         <div class="footer-main">
           <div class="footer-brand">
             <span class="brand-mark"><img :src="brandLogo" :alt="siteName + ' logo'" /></span>
-            <div><strong>LLM Provider</strong><p>{{ t('home.footer.description') }}</p></div>
+            <div><strong>OriginCoder</strong><p>{{ t('home.footer.description') }}</p></div>
           </div>
-          <nav class="footer-nav" :aria-label="t('home.footer.navigation')">
-            <strong>{{ t('home.footer.navigation') }}</strong>
-            <div class="footer-links">
-              <a href="#service">{{ t('home.nav.service') }}</a>
-              <a href="#guarantees">{{ t('home.nav.guarantees') }}</a>
-              <a href="#ecosystem">{{ t('home.nav.ecosystem') }}</a>
-              <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">{{ t('home.docs') }}</a>
-              <router-link to="/register">{{ t('home.cta.button') }}</router-link>
-              <router-link to="/login">{{ t('home.login') }}</router-link>
-            </div>
+
+          <nav class="footer-col" :aria-label="t('home.landing.footer.product')">
+            <strong>{{ t('home.landing.footer.product') }}</strong>
+            <router-link to="/model-plaza">{{ t('home.landing.nav.models') }}</router-link>
+            <router-link to="/purchase">{{ t('home.landing.nav.pricing') }}</router-link>
+            <a href="#developers">{{ t('home.landing.nav.developers') }}</a>
+            <router-link :to="isAuthenticated ? dashboardPath : '/login'">
+              {{ t('home.landing.footer.console') }}
+            </router-link>
           </nav>
-          <div class="footer-contact">
+
+          <nav class="footer-col" :aria-label="t('home.landing.footer.resources')">
+            <strong>{{ t('home.landing.footer.resources') }}</strong>
+            <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">
+              {{ t('home.landing.footer.quickStart') }}
+            </a>
+            <router-link to="/key-usage">{{ t('keyUsage.title') }}</router-link>
+            <a href="#ecosystem">{{ t('home.nav.ecosystem') }}</a>
+            <a href="#support">{{ t('home.community.support') }}</a>
+          </nav>
+
+          <nav v-if="legalDocuments.length" class="footer-col" :aria-label="t('home.landing.footer.legal')">
+            <strong>{{ t('home.landing.footer.legal') }}</strong>
+            <router-link v-for="doc in legalDocuments" :key="doc.id" :to="`/legal/${doc.id}`">
+              {{ doc.title }}
+            </router-link>
+          </nav>
+          <div v-else class="footer-col">
             <strong>{{ t('home.footer.contact') }}</strong>
-            <p v-if="contactInfo">{{ contactInfo }}</p>
-            <p v-else>{{ t('home.footer.contactDescription') }}</p>
+            <p class="footer-note">{{ contactInfo || t('home.footer.contactDescription') }}</p>
           </div>
         </div>
+
         <div class="footer-bottom">
-          <span>&copy; {{ currentYear }} LLM Provider. {{ t('home.footer.allRightsReserved') }}</span>
+          <span>&copy; {{ currentYear }} OriginCoder. {{ t('home.footer.allRightsReserved') }}</span>
           <span>{{ t('home.footer.slogan') }}</span>
         </div>
       </div>
@@ -328,12 +392,13 @@ import { useAuthStore, useAppStore } from '@/stores'
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { normalizeSiteName } from '@/utils/branding'
+import { applyHomeSeo } from '@/utils/seo'
 import { sanitizeUrl } from '@/utils/url'
 
 const { t } = useI18n()
 const authStore = useAuthStore()
 const appStore = useAppStore()
-const BRAND_LOGO_URL = '/logo-v2.png?v=llm-provider-20260805'
+const BRAND_LOGO_URL = '/logo-v2.png?v=origincoder-20260814'
 
 // 留空的客服渠道不会展示。
 const CONTACT = {
@@ -380,19 +445,111 @@ const isAuthenticated = computed(() => authStore.isAuthenticated)
 const dashboardPath = computed(() => (authStore.isAdmin ? '/admin/dashboard' : '/dashboard'))
 const currentYear = computed(() => new Date().getFullYear())
 
+// 协议文档由管理员在后台配置；没有配置时footer改显示联系方式。
+const legalDocuments = computed(() =>
+  (appStore.cachedPublicSettings?.login_agreement_documents || []).filter(
+    (doc) => doc?.id && doc?.title
+  )
+)
+
 const navLinks = computed(() => [
-  { href: '#service', label: t('home.nav.service') },
-  { href: '#guarantees', label: t('home.nav.guarantees') },
-  { href: '#ecosystem', label: t('home.nav.ecosystem') },
+  { to: '/model-plaza', label: t('home.landing.nav.models') },
+  { to: '/purchase', label: t('home.landing.nav.pricing') },
+  { to: '/key-usage', label: t('keyUsage.title') },
 ])
 
-const heroTrustItems = computed(() => [
-  t('home.heroTrust.status'),
-  t('home.heroTrust.billing'),
-  t('home.heroTrust.support'),
+// 头像色块与下方模型标签共用同一份数据。
+const modelChips = [
+  { name: 'Claude', short: 'C', color: '#4964f4' },
+  { name: 'GPT', short: 'G', color: '#3f57dc' },
+  { name: 'Gemini', short: 'GM', color: '#6366f1' },
+  { name: 'DeepSeek', short: 'DS', color: '#354bd2' },
+  { name: 'Grok', short: 'GR', color: '#7b8ef8' },
+  { name: 'Qwen', short: 'Q', color: '#2c3ea8' },
+]
+
+const heroStats = computed(() => [
+  {
+    key: 'models',
+    value: t('home.landing.hero.stats.modelsValue'),
+    label: t('home.landing.hero.stats.modelsLabel'),
+  },
+  {
+    key: 'compatible',
+    value: t('home.landing.hero.stats.compatibleValue'),
+    label: t('home.landing.hero.stats.compatibleLabel'),
+  },
+  {
+    key: 'stream',
+    value: t('home.landing.hero.stats.streamValue'),
+    label: t('home.landing.hero.stats.streamLabel'),
+  },
 ])
 
-const providers = ['Claude', 'GPT', 'Gemini', 'More']
+const pricingPlans = computed(() => [
+  {
+    key: 'payg',
+    featured: false,
+    anchor: false,
+    to: '/model-plaza',
+    eyebrow: t('home.landing.pricing.payg.eyebrow'),
+    title: t('home.landing.pricing.payg.title'),
+    description: t('home.landing.pricing.payg.description'),
+    action: t('home.landing.pricing.payg.action'),
+    points: [
+      t('home.landing.pricing.payg.points.price'),
+      t('home.landing.pricing.payg.points.lockIn'),
+      t('home.landing.pricing.payg.points.switch'),
+    ],
+  },
+  {
+    key: 'subscription',
+    featured: true,
+    anchor: false,
+    to: '/purchase',
+    eyebrow: t('home.landing.pricing.subscription.eyebrow'),
+    title: t('home.landing.pricing.subscription.title'),
+    description: t('home.landing.pricing.subscription.description'),
+    action: t('home.landing.pricing.subscription.action'),
+    points: [
+      t('home.landing.pricing.subscription.points.tiers'),
+      t('home.landing.pricing.subscription.points.steady'),
+      t('home.landing.pricing.subscription.points.records'),
+    ],
+  },
+  {
+    key: 'support',
+    featured: false,
+    anchor: true,
+    to: '#support',
+    eyebrow: t('home.landing.pricing.support.eyebrow'),
+    title: t('home.landing.pricing.support.title'),
+    description: t('home.landing.pricing.support.description'),
+    action: t('home.landing.pricing.support.action'),
+    points: [
+      t('home.landing.pricing.support.points.troubleshoot'),
+      t('home.landing.pricing.support.points.guide'),
+      t('home.landing.pricing.support.points.scope'),
+    ],
+  },
+])
+
+const developerPoints = computed(() => [
+  t('home.landing.developer.points.endpoint'),
+  t('home.landing.developer.points.routing'),
+  t('home.landing.developer.points.streaming'),
+])
+
+const curlSnippet = `curl -X POST https://origincoder.com/v1/chat/completions \\
+  -H "Authorization: Bearer $API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "your-model",
+    "messages": [
+      { "role": "user", "content": "Hello!" }
+    ],
+    "stream": true
+  }'`
 
 const REQUEST_FORMATS = [
   { key: 'openai', endpoint: '/v1/chat/completions' },
@@ -403,15 +560,6 @@ const requestFormats = computed(() =>
   REQUEST_FORMATS.map((format) => ({
     ...format,
     label: t('home.servicePreview.formats.' + format.key),
-  }))
-)
-
-const SERVICE_EVENT_SLOTS = ['health', 'routing', 'billing'] as const
-const serviceEvents = computed(() =>
-  SERVICE_EVENT_SLOTS.map((key) => ({
-    key,
-    title: t('home.servicePreview.events.' + key + '.title'),
-    description: t('home.servicePreview.events.' + key + '.description'),
   }))
 )
 
@@ -471,14 +619,20 @@ onMounted(() => {
   initTheme()
   authStore.checkAuth()
   if (!appStore.publicSettingsLoaded) appStore.fetchPublicSettings()
+  applyHomeSeo({
+    siteName: siteName.value,
+    description: t('home.landing.hero.lead'),
+    logoUrl: siteLogo.value || BRAND_LOGO_URL,
+  })
 })
 </script>
 
 <style scoped>
+/* Palette: brand indigo #4964f4 on a white / #f7f8fc canvas. */
 .home-shell {
   min-height: 100vh;
   overflow-x: hidden;
-  color: #134e4a;
+  color: #111827;
   background: #fff;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
     "Hiragino Sans GB", system-ui, sans-serif;
@@ -487,20 +641,20 @@ onMounted(() => {
   position: sticky;
   top: 0;
   z-index: 40;
-  border-bottom: 1px solid rgba(226, 232, 240, .88);
-  background: rgba(255, 255, 255, .88);
+  border-bottom: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, .86);
   backdrop-filter: blur(18px);
 }
 .section-inner {
   width: 100%;
-  max-width: 1240px;
+  max-width: 1200px;
   margin: 0 auto;
   padding-left: 24px;
   padding-right: 24px;
 }
 .home-nav {
   display: flex;
-  height: 72px;
+  height: 68px;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
@@ -509,347 +663,423 @@ onMounted(() => {
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: 12px;
+  gap: 11px;
   color: inherit;
   text-decoration: none;
 }
 .brand-mark {
   display: flex;
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   flex: none;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
-  border-radius: 13px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 5px 16px rgba(15, 23, 42, .06);
+  box-shadow: 0 8px 24px rgba(73, 100, 244, .08);
 }
-.brand-name { display: block; font-size: 15px; font-weight: 900; letter-spacing: -.02em; }
-.brand-caption { display: block; margin-top: 1px; font-size: 9px; font-weight: 700; color: #94a3b8; }
-.nav-links { display: flex; align-items: center; gap: 4px; }
-.nav-links a, .docs-link {
-  border-radius: 10px;
-  padding: 9px 13px;
-  color: #475569;
-  font-size: 13px;
-  font-weight: 700;
+.brand-name { display: block; font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+.brand-caption { display: block; margin-top: 1px; font-size: 10px; font-weight: 500; color: #6b7280; }
+.nav-links { display: flex; align-items: center; gap: 2px; }
+.nav-links a {
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #6b7280;
+  font-size: 13.5px;
+  font-weight: 500;
   text-decoration: none;
-  transition: .2s ease;
+  transition: .18s ease;
 }
-.nav-links a:hover, .docs-link:hover { color: #0d9488; background: #f0fdfa; }
+.nav-links a:hover { color: #4964f4; background: #f7f8fc; }
 .nav-actions { display: flex; flex: none; align-items: center; gap: 8px; }
+.header-ghost {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  border-radius: 10px;
+  padding: 0 12px;
+  color: #374151;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: .18s ease;
+}
+.header-ghost:hover { color: #4964f4; background: #f7f8fc; }
 .header-action {
   display: inline-flex;
-  min-height: 40px;
+  min-height: 38px;
   align-items: center;
   justify-content: center;
-  border-radius: 11px;
+  border-radius: 10px;
   padding: 0 16px;
   color: #fff;
-  background: linear-gradient(135deg, #14b8a6, #0d9488);
-  font-size: 13px;
-  font-weight: 800;
+  background: #4964f4;
+  font-size: 13.5px;
+  font-weight: 600;
   text-decoration: none;
-  transition: .2s ease;
+  box-shadow: 0 8px 24px rgba(73, 100, 244, .18);
+  transition: .18s ease;
 }
-.header-action:hover { background: linear-gradient(135deg, #0d9488, #0f766e); }
+.header-action:hover { background: #3f57dc; }
 
 /* Hero */
 .hero-section {
   position: relative;
   overflow: hidden;
-  padding: 92px 0 96px;
-  background: linear-gradient(180deg, #f8faff 0%, #fff 88%);
+  padding: 96px 0 88px;
+  background: linear-gradient(180deg, #f7f8fc 0%, #fff 78%);
 }
-.hero-grid-bg {
+.hero-glow {
+  position: absolute;
+  left: 50%;
+  top: -220px;
+  width: 900px;
+  height: 560px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgba(73, 100, 244, .16), transparent 72%);
+  pointer-events: none;
+}
+.hero-grid {
   position: absolute;
   inset: 0;
-  opacity: .35;
-  background-image: radial-gradient(circle at 1px 1px, rgba(20, 184, 166, .2) 1px, transparent 0);
-  background-size: 24px 24px;
-  mask-image: linear-gradient(to bottom, #000, transparent 90%);
+  background-image:
+    linear-gradient(rgba(73, 100, 244, .06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(73, 100, 244, .06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 25%, #000, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 25%, #000, transparent 78%);
 }
-.hero-glow { position: absolute; border-radius: 999px; filter: blur(90px); pointer-events: none; }
-.hero-glow-one { width: 440px; height: 440px; right: -180px; top: -120px; background: rgba(20, 184, 166, .18); }
-.hero-glow-two { width: 330px; height: 330px; left: -160px; bottom: -180px; background: rgba(6, 182, 212, .13); }
-.hero-layout {
-  position: relative;
-  display: grid;
-  grid-template-columns: .92fr 1.08fr;
+.hero-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.model-orbit { display: flex; align-items: center; }
+.model-orbit span {
+  display: flex;
+  width: 44px;
+  height: 44px;
   align-items: center;
-  gap: 70px;
+  justify-content: center;
+  margin-left: -10px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  box-shadow: 0 8px 24px rgba(73, 100, 244, .16);
 }
-.hero-copy { min-width: 0; }
-.brand-pill {
+.model-orbit span:first-child { margin-left: 0; }
+.hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  border: 1px solid #99f6e4;
+  gap: 8px;
+  margin-top: 26px;
+  border: 1px solid #e0e7ff;
   border-radius: 999px;
-  padding: 7px 12px;
-  color: #0f766e;
-  background: rgba(240, 253, 250, .92);
-  font-size: 11px;
-  font-weight: 800;
-  box-shadow: 0 4px 14px rgba(13, 148, 136, .08);
+  padding: 7px 14px;
+  color: #354bd2;
+  background: #eef2ff;
+  font-size: 12.5px;
+  font-weight: 500;
 }
-.brand-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.12); }
+.hero-badge-dot { width: 7px; height: 7px; flex: none; border-radius: 50%; background: #4964f4; }
 .hero-title {
+  max-width: 900px;
   margin-top: 22px;
-  color: #134e4a;
-  font-size: clamp(46px, 4.7vw, 62px);
-  font-weight: 950;
-  line-height: 1.04;
-  letter-spacing: -.055em;
+  color: #111827;
+  font-size: clamp(40px, 5.2vw, 64px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -.04em;
 }
-.hero-title > span { display: block; }
-.hero-title-accent {
-  margin-top: 5px;
-  background: linear-gradient(100deg, #0d9488 0%, #14b8a6 55%, #0891b2 105%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.hero-lead {
+  max-width: 660px;
+  margin-top: 20px;
+  color: #6b7280;
+  font-size: 16.5px;
+  line-height: 1.75;
 }
-.hero-description {
-  max-width: 590px;
-  margin-top: 24px;
-  color: #5f6b7c;
-  font-size: 17px;
-  line-height: 1.85;
-}
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 30px; }
 .primary-action, .secondary-action {
   display: inline-flex;
-  min-height: 50px;
+  min-height: 46px;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  border-radius: 13px;
-  padding: 0 21px;
-  font-size: 14px;
-  font-weight: 850;
-  text-decoration: none;
-  transition: .2s ease;
-}
-.primary-action { color: #fff; background: #0d9488; box-shadow: 0 14px 30px rgba(13, 148, 136, .24); }
-.primary-action:hover { transform: translateY(-2px); background: #0f766e; }
-.secondary-action { border: 1px solid #dbe2ea; color: #334155; background: #fff; }
-.secondary-action:hover { border-color: #99f6e4; color: #0f766e; background: #f0fdfa; }
-.hero-trust-list { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
-.hero-trust-list li { display: flex; align-items: center; gap: 6px; color: #64748b; font-size: 11px; font-weight: 750; }
-.hero-trust-list svg { color: #10b981; }
-
-/* Service console */
-.service-console {
-  overflow: hidden;
-  border: 1px solid #99f6e4;
-  border-radius: 26px;
-  color: #0f766e;
-  background: linear-gradient(145deg, #fff 0%, #f0fdfa 58%, #ecfeff 100%);
-  box-shadow: 0 32px 80px rgba(20, 184, 166, .16);
-}
-.console-topbar {
-  display: flex;
-  height: 48px;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid #ccfbf1;
-  padding: 0 18px;
-  background: rgba(240, 253, 250, .9);
-}
-.console-window-dots { display: flex; gap: 6px; }
-.console-window-dots span { width: 8px; height: 8px; border-radius: 50%; background: #334155; }
-.console-window-dots span:first-child { background: #fb7185; }
-.console-window-dots span:nth-child(2) { background: #fbbf24; }
-.console-window-dots span:nth-child(3) { background: #34d399; }
-.console-title { flex: 1; text-align: center; color: #5f807d; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-.console-live { display: inline-flex; align-items: center; gap: 6px; color: #6ee7b7; font-size: 10px; font-weight: 800; }
-.console-live span { width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 4px rgba(52,211,153,.1); }
-.console-body { padding: 24px; }
-.console-status-head { display: flex; align-items: center; justify-content: space-between; }
-.console-status-head p { color: #5f807d; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.console-status-head h2 { margin-top: 6px; color: #134e4a; font-size: 23px; font-weight: 900; letter-spacing: -.035em; }
-.health-orbit {
-  position: relative;
-  display: flex;
-  width: 54px;
-  height: 54px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(52,211,153,.18);
-  border-radius: 18px;
-  color: #6ee7b7;
-  background: rgba(16,185,129,.08);
-}
-.health-orbit > span { position: absolute; right: 7px; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: #34d399; }
-.request-list {
-  display: grid;
-  gap: 7px;
-  margin-top: 21px;
-}
-.request-box {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  border: 1px solid #ccfbf1;
+  gap: 8px;
   border-radius: 12px;
-  padding: 9px 13px;
-  background: rgba(255,255,255,.88);
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: .18s ease;
 }
-.request-method { border-radius: 6px; padding: 4px 7px; color: #6ee7b7; background: rgba(16,185,129,.1); font-size: 9px; font-weight: 900; }
-.request-box code { min-width: 0; flex: 1; overflow: hidden; color: #315d58; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
-.request-box > span { color: #6f918d; font-size: 9px; font-weight: 700; }
-.route-flow { display: grid; grid-template-columns: 1fr 55px 1fr 55px 1fr; align-items: center; margin-top: 22px; }
-.route-node { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.route-node > span { display: flex; width: 42px; height: 42px; align-items: center; justify-content: center; border: 1px solid #99f6e4; border-radius: 13px; color: #0d9488; background: #fff; }
-.route-node > span img { width: 28px; height: 28px; object-fit: contain; }
-.route-node small { color: #5f807d; font-size: 9px; font-weight: 750; text-align: center; }
-.route-node-primary > span { border-color: #5eead4; background: #f0fdfa; box-shadow: 0 0 24px rgba(20,184,166,.14); }
-.route-node-primary small { color: #0d9488; }
-.route-line { display: flex; align-items: center; color: #5eead4; }
-.route-line span { height: 1px; flex: 1; background: linear-gradient(to right, #5eead4, #14b8a6); }
-.console-event-list { margin-top: 22px; border-top: 1px solid #ccfbf1; }
-.console-event { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e6fffb; padding: 11px 0; }
-.event-check { display: flex; width: 22px; height: 22px; flex: none; align-items: center; justify-content: center; border-radius: 7px; color: #6ee7b7; background: rgba(16,185,129,.1); }
-.console-event > div { display: flex; min-width: 0; flex: 1; flex-direction: column; }
-.console-event strong { color: #285a55; font-size: 11px; font-weight: 800; }
-.console-event small { margin-top: 2px; overflow: hidden; color: #6f918d; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-.event-status { color: #6ee7b7; font-size: 9px; font-weight: 800; }
-.provider-row { display: flex; flex-wrap: wrap; gap: 7px; padding-top: 16px; }
-.provider-row span { border: 1px solid #99f6e4; border-radius: 999px; padding: 5px 9px; color: #0f766e; background: #fff; font-size: 9px; font-weight: 750; }
+.primary-action { color: #fff; background: #4964f4; box-shadow: 0 16px 48px rgba(73, 100, 244, .22); }
+.primary-action:hover { background: #3f57dc; transform: translateY(-1px); }
+.secondary-action { border: 1px solid #e5e7eb; color: #374151; background: #fff; }
+.secondary-action:hover { border-color: #c7d2fe; color: #354bd2; background: #f7f8fc; }
+.model-chip-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 34px; }
+.model-chip-row li {
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: #6b7280;
+  background: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 620px;
+  margin-top: 42px;
+}
+.hero-stats > div {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 12px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(73, 100, 244, .06);
+}
+.hero-stats dt { color: #4964f4; font-size: 24px; font-weight: 700; letter-spacing: -.03em; }
+.hero-stats dd { margin-top: 4px; color: #6b7280; font-size: 12.5px; }
 
 /* Trust bar */
-.trust-bar { border-top: 1px solid #edf0f5; border-bottom: 1px solid #edf0f5; background: #fff; }
+.trust-bar { border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; background: #f7f8fc; }
 .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
-.trust-bar-item { display: flex; min-width: 0; align-items: center; gap: 12px; border-right: 1px solid #edf0f5; padding: 24px 20px; }
+.trust-bar-item { display: flex; min-width: 0; align-items: center; gap: 12px; border-right: 1px solid #e5e7eb; padding: 24px 20px; }
 .trust-bar-item:last-child { border-right: 0; }
-.trust-bar-icon { display: flex; width: 39px; height: 39px; flex: none; align-items: center; justify-content: center; border-radius: 12px; color: #0d9488; background: #f0fdfa; }
-.trust-bar-item strong { display: block; color: #115e59; font-size: 12px; font-weight: 900; }
-.trust-bar-item p { margin-top: 3px; color: #8490a2; font-size: 10px; line-height: 1.4; }
+.trust-bar-icon { display: flex; width: 38px; height: 38px; flex: none; align-items: center; justify-content: center; border-radius: 11px; color: #4964f4; background: #eef2ff; }
+.trust-bar-item strong { display: block; color: #111827; font-size: 13px; font-weight: 600; }
+.trust-bar-item p { margin-top: 3px; color: #6b7280; font-size: 11.5px; line-height: 1.5; }
 
 /* Shared sections */
-.section { padding: 78px 0; scroll-margin-top: 72px; }
+.section { padding: 88px 0; scroll-margin-top: 68px; }
+.section-head { max-width: 660px; margin: 0 auto; text-align: center; }
+.section-eyebrow { color: #4964f4; font-size: 13px; font-weight: 600; letter-spacing: -.01em; }
+.section-head h2 { margin-top: 12px; color: #111827; font-size: clamp(28px, 3.2vw, 38px); font-weight: 700; line-height: 1.2; letter-spacing: -.035em; }
+.section-lead { margin-top: 14px; color: #6b7280; font-size: 15.5px; line-height: 1.75; }
+.section-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; color: #4964f4; font-size: 13.5px; font-weight: 600; text-decoration: none; }
+.section-link:hover { color: #3f57dc; }
+
+/* Pricing */
+.pricing-section { background: #fff; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 46px; }
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 28px 26px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(73, 100, 244, .05);
+  transition: .2s ease;
+}
+.pricing-card:hover { transform: translateY(-3px); border-color: #c7d2fe; box-shadow: 0 16px 48px rgba(73, 100, 244, .1); }
+.pricing-card-featured { border-color: #4964f4; box-shadow: 0 16px 48px rgba(73, 100, 244, .14); }
+.pricing-ribbon {
+  position: absolute;
+  right: 20px;
+  top: -11px;
+  border-radius: 999px;
+  padding: 4px 12px;
+  color: #fff;
+  background: #4964f4;
+  font-size: 11px;
+  font-weight: 600;
+}
+.pricing-eyebrow { color: #6b7280; font-size: 11px; font-weight: 600; letter-spacing: .12em; }
+.pricing-card h3 { margin-top: 12px; color: #111827; font-size: 21px; font-weight: 700; letter-spacing: -.03em; }
+.pricing-description { margin-top: 10px; color: #6b7280; font-size: 14px; line-height: 1.7; }
+.pricing-points { display: grid; gap: 10px; margin-top: 22px; }
+.pricing-points li { display: flex; align-items: flex-start; gap: 8px; color: #374151; font-size: 13.5px; line-height: 1.55; }
+.pricing-points svg { flex: none; margin-top: 2px; color: #4964f4; }
+.pricing-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 26px;
+  color: #4964f4;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.pricing-action:hover { color: #3f57dc; }
+
+/* Developer first */
+.developer-section { background: #f7f8fc; }
+.developer-grid { display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: 56px; }
+.developer-copy { min-width: 0; }
+.developer-copy h2 { margin-top: 12px; color: #111827; font-size: clamp(28px, 3.2vw, 38px); font-weight: 700; line-height: 1.2; letter-spacing: -.035em; }
+.developer-copy h2 > span { display: block; }
+.developer-title-accent { color: #4964f4; }
+.developer-points { display: grid; gap: 11px; margin-top: 24px; }
+.developer-points li { display: flex; align-items: center; gap: 8px; color: #374151; font-size: 14px; }
+.developer-points svg { flex: none; color: #4964f4; }
+.developer-action { margin-top: 28px; }
+.code-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 16px 48px rgba(73, 100, 244, .1);
+}
+.code-topbar {
+  display: flex;
+  height: 44px;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 16px;
+  background: #f7f8fc;
+}
+.code-dots { display: flex; gap: 6px; }
+.code-dots span { width: 9px; height: 9px; border-radius: 50%; background: #d1d5db; }
+.code-label { color: #6b7280; font-size: 11px; font-weight: 600; letter-spacing: .08em; }
+.code-body {
+  overflow-x: auto;
+  padding: 20px;
+  color: #1f2937;
+  background: #fff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.85;
+}
+.code-endpoints { border-top: 1px solid #e5e7eb; padding: 8px; }
+.code-endpoints > div { display: flex; align-items: center; gap: 10px; border-radius: 10px; padding: 9px 12px; }
+.code-endpoints > div:hover { background: #f7f8fc; }
+.code-method { flex: none; border-radius: 6px; padding: 3px 7px; color: #354bd2; background: #eef2ff; font-size: 10px; font-weight: 700; }
+.code-endpoints code { min-width: 0; flex: 1; overflow: hidden; color: #374151; font-size: 11.5px; text-overflow: ellipsis; white-space: nowrap; }
+.code-endpoints small { flex: none; color: #9ca3af; font-size: 10.5px; }
 
 /* Ecosystem promo */
 .ecosystem-section { background: #fff; }
 .ecosystem-card {
   position: relative;
   display: grid;
-  min-height: 292px;
-  grid-template-columns: 260px 1fr auto;
+  min-height: 268px;
+  grid-template-columns: 240px 1fr auto;
   align-items: center;
-  gap: 40px;
+  gap: 36px;
   overflow: hidden;
-  border-radius: 28px;
-  padding: 40px 46px 40px 30px;
-  border: 1px solid #dbeafe;
-  color: #115e59;
-  background: linear-gradient(120deg, #ecfdf5 0%, #ecfeff 56%, #ccfbf1 125%);
-  box-shadow: 0 28px 70px rgba(20,184,166,.15);
+  border-radius: 20px;
+  padding: 38px 42px 38px 28px;
+  border: 1px solid #e0e7ff;
+  color: #111827;
+  background: linear-gradient(120deg, #f7f8fc 0%, #eef2ff 70%, #e0e7ff 130%);
+  box-shadow: 0 16px 48px rgba(73, 100, 244, .1);
   text-decoration: none;
   transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
-.ecosystem-card:hover { transform: translateY(-3px); border-color: #5eead4; box-shadow: 0 30px 72px rgba(20,184,166,.17); }
-.ecosystem-card:focus-visible { outline: 3px solid rgba(20,184,166,.28); outline-offset: 4px; }
-.ecosystem-grid { position: absolute; inset: 0; opacity: .16; background-image: linear-gradient(rgba(20,184,166,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,.18) 1px, transparent 1px); background-size: 30px 30px; mask-image: linear-gradient(to right, #000, transparent 80%); }
-.ecosystem-art { position: relative; height: 177px; }
-.ecosystem-orbit { position: absolute; border: 1px solid rgba(20,184,166,.28); border-radius: 50%; }
-.orbit-one { width: 150px; height: 150px; left: 35px; top: 13px; }
-.orbit-two { width: 100px; height: 100px; left: 60px; top: 38px; }
-.ecosystem-cube { position: absolute; display: flex; width: 68px; height: 68px; left: 76px; top: 54px; align-items: center; justify-content: center; border: 1px solid #99f6e4; border-radius: 22px; color: #0d9488; background: rgba(255,255,255,.72); box-shadow: 0 18px 45px rgba(20,184,166,.15); backdrop-filter: blur(10px); }
+.ecosystem-card:hover { transform: translateY(-3px); border-color: #a5b4fc; box-shadow: 0 20px 56px rgba(73, 100, 244, .14); }
+.ecosystem-card:focus-visible { outline: 3px solid rgba(73, 100, 244, .3); outline-offset: 4px; }
+.ecosystem-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(73,100,244,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(73,100,244,.07) 1px, transparent 1px); background-size: 32px 32px; mask-image: linear-gradient(to right, #000, transparent 80%); -webkit-mask-image: linear-gradient(to right, #000, transparent 80%); }
+.ecosystem-art { position: relative; height: 168px; }
+.ecosystem-orbit { position: absolute; border: 1px solid rgba(73,100,244,.24); border-radius: 50%; }
+.orbit-one { width: 144px; height: 144px; left: 34px; top: 12px; }
+.orbit-two { width: 96px; height: 96px; left: 58px; top: 36px; }
+.ecosystem-cube { position: absolute; display: flex; width: 64px; height: 64px; left: 74px; top: 52px; align-items: center; justify-content: center; border: 1px solid #c7d2fe; border-radius: 18px; color: #4964f4; background: rgba(255,255,255,.8); box-shadow: 0 16px 48px rgba(73,100,244,.14); backdrop-filter: blur(10px); }
 .ecosystem-copy { position: relative; z-index: 1; }
-.ecosystem-eyebrow { color: #0d9488 !important; font-size: 11px !important; font-weight: 950; letter-spacing: .14em; text-transform: uppercase; }
-.ecosystem-copy h2 { max-width: 720px; margin-top: 10px; color: #115e59; font-size: 36px; font-weight: 950; line-height: 1.2; letter-spacing: -.04em; }
-.ecosystem-copy > p { max-width: 690px; margin-top: 15px; color: #4f746f; font-size: 14px; font-weight: 550; line-height: 1.8; }
-.ecosystem-copy ul { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 21px; }
-.ecosystem-copy li { border: 1px solid #5eead4; border-radius: 999px; padding: 7px 12px; color: #0f766e; background: rgba(255,255,255,.76); font-size: 10px; font-weight: 850; box-shadow: 0 5px 14px rgba(13,148,136,.06); }
-.ecosystem-action { position: relative; z-index: 1; display: inline-flex; min-height: 52px; align-items: center; gap: 9px; border-radius: 14px; padding: 0 22px; color: #fff; background: linear-gradient(135deg, #14b8a6, #0d9488); font-size: 13px; font-weight: 900; text-decoration: none; white-space: nowrap; transition: .2s ease; box-shadow: 0 12px 26px rgba(13,148,136,.17); }
-.ecosystem-card:hover .ecosystem-action { background: linear-gradient(135deg, #0d9488, #0f766e); }
+.ecosystem-eyebrow { color: #4964f4 !important; font-size: 12px !important; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.ecosystem-copy h2 { max-width: 700px; margin-top: 10px; color: #111827; font-size: 32px; font-weight: 700; line-height: 1.22; letter-spacing: -.035em; }
+.ecosystem-copy > p { max-width: 660px; margin-top: 13px; color: #6b7280; font-size: 14px; line-height: 1.75; }
+.ecosystem-copy ul { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.ecosystem-copy li { border: 1px solid #c7d2fe; border-radius: 999px; padding: 6px 12px; color: #354bd2; background: rgba(255,255,255,.82); font-size: 11.5px; font-weight: 500; }
+.ecosystem-action { position: relative; z-index: 1; display: inline-flex; min-height: 46px; align-items: center; gap: 8px; border-radius: 12px; padding: 0 20px; color: #fff; background: #4964f4; font-size: 13.5px; font-weight: 600; text-decoration: none; white-space: nowrap; box-shadow: 0 16px 48px rgba(73,100,244,.2); transition: .18s ease; }
+.ecosystem-card:hover .ecosystem-action { background: #3f57dc; }
+
+/* Final CTA */
+.final-cta { border-top: 1px solid #e5e7eb; padding: 88px 0; background: #f7f8fc; }
+.final-cta-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.final-cta-eyebrow { color: #4964f4; font-size: 13px; font-weight: 600; }
+.final-cta-inner h2 { margin-top: 12px; color: #111827; font-size: clamp(28px, 3.4vw, 40px); font-weight: 700; letter-spacing: -.035em; }
+.final-cta-inner > p { max-width: 560px; margin-top: 14px; color: #6b7280; font-size: 15.5px; line-height: 1.75; }
+.final-cta-inner .primary-action { margin-top: 28px; }
 
 /* Footer */
-.site-footer { border-top: 1px solid #e8edf4; padding: 55px 0 28px; background: #fff; }
-.footer-main { display: grid; grid-template-columns: 1.3fr 1fr 1fr; align-items: start; gap: 45px; }
-.footer-brand { display: flex; gap: 13px; }
+.site-footer { border-top: 1px solid #e5e7eb; padding: 56px 0 28px; background: #fff; }
+.footer-main { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; align-items: start; gap: 40px; }
+.footer-brand { display: flex; gap: 12px; }
 .footer-brand img { width: 100%; height: 100%; object-fit: contain; }
-.footer-brand strong { font-size: 14px; font-weight: 900; }
-.footer-brand p, .footer-contact p { max-width: 320px; margin-top: 6px; color: #8490a2; font-size: 10px; line-height: 1.6; }
-.footer-nav > strong { color: #115e59; font-size: 11px; font-weight: 900; }
-.footer-links { display: flex; flex-wrap: wrap; gap: 9px 18px; margin-top: 11px; }
-.footer-links a { color: #64748b; font-size: 11px; font-weight: 750; text-decoration: none; }
-.footer-links a:hover { color: #0d9488; }
-.footer-contact strong { font-size: 11px; font-weight: 900; }
-.footer-bottom { display: flex; justify-content: space-between; gap: 20px; margin-top: 38px; border-top: 1px solid #edf0f5; padding-top: 22px; color: #94a3b8; font-size: 9px; }
+.footer-brand strong { font-size: 14px; font-weight: 700; }
+.footer-brand p { max-width: 300px; margin-top: 8px; color: #6b7280; font-size: 12px; line-height: 1.7; }
+.footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.footer-col > strong { color: #111827; font-size: 12.5px; font-weight: 600; }
+.footer-col a { color: #6b7280; font-size: 12.5px; text-decoration: none; }
+.footer-col a:hover { color: #4964f4; }
+.footer-note { max-width: 260px; color: #6b7280; font-size: 12px; line-height: 1.7; }
+.footer-bottom { display: flex; justify-content: space-between; gap: 20px; margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 22px; color: #9ca3af; font-size: 11.5px; }
 
 /* Floating support */
 .support-dock { position: fixed; right: 18px; top: 50%; z-index: 50; transform: translateY(-50%); }
-.support-dock summary { position: relative; display: flex; width: 58px; min-height: 68px; cursor: pointer; list-style: none; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 1px solid rgba(255,255,255,.4); border-radius: 19px; padding: 8px 5px; color: #fff; background: linear-gradient(145deg, #2dd4bf, #0d9488); font-size: 10px; font-weight: 850; box-shadow: 0 18px 42px rgba(20,184,166,.27); transition: .2s ease; }
+.support-dock summary { position: relative; display: flex; width: 56px; min-height: 66px; cursor: pointer; list-style: none; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 1px solid rgba(255,255,255,.35); border-radius: 16px; padding: 8px 5px; color: #fff; background: #4964f4; font-size: 10.5px; font-weight: 600; box-shadow: 0 16px 48px rgba(73,100,244,.28); transition: .18s ease; }
 .support-dock summary::-webkit-details-marker { display: none; }
-.support-dock summary:hover { transform: translateY(-2px); background: #0d9488; }
-.support-online { position: absolute; right: -2px; top: -2px; width: 11px; height: 11px; border: 2px solid #fff; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 4px rgba(52,211,153,.14); }
-.support-panel { position: absolute; right: calc(100% + 13px); top: 50%; width: 335px; overflow: hidden; border: 1px solid #ccfbf1; border-radius: 22px; background: #fff; box-shadow: 0 25px 70px rgba(13,148,136,.18); transform: translateY(-50%); }
-.support-head { display: flex; align-items: start; justify-content: space-between; gap: 15px; padding: 19px; color: #fff; background: linear-gradient(135deg, #14b8a6, #0d9488); }
-.support-head strong { font-size: 13px; font-weight: 900; }
-.support-head p { margin-top: 4px; color: #94a3b8; font-size: 9px; }
-.support-head > span { display: flex; align-items: center; gap: 5px; border-radius: 999px; padding: 4px 7px; color: #6ee7b7; background: rgba(255,255,255,.08); font-size: 8px; font-weight: 800; }
+.support-dock summary:hover { transform: translateY(-2px); background: #3f57dc; }
+.support-online { position: absolute; right: -2px; top: -2px; width: 11px; height: 11px; border: 2px solid #fff; border-radius: 50%; background: #34d399; }
+.support-panel { position: absolute; right: calc(100% + 12px); top: 50%; width: 330px; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; background: #fff; box-shadow: 0 16px 48px rgba(73,100,244,.18); transform: translateY(-50%); }
+.support-head { display: flex; align-items: start; justify-content: space-between; gap: 14px; padding: 18px; color: #fff; background: #4964f4; }
+.support-head strong { font-size: 13px; font-weight: 700; }
+.support-head p { margin-top: 4px; color: rgba(255,255,255,.78); font-size: 11px; }
+.support-head > span { display: flex; flex: none; align-items: center; gap: 5px; border-radius: 999px; padding: 4px 8px; color: #fff; background: rgba(255,255,255,.16); font-size: 10px; font-weight: 600; }
 .support-head i { width: 5px; height: 5px; border-radius: 50%; background: #34d399; }
 .support-list { padding: 7px; }
-.support-list a { display: flex; align-items: center; gap: 11px; border-radius: 14px; padding: 10px; color: #94a3b8; text-decoration: none; transition: .2s ease; }
-.support-list a:hover { color: #0d9488; background: #f0fdfa; }
-.support-logo { display: flex; width: 39px; height: 39px; flex: none; align-items: center; justify-content: center; border-radius: 12px; color: #fff; }
+.support-list a { display: flex; align-items: center; gap: 11px; border-radius: 12px; padding: 10px; color: #9ca3af; text-decoration: none; transition: .18s ease; }
+.support-list a:hover { color: #4964f4; background: #f7f8fc; }
+.support-logo { display: flex; width: 38px; height: 38px; flex: none; align-items: center; justify-content: center; border-radius: 11px; color: #fff; }
 .support-logo svg { width: 18px; height: 18px; }
 .support-telegram { background: #229ed9; }
 .support-discord { background: #5865f2; }
 .support-list a > span:nth-child(2) { min-width: 0; flex: 1; }
-.support-list strong { display: block; color: #115e59; font-size: 11px; font-weight: 850; }
-.support-list small { display: block; margin-top: 2px; overflow: hidden; color: #94a3b8; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.support-list strong { display: block; color: #111827; font-size: 12px; font-weight: 600; }
+.support-list small { display: block; margin-top: 2px; overflow: hidden; color: #9ca3af; font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
 
-.home-shell :deep(.home-locale button) { color: #475569; }
-.home-shell :deep(.home-locale > div) { border-color: #e2e8f0; background: #fff; }
+.home-shell :deep(.home-locale button) { color: #6b7280; }
+.home-shell :deep(.home-locale > div) { border-color: #e5e7eb; background: #fff; }
 
 @media (max-width: 1023px) {
   .nav-links { display: none; }
-  .hero-layout { grid-template-columns: 1fr; gap: 50px; }
-  .hero-copy { max-width: 720px; }
-  .service-console { max-width: 720px; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 560px; margin-left: auto; margin-right: auto; }
+  .developer-grid { grid-template-columns: 1fr; gap: 40px; }
   .trust-grid { grid-template-columns: repeat(2, 1fr); }
   .trust-bar-item:nth-child(2) { border-right: 0; }
-  .trust-bar-item:nth-child(-n+2) { border-bottom: 1px solid #edf0f5; }
+  .trust-bar-item:nth-child(-n+2) { border-bottom: 1px solid #e5e7eb; }
   .ecosystem-card { grid-template-columns: 190px 1fr; }
   .ecosystem-action { grid-column: 2; justify-self: start; }
+  .footer-main { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
   .section-inner { padding-left: 16px; padding-right: 16px; }
-  .home-nav { height: 64px; gap: 8px; }
-  .brand-caption, .docs-link { display: none; }
-  .brand-mark { width: 38px; height: 38px; }
-  .brand-name { display: none; }
-  .nav-actions { gap: 3px; }
-  .header-action { min-height: 38px; padding: 0 13px; }
-  .hero-section { padding: 65px 0 72px; }
-  .hero-layout { gap: 40px; }
-  .hero-title { font-size: 42px; }
-  .hero-description { font-size: 15px; line-height: 1.75; }
-  .hero-trust-list { gap: 9px 13px; }
-  .console-body { padding: 18px; }
-  .route-flow { grid-template-columns: 1fr 30px 1fr 30px 1fr; }
-  .route-node small { font-size: 8px; }
-  .request-box > span { display: none; }
-  .trust-bar-item { padding: 18px 10px; }
-  .trust-bar-icon { width: 34px; height: 34px; }
-  .section { padding: 72px 0; }
-  .ecosystem-card { min-height: auto; grid-template-columns: 1fr; gap: 15px; padding: 27px 24px; }
+  .home-nav { height: 60px; gap: 8px; }
+  .brand-caption { display: none; }
+  .brand-name { font-size: 14px; }
+  .nav-actions { gap: 4px; }
+  .header-ghost { display: none; }
+  .header-action { min-height: 36px; padding: 0 13px; }
+  .hero-section { padding: 64px 0 70px; }
+  .model-orbit span { width: 36px; height: 36px; font-size: 10.5px; }
+  .hero-title { font-size: 36px; }
+  .hero-lead { font-size: 15px; }
+  .hero-stats { grid-template-columns: 1fr; gap: 10px; }
+  .trust-bar-item { padding: 18px 12px; }
+  .section { padding: 64px 0; }
+  .final-cta { padding: 64px 0; }
+  .pricing-card { padding: 24px 20px; }
+  .code-body { font-size: 11.5px; }
+  .ecosystem-card { min-height: auto; grid-template-columns: 1fr; gap: 16px; padding: 26px 22px; }
   .ecosystem-art { display: none; }
   .ecosystem-action { grid-column: 1; }
-  .ecosystem-copy h2 { font-size: 28px; }
-  .ecosystem-copy > p { font-size: 13px; }
+  .ecosystem-copy h2 { font-size: 26px; }
   .footer-main { grid-template-columns: 1fr; gap: 28px; }
   .footer-bottom { flex-direction: column; }
   .support-dock { right: 14px; top: auto; bottom: 14px; transform: none; }
   .support-dock summary { width: 50px; height: 50px; min-height: 50px; justify-content: center; padding: 0; border-radius: 50%; }
   .support-dock summary > span:last-child { display: none; }
-  .support-panel { right: 0; top: auto; bottom: calc(100% + 12px); width: min(325px, calc(100vw - 28px)); transform: none; }
+  .support-panel { right: 0; top: auto; bottom: calc(100% + 12px); width: min(320px, calc(100vw - 28px)); transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .home-shell { scroll-behavior: auto; }

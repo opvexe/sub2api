@@ -29,14 +29,108 @@ export default {
     goToDashboard: 'Go to Dashboard',
     // User-focused value proposition
     heroSubtitle: 'One Key, All AI Models',
-    heroEyebrow: 'LLM Provider · A reliable AI API service',
+    heroEyebrow: 'OriginCoder · A reliable AI API service',
     heroTitleLead: 'A dependable AI API',
     heroTitleAccent: 'Built for long-term trust',
-    heroDescription: 'LLM Provider brings Claude, GPT, Gemini, and other leading models behind one API—with transparent status, clear billing, and support you can actually reach.',
+    heroDescription: 'OriginCoder brings Claude, GPT, Gemini, and other leading models behind one API—with transparent status, clear billing, and support you can actually reach.',
     heroTrust: {
       status: 'Transparent service status',
       billing: 'Every charge is traceable',
       support: 'Real people respond'
+    },
+    // Landing page (OriginCoder marketing layout)
+    landing: {
+      nav: {
+        models: 'Model pricing',
+        pricing: 'Plans',
+        developers: 'Developers',
+        billingRules: 'Billing rules'
+      },
+      hero: {
+        badge: 'OpenAI compatible · One gateway, every model',
+        headline: 'One API. Every AI Model.',
+        lead: 'OriginCoder gives developers a single entry point for models and tools. One interface for the major providers, so building, switching, and scaling stay simple.',
+        primaryCta: 'Start for free',
+        secondaryCta: 'Read the setup guide',
+        stats: {
+          modelsValue: '10+',
+          modelsLabel: 'models available',
+          compatibleValue: 'Unified',
+          compatibleLabel: 'compatible API',
+          streamValue: 'Streaming',
+          streamLabel: 'responses supported'
+        }
+      },
+      pricing: {
+        eyebrow: 'Simple, transparent pricing',
+        title: 'Straightforward, transparent usage.',
+        description: 'Pick pay-as-you-go or a subscription based on how often you call. Prices and usage records stay visible at all times.',
+        link: 'See the full billing rules',
+        recommended: 'Recommended',
+        payg: {
+          eyebrow: 'PAY AS YOU GO',
+          title: 'Per-model usage billing',
+          description: 'Settled on actual usage — a fit for projects with uneven demand and multi-model evaluation.',
+          points: {
+            price: 'Input and output prices per model',
+            lockIn: 'No lock-in to a single model',
+            switch: 'Switch any time, stay flexible'
+          },
+          action: 'View model pricing'
+        },
+        subscription: {
+          eyebrow: 'SUBSCRIPTION',
+          title: 'Subscription plans',
+          description: 'Fixed plans for high-frequency development workflows, with clear quotas and cycles.',
+          points: {
+            tiers: 'Multiple tiers to choose from',
+            steady: 'Built for steady, ongoing work',
+            records: 'All usage records in one place'
+          },
+          action: 'Choose a plan'
+        },
+        support: {
+          eyebrow: 'SUPPORT',
+          title: 'Service and support',
+          description: 'Need integration advice or hands-on help? Reach us directly.',
+          points: {
+            troubleshoot: 'Help troubleshooting integrations',
+            guide: 'Tool configuration walkthroughs',
+            scope: 'A clear statement of what we cover'
+          },
+          action: 'Contact us'
+        }
+      },
+      developer: {
+        eyebrow: 'Developer first',
+        titleLead: 'Integrate in seconds.',
+        titleAccent: 'Then focus on building.',
+        description: 'The API follows OpenAI call conventions. Swap the base URL and key, and use different models inside your existing project.',
+        points: {
+          endpoint: 'OpenAI-compatible endpoints',
+          routing: 'One key, unified model routing',
+          streaming: 'Streaming responses and tool calls'
+        },
+        action: 'Read the full docs',
+        codeLabel: 'bash'
+      },
+      finalCta: {
+        eyebrow: 'Ready to build?',
+        title: 'Ready to start building?',
+        description: 'Create an account, grab an API key, and bring more models into your next project.',
+        action: 'Create a free account'
+      },
+      footer: {
+        product: 'Product',
+        resources: 'Resources',
+        legal: 'Legal',
+        console: 'Console',
+        quickStart: 'Quick start',
+        guide: 'How-to guides',
+        faq: 'FAQ',
+        terms: 'Terms of service',
+        privacy: 'Privacy policy'
+      }
     },
     tags: {
       subscriptionToApi: 'Subscription to API',
@@ -232,7 +326,7 @@ export default {
         }
       },
       promiseEyebrow: 'Our principles',
-      promiseTitle: 'The LLM Provider service promise',
+      promiseTitle: 'The OriginCoder service promise',
       promiseDescription: 'Trust does not come from inflated numbers. It comes from a consistently dependable experience.',
       commitments: {
         status: 'Never hide service status',
@@ -255,7 +349,7 @@ export default {
     },
     // CTA section
     cta: {
-      title: 'Put your API reliability in LLM Provider’s hands',
+      title: 'Put your API reliability in OriginCoder’s hands',
       description: 'Start with one key and experience an AI API service that is transparent, stable, and accountable.',
       button: 'Create a free account'
     },
@@ -270,7 +364,7 @@ export default {
     community: {
       openSupport: 'Open support channels',
       support: 'Support',
-      title: 'Contact LLM Provider',
+      title: 'Contact OriginCoder',
       description: 'Support through Telegram and Discord',
       online: 'Online',
       telegram: 'Telegram support',
@@ -357,8 +451,8 @@ export default {
 
   // Setup Wizard
   setup: {
-    title: 'LLM Provider Setup',
-    description: 'Configure your LLM Provider instance',
+    title: 'OriginCoder Setup',
+    description: 'Configure your OriginCoder instance',
     database: {
       title: 'Database Configuration',
       description: 'Connect to your PostgreSQL database',

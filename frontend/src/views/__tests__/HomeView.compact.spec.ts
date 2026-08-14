@@ -117,14 +117,14 @@ describe('HomeView compact mode', () => {
 
   it('shows OpenAI, Claude, and Gemini request formats', () => {
     const wrapper = mountHome()
-    const requests = wrapper.findAll('.request-box')
+    const requests = wrapper.findAll('.code-endpoints > div')
 
     expect(requests.map((request) => request.get('code').text())).toEqual([
       '/v1/chat/completions',
       '/v1/messages',
       '/v1beta/models/{model}:generateContent',
     ])
-    expect(requests.every((request) => request.get('.request-method').text() === 'POST')).toBe(true)
+    expect(requests.every((request) => request.get('.code-method').text() === 'POST')).toBe(true)
   })
 
   it('links unauthenticated visitors to login', () => {

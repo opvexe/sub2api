@@ -1,12 +1,15 @@
 import { sanitizeUrl } from '@/utils/url'
 
-export const DEFAULT_SITE_NAME = 'LLM Provider'
+export const DEFAULT_SITE_NAME = 'OriginCoder'
+export const SITE_DOMAIN = 'origincoder.com'
+export const SITE_ORIGIN = `https://${SITE_DOMAIN}`
 
-const LEGACY_DEFAULT_SITE_NAME = 'Sub2API'
+// 历史品牌名：数据库里可能仍存着上游默认值或上一次改名的结果，统一收敛到当前品牌。
+const LEGACY_DEFAULT_SITE_NAMES = ['Sub2API', 'LLM Provider']
 
 export function normalizeSiteName(siteName?: string | null): string {
   const normalized = siteName?.trim() || ''
-  return !normalized || normalized === LEGACY_DEFAULT_SITE_NAME
+  return !normalized || LEGACY_DEFAULT_SITE_NAMES.includes(normalized)
     ? DEFAULT_SITE_NAME
     : normalized
 }

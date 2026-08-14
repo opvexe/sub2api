@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /$
+Allow: /home
+Allow: /model-plaza
+Allow: /legal/
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /keys
+Disallow: /usage
+Disallow: /orders
+Disallow: /profile
+Disallow: /payment/
+Disallow: /auth/
+Disallow: /api/
+Disallow: /v1/
+
+Sitemap: https://origincoder.com/sitemap.xml

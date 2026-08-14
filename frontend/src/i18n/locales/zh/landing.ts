@@ -29,14 +29,108 @@ export default {
     goToDashboard: '进入控制台',
     // 新增：面向用户的价值主张
     heroSubtitle: '一个密钥，畅用多个 AI 模型',
-    heroEyebrow: 'LLM Provider · 专注稳定的 AI API 服务',
+    heroEyebrow: 'OriginCoder · 专注稳定的 AI API 服务',
     heroTitleLead: '稳定可靠的 API',
     heroTitleAccent: '值得长期信赖',
-    heroDescription: 'LLM Provider 统一接入 Claude、GPT、Gemini 等主流模型，以透明状态、清晰计费和可达客服，让个人开发者与团队放心长期使用。',
+    heroDescription: 'OriginCoder 统一接入 Claude、GPT、Gemini 等主流模型，以透明状态、清晰计费和可达客服，让个人开发者与团队放心长期使用。',
     heroTrust: {
       status: '服务状态透明',
       billing: '每笔费用可查',
       support: '问题有人响应'
+    },
+    // 首页（OriginCoder 官网版式）
+    landing: {
+      nav: {
+        models: '模型价格',
+        pricing: '套餐价格',
+        developers: '开发者接入',
+        billingRules: '计费规则'
+      },
+      hero: {
+        badge: 'OpenAI 兼容 · 多模型统一接入',
+        headline: 'One API. Every AI Model.',
+        lead: 'OriginCoder 为开发者提供统一的模型与工具入口。一套接口接入主流模型，让开发、切换与扩展更简单。',
+        primaryCta: '免费开始使用',
+        secondaryCta: '查看接入指南',
+        stats: {
+          modelsValue: '10+',
+          modelsLabel: '接入模型',
+          compatibleValue: '统一',
+          compatibleLabel: '兼容接口',
+          streamValue: '流式',
+          streamLabel: '响应支持'
+        }
+      },
+      pricing: {
+        eyebrow: 'Simple, transparent pricing',
+        title: '简单、透明的使用方式。',
+        description: '根据你的调用频率选择按量计费或订阅套餐，价格和使用记录随时可查。',
+        link: '查看完整计费规则',
+        recommended: '推荐',
+        payg: {
+          eyebrow: 'PAY AS YOU GO',
+          title: '模型按量计费',
+          description: '按实际调用量结算，适合需求波动明显的项目和多模型评测。',
+          points: {
+            price: '按模型查看输入与输出价格',
+            lockIn: '无需绑定单一模型',
+            switch: '随时切换，弹性使用'
+          },
+          action: '查看模型价格'
+        },
+        subscription: {
+          eyebrow: 'SUBSCRIPTION',
+          title: '订阅套餐',
+          description: '为高频开发工作流准备的固定套餐，额度和周期清晰可见。',
+          points: {
+            tiers: '多档套餐可选',
+            steady: '适合稳定、持续的开发任务',
+            records: '统一查看使用记录'
+          },
+          action: '选择套餐'
+        },
+        support: {
+          eyebrow: 'SUPPORT',
+          title: '服务与支持',
+          description: '需要接入建议或使用支持时，可直接联系我们获取帮助。',
+          points: {
+            troubleshoot: '接入问题协助排查',
+            guide: '工具配置与使用指引',
+            scope: '服务范围透明说明'
+          },
+          action: '联系我们'
+        }
+      },
+      developer: {
+        eyebrow: 'Developer first',
+        titleLead: '几秒完成接入。',
+        titleAccent: '然后专注于构建。',
+        description: '接口兼容 OpenAI 调用方式。替换请求地址和密钥，即可在已有项目中使用不同模型。',
+        points: {
+          endpoint: 'OpenAI 兼容端点',
+          routing: '统一密钥与模型路由',
+          streaming: '流式响应与多工具支持'
+        },
+        action: '阅读完整文档',
+        codeLabel: 'bash'
+      },
+      finalCta: {
+        eyebrow: 'Ready to build?',
+        title: '准备好开始构建了吗？',
+        description: '创建账号，获取 API Key，把更多模型带进你的下一个项目。',
+        action: '创建免费账号'
+      },
+      footer: {
+        product: '产品',
+        resources: '资源',
+        legal: '协议',
+        console: '控制台',
+        quickStart: '快速开始',
+        guide: '操作指南',
+        faq: '常见问题',
+        terms: '用户协议',
+        privacy: '隐私政策'
+      }
     },
     tags: {
       subscriptionToApi: '订阅转 API',
@@ -232,7 +326,7 @@ export default {
         }
       },
       promiseEyebrow: '我们的原则',
-      promiseTitle: 'LLM Provider 服务承诺',
+      promiseTitle: 'OriginCoder 服务承诺',
       promiseDescription: '信任不是靠夸张数字，而是靠长期一致的服务体验。',
       commitments: {
         status: '不隐瞒服务状态',
@@ -255,7 +349,7 @@ export default {
     },
     // CTA 区块
     cta: {
-      title: '把稳定的 API 服务，交给 LLM Provider',
+      title: '把稳定的 API 服务，交给 OriginCoder',
       description: '从第一把密钥开始，体验透明、稳定、有人负责的 AI API 服务。',
       button: '免费注册'
     },
@@ -270,7 +364,7 @@ export default {
     community: {
       openSupport: '打开客服渠道',
       support: '客服',
-      title: '联系 LLM Provider',
+      title: '联系 OriginCoder',
       description: 'Telegram、Discord 客服渠道',
       online: '在线',
       telegram: 'Telegram 客服',
@@ -357,8 +451,8 @@ export default {
 
   // Setup Wizard
   setup: {
-    title: 'LLM Provider 安装向导',
-    description: '配置您的 LLM Provider 实例',
+    title: 'OriginCoder 安装向导',
+    description: '配置您的 OriginCoder 实例',
     database: {
       title: '数据库配置',
       description: '连接到您的 PostgreSQL 数据库',

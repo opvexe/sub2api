@@ -15,8 +15,8 @@ export default {
       guarantees: '服务保障'
     },
     highlights: '平台优势',
-    brandCaption: '可信赖的 AI API 服务',
-    productTagline: '值得长期信赖的 AI API 服务平台',
+    brandCaption: 'Claude · OpenAI 统一网关',
+    productTagline: 'Claude 与 OpenAI 系模型的统一 API 网关',
     viewOnGithub: '在 GitHub 上查看',
     viewDocs: '查看文档',
     docs: '文档',
@@ -47,24 +47,24 @@ export default {
         docs: '使用文档'
       },
       hero: {
-        badge: 'Claude 与 OpenAI 统一接入 · 支持 CC-Switch 一键切换',
-        headline: 'One API. Every AI Model.',
-        lead: 'OriginCoder 为开发者提供统一的模型与工具入口。一套接口接入主流模型，让开发、切换与扩展更简单。',
-        primaryCta: '免费开始使用',
-        secondaryCta: '查看接入指南',
+        badge: 'OpenAI 与 Anthropic 双协议兼容 · CC-Switch 一键导入',
+        headline: 'One key. Every coding agent.',
+        lead: '一个 Base URL、一把 Key，Claude Code、Codex 和你现有的 OpenAI 代码不改一行就能跑。按调用扣美金余额，也可以走订阅套餐。',
+        primaryCta: '免费创建 API Key',
+        secondaryCta: '看接入配置',
         stats: {
-          modelsValue: '10+',
-          modelsLabel: '接入模型',
-          compatibleValue: '统一',
-          compatibleLabel: '兼容接口',
-          streamValue: '流式',
-          streamLabel: '响应支持'
+          modelsValue: '3',
+          modelsLabel: '种请求格式互通',
+          compatibleValue: '4',
+          compatibleLabel: '个客户端开箱即用',
+          streamValue: 'USD',
+          streamLabel: '余额按调用扣费'
         }
       },
       pricing: {
-        eyebrow: 'Simple, transparent pricing',
-        title: '简单、透明的使用方式。',
-        description: '根据你的调用频率选择按量计费或订阅套餐，价格和使用记录随时可查。',
+        eyebrow: 'Pricing',
+        title: '按调用付费，或者包月。',
+        description: '余额以美金结算，每笔调用的输入输出 token 与费用都能查到。',
         link: '查看完整计费规则',
         recommended: '推荐',
         payg: {
@@ -91,12 +91,12 @@ export default {
         },
         support: {
           eyebrow: 'SUPPORT',
-          title: '服务与支持',
-          description: '需要接入建议或使用支持时，可直接联系我们获取帮助。',
+          title: '接入支持',
+          description: 'Telegram 与 Discord 能直接找到人，不是工单系统。',
           points: {
-            troubleshoot: '接入问题协助排查',
-            guide: '工具配置与使用指引',
-            scope: '服务范围透明说明'
+            troubleshoot: '贴出报错和配置，帮你定位到哪一步',
+            guide: 'Claude Code / Codex / CC-Switch 配置指引',
+            scope: '账单对不上可以要求逐笔复核'
           },
           action: '联系我们'
         }
@@ -119,8 +119,8 @@ export default {
       },
       endpoints: {
         eyebrow: 'Endpoints',
-        title: '三种请求格式，同一个网关。',
-        description: '按你现有代码的调用习惯选一个，不需要为了换模型重写请求。',
+        title: '你现在的代码，换个地址就能跑。',
+        description: '三种请求格式都落在同一个网关上，你的代码说哪种就继续说哪种。',
         headers: {
           format: '格式',
           endpoint: '端点',
@@ -133,10 +133,10 @@ export default {
         }
       },
       developer: {
-        eyebrow: 'Developer first',
-        titleLead: '几秒完成接入。',
-        titleAccent: '然后专注于构建。',
-        description: '接口兼容 OpenAI 调用方式。替换请求地址和密钥，即可在已有项目中使用不同模型。',
+        eyebrow: 'Compatibility',
+        titleLead: '换模型，',
+        titleAccent: '不用重写请求。',
+        description: '同一把密钥路由到不同上游，上游异常时自动切换；流式响应与工具调用原样透传。',
         points: {
           endpoint: 'OpenAI 兼容端点，同时支持 Anthropic Messages',
           routing: '统一密钥与模型路由',
@@ -165,10 +165,10 @@ export default {
         }
       },
       finalCta: {
-        eyebrow: 'Ready to build?',
-        title: '准备好开始构建了吗？',
-        description: '创建账号，获取 API Key，把更多模型带进你的下一个项目。',
-        action: '创建免费账号'
+        eyebrow: 'Get started',
+        title: '拿一把 Key 试试。',
+        description: '注册后即可创建 API Key，配置照抄上面那份就能跑起来。',
+        action: '创建 API Key'
       },
       footer: {
         product: '产品',
@@ -337,20 +337,20 @@ export default {
       title: '值得信赖的服务基础',
       items: {
         monitoring: {
-          title: '全天候',
-          description: '持续检查上游健康状态'
+          title: '健康检查',
+          description: '上游异常会在下一次调用前被剔除'
         },
         records: {
-          title: '逐请求',
-          description: '用量与费用都有记录'
+          title: '逐请求记账',
+          description: '每笔调用的 token 与费用都可回溯'
         },
         failover: {
-          title: '多线路',
-          description: '异常自动切换可用上游'
+          title: '自动故障切换',
+          description: '一路上游不可用时请求转到下一路'
         },
         support: {
-          title: '多渠道',
-          description: 'Telegram、Discord 客服'
+          title: '人工可达',
+          description: 'Telegram 与 Discord 有人值守'
         }
       }
     },
@@ -394,10 +394,10 @@ export default {
     },
     footer: {
       allRightsReserved: '保留所有权利。',
-      description: '专注稳定、透明、值得长期信赖的 AI API 服务平台。',
+      description: 'Claude 与 OpenAI 系模型的统一网关，同时兼容 OpenAI 与 Anthropic 协议。',
       contact: '联系我们',
       contactDescription: 'Telegram、Discord 客服随时可达',
-      slogan: '认真服务每一次 API 调用',
+      slogan: 'origincoder.com/v1',
       navigation: '快速导航'
     },
     community: {

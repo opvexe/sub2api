@@ -15,8 +15,8 @@ export default {
       guarantees: 'Service Assurance'
     },
     highlights: 'Platform highlights',
-    brandCaption: 'Trusted AI API Service',
-    productTagline: 'An AI API service platform built for long-term trust',
+    brandCaption: 'Claude · OpenAI gateway',
+    productTagline: 'A unified API gateway for Claude and OpenAI models',
     viewOnGithub: 'View on GitHub',
     viewDocs: 'View Documentation',
     docs: 'Docs',
@@ -47,24 +47,24 @@ export default {
         docs: 'Docs'
       },
       hero: {
-        badge: 'One gateway for Claude and OpenAI · CC-Switch ready',
-        headline: 'One API. Every AI Model.',
-        lead: 'OriginCoder gives developers a single entry point for models and tools. One interface for the major providers, so building, switching, and scaling stay simple.',
-        primaryCta: 'Start for free',
-        secondaryCta: 'Read the setup guide',
+        badge: 'Speaks OpenAI and Anthropic · CC-Switch ready',
+        headline: 'One key. Every coding agent.',
+        lead: 'One base URL, one key. Claude Code, Codex, and your existing OpenAI code run unchanged. Pay per call from a USD balance, or take a subscription.',
+        primaryCta: 'Create a free API key',
+        secondaryCta: 'See the configs',
         stats: {
-          modelsValue: '10+',
-          modelsLabel: 'models available',
-          compatibleValue: 'Unified',
-          compatibleLabel: 'compatible API',
-          streamValue: 'Streaming',
-          streamLabel: 'responses supported'
+          modelsValue: '3',
+          modelsLabel: 'interchangeable formats',
+          compatibleValue: '4',
+          compatibleLabel: 'clients ready to go',
+          streamValue: 'USD',
+          streamLabel: 'balance, billed per call'
         }
       },
       pricing: {
-        eyebrow: 'Simple, transparent pricing',
-        title: 'Straightforward, transparent usage.',
-        description: 'Pick pay-as-you-go or a subscription based on how often you call. Prices and usage records stay visible at all times.',
+        eyebrow: 'Pricing',
+        title: 'Pay per call, or per month.',
+        description: 'Balance settles in USD, and every call\'s input/output tokens and cost stay visible.',
         link: 'See the full billing rules',
         recommended: 'Recommended',
         payg: {
@@ -91,12 +91,12 @@ export default {
         },
         support: {
           eyebrow: 'SUPPORT',
-          title: 'Service and support',
-          description: 'Need integration advice or hands-on help? Reach us directly.',
+          title: 'Integration support',
+          description: 'Telegram and Discord reach a person, not a ticket queue.',
           points: {
-            troubleshoot: 'Help troubleshooting integrations',
-            guide: 'Tool configuration walkthroughs',
-            scope: 'A clear statement of what we cover'
+            troubleshoot: 'Paste the error and config; we trace where it breaks',
+            guide: 'Setup walkthroughs for Claude Code, Codex, CC-Switch',
+            scope: 'Billing disputes get a call-by-call review'
           },
           action: 'Contact us'
         }
@@ -119,8 +119,8 @@ export default {
       },
       endpoints: {
         eyebrow: 'Endpoints',
-        title: 'Three request formats, one gateway.',
-        description: 'Pick whichever matches your existing code — no rewrite required to change models.',
+        title: 'Your current code, just a new base URL.',
+        description: 'All three request formats land on the same gateway — keep speaking whichever your code already speaks.',
         headers: {
           format: 'Format',
           endpoint: 'Endpoint',
@@ -133,10 +133,10 @@ export default {
         }
       },
       developer: {
-        eyebrow: 'Developer first',
-        titleLead: 'Integrate in seconds.',
-        titleAccent: 'Then focus on building.',
-        description: 'The API follows OpenAI call conventions. Swap the base URL and key, and use different models inside your existing project.',
+        eyebrow: 'Compatibility',
+        titleLead: 'Change models',
+        titleAccent: 'without rewriting requests.',
+        description: 'One key routes to different upstreams and fails over when one is down. Streaming and tool calls pass through untouched.',
         points: {
           endpoint: 'OpenAI-compatible endpoints, plus Anthropic Messages',
           routing: 'One key, unified model routing',
@@ -165,10 +165,10 @@ export default {
         }
       },
       finalCta: {
-        eyebrow: 'Ready to build?',
-        title: 'Ready to start building?',
-        description: 'Create an account, grab an API key, and bring more models into your next project.',
-        action: 'Create a free account'
+        eyebrow: 'Get started',
+        title: 'Grab a key and try it.',
+        description: 'Sign up, create an API key, and copy the config above — that is the whole setup.',
+        action: 'Create an API key'
       },
       footer: {
         product: 'Product',
@@ -337,20 +337,20 @@ export default {
       title: 'The foundation of a trustworthy service',
       items: {
         monitoring: {
-          title: 'Always on',
-          description: 'Continuous upstream health monitoring'
+          title: 'Health checks',
+          description: 'Unhealthy upstreams drop out before your next call'
         },
         records: {
-          title: 'Per request',
-          description: 'Usage and cost are recorded'
+          title: 'Per-request accounting',
+          description: 'Every call\'s tokens and cost stay traceable'
         },
         failover: {
-          title: 'Multiple routes',
-          description: 'Automatic failover to available upstreams'
+          title: 'Automatic failover',
+          description: 'When one upstream is down, requests move to the next'
         },
         support: {
-          title: 'Multi-channel',
-          description: 'Telegram and Discord support'
+          title: 'Real people',
+          description: 'Telegram and Discord are staffed'
         }
       }
     },
@@ -394,10 +394,10 @@ export default {
     },
     footer: {
       allRightsReserved: 'All rights reserved.',
-      description: 'A stable, transparent AI API service platform built for long-term trust.',
+      description: 'A unified gateway for Claude and OpenAI models, speaking both the OpenAI and Anthropic protocols.',
       contact: 'Contact us',
       contactDescription: 'Support is available through Telegram and Discord',
-      slogan: 'Taking every API request seriously',
+      slogan: 'origincoder.com/v1',
       navigation: 'Quick links'
     },
     community: {

@@ -142,7 +142,7 @@
               <Icon name="book" size="sm" :stroke-width="2" aria-hidden="true" />
               {{ t('home.landing.hero.secondaryCta') }}
             </a>
-            <router-link v-else to="/model-plaza" class="secondary-action">
+            <router-link v-else :to="pricingEntry" class="secondary-action">
               <Icon name="book" size="sm" :stroke-width="2" aria-hidden="true" />
               {{ t('home.landing.hero.secondaryCta') }}
             </router-link>
@@ -178,7 +178,7 @@
             <p class="section-eyebrow">{{ t('home.landing.pricing.eyebrow') }}</p>
             <h2>{{ t('home.landing.pricing.title') }}</h2>
             <p class="section-lead">{{ t('home.landing.pricing.description') }}</p>
-            <router-link to="/model-plaza" class="section-link">
+            <router-link v-if="modelPlazaEnabled" to="/model-plaza" class="section-link">
               {{ t('home.landing.pricing.link') }}
               <Icon name="arrowRight" size="xs" :stroke-width="2.4" aria-hidden="true" />
             </router-link>
@@ -329,7 +329,9 @@
 
           <nav class="footer-col" :aria-label="t('home.landing.footer.product')">
             <strong>{{ t('home.landing.footer.product') }}</strong>
-            <router-link to="/model-plaza">{{ t('home.landing.nav.models') }}</router-link>
+            <router-link v-if="modelPlazaEnabled" to="/model-plaza">
+              {{ t('home.landing.nav.models') }}
+            </router-link>
             <router-link to="/purchase">{{ t('home.landing.nav.pricing') }}</router-link>
             <a href="#developers">{{ t('home.landing.nav.developers') }}</a>
             <router-link :to="isAuthenticated ? dashboardPath : '/login'">
@@ -465,11 +467,22 @@ const legalDocuments = computed(() =>
   )
 )
 
-const navLinks = computed(() => [
-  { to: '/model-plaza', label: t('home.landing.nav.models') },
-  { to: '/purchase', label: t('home.landing.nav.pricing') },
-  { to: '/key-usage', label: t('keyUsage.title') },
-])
+// 模型广场可被管理员关闭；关闭时相关入口会被路由守卫打回首页，所以直接不展示。
+const modelPlazaEnabled = computed(
+  () => appStore.cachedPublicSettings?.model_plaza_enabled !== false
+)
+// 广场关闭时，"看价格"的落点退回注册/控制台。
+const pricingEntry = computed(() =>
+  modelPlazaEnabled.value ? '/model-plaza' : isAuthenticated.value ? dashboardPath.value : '/register'
+)
+
+const navLinks = computed(() =>
+  [
+    modelPlazaEnabled.value ? { to: '/model-plaza', label: t('home.landing.nav.models') } : null,
+    { to: '/purchase', label: t('home.landing.nav.pricing') },
+    { to: '/key-usage', label: t('keyUsage.title') },
+  ].filter((link): link is { to: string; label: string } => link !== null)
+)
 
 // 头像色块与下方模型标签共用同一份数据。
 const modelChips = [
@@ -503,7 +516,7 @@ const pricingPlans = computed(() => [
     key: 'payg',
     featured: false,
     anchor: false,
-    to: '/model-plaza',
+    to: pricingEntry.value,
     eyebrow: t('home.landing.pricing.payg.eyebrow'),
     title: t('home.landing.pricing.payg.title'),
     description: t('home.landing.pricing.payg.description'),

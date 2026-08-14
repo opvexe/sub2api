@@ -109,13 +109,13 @@ describe('HomeView compact mode', () => {
     expect(links).toHaveLength(2)
   })
 
-  it('renders Telegram and Discord contact cards in the support section', () => {
+  it('surfaces Telegram and Discord in the footer channel row', () => {
     const wrapper = mountHome()
-    const cards = wrapper.findAll('#support .contact-card')
+    const channels = wrapper.findAll('.footer-channels a')
 
-    expect(cards).toHaveLength(2)
-    expect(cards[0].attributes('href')).toBe('https://t.me/origincoder998')
-    expect(cards[1].attributes('href')).toBe('https://discord.gg/2C6Qvd36pq')
+    expect(channels).toHaveLength(2)
+    expect(channels[0].attributes('href')).toBe('https://t.me/origincoder998')
+    expect(channels[1].attributes('href')).toBe('https://discord.gg/2C6Qvd36pq')
   })
 
   it('shows OpenAI, Claude, and Gemini request formats', () => {

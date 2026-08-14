@@ -101,6 +101,37 @@ export default {
           action: '联系我们'
         }
       },
+      setup: {
+        eyebrow: 'Quick start',
+        title: '选一个客户端，粘贴配置，开始用。',
+        description: '所有客户端共用同一个 Base URL 与 API Key，换模型不用改代码。',
+        baseUrlLabel: 'Base URL',
+        keyHint: '把 sk-xxx 换成你在控制台创建的 API Key。',
+        copy: '复制',
+        copied: '已复制',
+        tabs: {
+          claudeCode: 'Claude Code',
+          codex: 'Codex',
+          ccSwitch: 'CC-Switch',
+          sdk: 'OpenAI SDK'
+        },
+        ccSwitchNote: '在控制台的 API Key 列表点「导入到 CCS」，CC-Switch 会自动写入下面这组配置，不用手动填。'
+      },
+      endpoints: {
+        eyebrow: 'Endpoints',
+        title: '三种请求格式，同一个网关。',
+        description: '按你现有代码的调用习惯选一个，不需要为了换模型重写请求。',
+        headers: {
+          format: '格式',
+          endpoint: '端点',
+          client: '典型客户端'
+        },
+        clients: {
+          openai: 'OpenAI SDK、Codex、OpenCode',
+          claude: 'Claude Code、Anthropic SDK',
+          gemini: 'Gemini CLI'
+        }
+      },
       developer: {
         eyebrow: 'Developer first',
         titleLead: '几秒完成接入。',

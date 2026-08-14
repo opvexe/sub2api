@@ -101,6 +101,37 @@ export default {
           action: 'Contact us'
         }
       },
+      setup: {
+        eyebrow: 'Quick start',
+        title: 'Pick a client, paste the config, start building.',
+        description: 'Every client shares one Base URL and one API key — switching models needs no code change.',
+        baseUrlLabel: 'Base URL',
+        keyHint: 'Replace sk-xxx with an API key created in your console.',
+        copy: 'Copy',
+        copied: 'Copied',
+        tabs: {
+          claudeCode: 'Claude Code',
+          codex: 'Codex',
+          ccSwitch: 'CC-Switch',
+          sdk: 'OpenAI SDK'
+        },
+        ccSwitchNote: 'Hit "Import to CCS" on any API key in the console — CC-Switch writes the config below for you.'
+      },
+      endpoints: {
+        eyebrow: 'Endpoints',
+        title: 'Three request formats, one gateway.',
+        description: 'Pick whichever matches your existing code — no rewrite required to change models.',
+        headers: {
+          format: 'Format',
+          endpoint: 'Endpoint',
+          client: 'Typical clients'
+        },
+        clients: {
+          openai: 'OpenAI SDK, Codex, OpenCode',
+          claude: 'Claude Code, Anthropic SDK',
+          gemini: 'Gemini CLI'
+        }
+      },
       developer: {
         eyebrow: 'Developer first',
         titleLead: 'Integrate in seconds.',

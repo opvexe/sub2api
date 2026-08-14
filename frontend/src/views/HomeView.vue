@@ -124,48 +124,111 @@
     </header>
 
     <main>
-      <!-- Hero -->
+      <!-- Hero: 左侧主张，右侧可直接复制的接入配置台 -->
       <section id="service" class="hero-section">
         <div class="hero-glow" aria-hidden="true"></div>
         <div class="hero-grid" aria-hidden="true"></div>
 
-        <div class="section-inner hero-inner">
-          <div class="hero-badge">
-            <span class="hero-badge-dot"></span>
-            {{ t('home.landing.hero.badge') }}
+        <div class="section-inner hero-layout">
+          <div class="hero-copy">
+            <div class="hero-badge">
+              <span class="hero-badge-dot"></span>
+              {{ t('home.landing.hero.badge') }}
+            </div>
+
+            <h1 class="hero-title">{{ t('home.landing.hero.headline') }}</h1>
+            <p class="hero-lead">{{ t('home.landing.hero.lead') }}</p>
+
+            <div class="base-url">
+              <span class="base-url-label">{{ t('home.landing.setup.baseUrlLabel') }}</span>
+              <code>{{ baseUrl }}</code>
+              <button type="button" class="icon-copy" :aria-label="t('home.landing.setup.copy')" @click="copySnippet(baseUrl, 'base')">
+                <Icon :name="copiedKey === 'base' ? 'check' : 'copy'" size="sm" :stroke-width="2" />
+              </button>
+            </div>
+
+            <div class="hero-actions">
+              <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="primary-action">
+                {{ isAuthenticated ? t('home.goToDashboard') : t('home.landing.hero.primaryCta') }}
+                <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
+              </router-link>
+              <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="secondary-action">
+                {{ t('home.landing.hero.secondaryCta') }}
+              </a>
+              <router-link v-else :to="pricingEntry" class="secondary-action">
+                {{ t('home.landing.hero.secondaryCta') }}
+              </router-link>
+            </div>
+
+            <ul class="model-chip-row" :aria-label="t('home.landing.nav.models')">
+              <li v-for="chip in modelChips" :key="chip.name">{{ chip.name }}</li>
+            </ul>
           </div>
 
-          <h1 class="hero-title">{{ t('home.landing.hero.headline') }}</h1>
-          <p class="hero-lead">{{ t('home.landing.hero.lead') }}</p>
+          <!-- 接入配置台：切客户端即得可复制配置 -->
+          <div class="setup-console">
+            <div class="setup-tabs" role="tablist" :aria-label="t('home.landing.setup.title')">
+              <button
+                v-for="client in setupClients"
+                :key="client.key"
+                type="button"
+                role="tab"
+                :aria-selected="activeClient === client.key"
+                :class="['setup-tab', { 'setup-tab-active': activeClient === client.key }]"
+                @click="activeClient = client.key"
+              >
+                {{ client.label }}
+              </button>
+            </div>
 
-          <div class="hero-actions">
-            <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="primary-action">
-              {{ isAuthenticated ? t('home.goToDashboard') : t('home.landing.hero.primaryCta') }}
-              <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
-            </router-link>
-            <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="secondary-action">
-              <Icon name="book" size="sm" :stroke-width="2" aria-hidden="true" />
-              {{ t('home.landing.hero.secondaryCta') }}
-            </a>
-            <router-link v-else :to="pricingEntry" class="secondary-action">
-              <Icon name="book" size="sm" :stroke-width="2" aria-hidden="true" />
-              {{ t('home.landing.hero.secondaryCta') }}
-            </router-link>
+            <div class="setup-body">
+              <div class="setup-head">
+                <span class="setup-file">{{ activeSetup.file }}</span>
+                <button type="button" class="copy-button" @click="copySnippet(activeSetup.code, 'setup')">
+                  <Icon :name="copiedKey === 'setup' ? 'check' : 'copy'" size="xs" :stroke-width="2.2" />
+                  {{ copiedKey === 'setup' ? t('home.landing.setup.copied') : t('home.landing.setup.copy') }}
+                </button>
+              </div>
+              <pre class="setup-code"><code>{{ activeSetup.code }}</code></pre>
+              <p class="setup-note">{{ activeSetup.note }}</p>
+            </div>
           </div>
+        </div>
 
-          <ul class="model-chip-row" :aria-label="t('home.landing.nav.models')">
-            <li v-for="chip in modelChips" :key="chip.name">
-              <i :style="{ background: chip.color }" aria-hidden="true"></i>
-              {{ chip.name }}
-            </li>
-          </ul>
-
+        <div class="section-inner">
           <dl class="hero-stats">
             <div v-for="stat in heroStats" :key="stat.key">
               <dt>{{ stat.value }}</dt>
               <dd>{{ stat.label }}</dd>
             </div>
           </dl>
+        </div>
+      </section>
+
+      <!-- 端点表：密集、可扫读 -->
+      <section id="endpoints" class="section endpoints-section">
+        <div class="section-inner">
+          <div class="section-head section-head-left">
+            <p class="section-eyebrow">{{ t('home.landing.endpoints.eyebrow') }}</p>
+            <h2>{{ t('home.landing.endpoints.title') }}</h2>
+            <p class="section-lead">{{ t('home.landing.endpoints.description') }}</p>
+          </div>
+
+          <div class="endpoint-table" role="table">
+            <div class="endpoint-row endpoint-head" role="row">
+              <span role="columnheader">{{ t('home.landing.endpoints.headers.format') }}</span>
+              <span role="columnheader">{{ t('home.landing.endpoints.headers.endpoint') }}</span>
+              <span role="columnheader">{{ t('home.landing.endpoints.headers.client') }}</span>
+            </div>
+            <div v-for="format in requestFormats" :key="format.key" class="endpoint-row" role="row">
+              <span role="cell" class="endpoint-format">
+                <i class="endpoint-method">POST</i>
+                {{ format.label }}
+              </span>
+              <code role="cell">{{ format.endpoint }}</code>
+              <span role="cell" class="endpoint-client">{{ format.client }}</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -233,46 +296,28 @@
 
       <!-- Developer first -->
       <section id="developers" class="section developer-section">
-        <div class="section-inner developer-grid">
-          <div class="developer-copy">
+        <div class="section-inner">
+          <div class="section-head section-head-left">
             <p class="section-eyebrow">{{ t('home.landing.developer.eyebrow') }}</p>
-            <h2>
-              <span>{{ t('home.landing.developer.titleLead') }}</span>
-              <span class="developer-title-accent">{{ t('home.landing.developer.titleAccent') }}</span>
-            </h2>
+            <h2>{{ t('home.landing.developer.titleLead') }}<br />{{ t('home.landing.developer.titleAccent') }}</h2>
             <p class="section-lead">{{ t('home.landing.developer.description') }}</p>
-            <ul class="developer-points">
-              <li v-for="point in developerPoints" :key="point">
-                <Icon name="checkCircle" size="sm" :stroke-width="2.2" aria-hidden="true" />
-                {{ point }}
-              </li>
-            </ul>
-            <a
-              v-if="docUrl"
-              :href="docUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="secondary-action developer-action"
-            >
-              {{ t('home.landing.developer.action') }}
-              <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
-            </a>
           </div>
-
-          <div class="code-card">
-            <div class="code-topbar">
-              <div class="code-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-              <span class="code-label">{{ t('home.landing.developer.codeLabel') }}</span>
-            </div>
-            <pre class="code-body"><code>{{ curlSnippet }}</code></pre>
-            <div class="code-endpoints" :aria-label="t('home.servicePreview.formats.title')">
-              <div v-for="format in requestFormats" :key="format.key">
-                <span class="code-method">POST</span>
-                <code>{{ format.endpoint }}</code>
-                <small>{{ format.label }}</small>
-              </div>
-            </div>
-          </div>
+          <ul class="developer-points">
+            <li v-for="point in developerPoints" :key="point">
+              <Icon name="checkCircle" size="sm" :stroke-width="2.2" aria-hidden="true" />
+              {{ point }}
+            </li>
+          </ul>
+          <a
+            v-if="docUrl"
+            :href="docUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="secondary-action developer-action"
+          >
+            {{ t('home.landing.developer.action') }}
+            <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
+          </a>
         </div>
       </section>
 
@@ -398,6 +443,7 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore, useAppStore } from '@/stores'
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import Icon from '@/components/icons/Icon.vue'
+import { useClipboard } from '@/composables/useClipboard'
 import { normalizeSiteName } from '@/utils/branding'
 import { applyHomeSeo } from '@/utils/seo'
 import { sanitizeUrl } from '@/utils/url'
@@ -549,23 +595,94 @@ const pricingPlans = computed(() => [
   },
 ])
 
+
+// ---- 接入配置台 ----
+// 片段与控制台 UseKeyModal 生成的配置保持一致，改这里时两边一起改。
+const BASE_URL = 'https://origincoder.com/v1'
+const baseUrl = BASE_URL
+const PLACEHOLDER_KEY = 'sk-xxx'
+
+const copiedKey = ref('')
+let copyTimer: ReturnType<typeof setTimeout> | undefined
+async function copySnippet(text: string, key: string) {
+  // 延迟到点击时再取：useClipboard 依赖 appStore，setup 阶段取会要求测试环境装 Pinia。
+  const { copyToClipboard } = useClipboard()
+  const ok = await copyToClipboard(text)
+  if (!ok) return
+  copiedKey.value = key
+  if (copyTimer) clearTimeout(copyTimer)
+  copyTimer = setTimeout(() => (copiedKey.value = ''), 2000)
+}
+
+const activeClient = ref('claudeCode')
+const setupClients = computed(() =>
+  (['claudeCode', 'codex', 'ccSwitch', 'sdk'] as const).map((key) => ({
+    key,
+    label: t('home.landing.setup.tabs.' + key),
+  }))
+)
+
+const SETUP_SNIPPETS: Record<string, { file: string; code: string }> = {
+  claudeCode: {
+    file: '~/.claude/settings.json',
+    code: `{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://origincoder.com",
+    "ANTHROPIC_AUTH_TOKEN": "${PLACEHOLDER_KEY}"
+  }
+}`,
+  },
+  codex: {
+    file: '~/.codex/config.toml',
+    code: `model_provider = "origincoder"
+model = "gpt-5.1-codex"
+
+[model_providers.origincoder]
+name = "OriginCoder"
+base_url = "${BASE_URL}"
+env_key = "ORIGINCODER_API_KEY"
+wire_api = "responses"
+requires_openai_auth = false`,
+  },
+  ccSwitch: {
+    file: 'CC-Switch',
+    code: `Base URL   ${BASE_URL}
+API Key    ${PLACEHOLDER_KEY}`,
+  },
+  sdk: {
+    file: 'python',
+    code: `from openai import OpenAI
+
+client = OpenAI(
+    base_url="${BASE_URL}",
+    api_key="${PLACEHOLDER_KEY}",
+)
+
+resp = client.chat.completions.create(
+    model="your-model",
+    messages=[{"role": "user", "content": "Hello!"}],
+    stream=True,
+)`,
+  },
+}
+
+const activeSetup = computed(() => {
+  const snippet = SETUP_SNIPPETS[activeClient.value] ?? SETUP_SNIPPETS.claudeCode
+  return {
+    ...snippet,
+    note:
+      activeClient.value === 'ccSwitch'
+        ? t('home.landing.setup.ccSwitchNote')
+        : t('home.landing.setup.keyHint'),
+  }
+})
+
 const developerPoints = computed(() => [
   t('home.landing.developer.points.endpoint'),
   t('home.landing.developer.points.routing'),
   t('home.landing.developer.points.streaming'),
   t('home.landing.developer.points.ccswitch'),
 ])
-
-const curlSnippet = `curl -X POST https://origincoder.com/v1/chat/completions \\
-  -H "Authorization: Bearer $API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "model": "your-model",
-    "messages": [
-      { "role": "user", "content": "Hello!" }
-    ],
-    "stream": true
-  }'`
 
 const REQUEST_FORMATS = [
   { key: 'openai', endpoint: '/v1/chat/completions' },
@@ -576,6 +693,7 @@ const requestFormats = computed(() =>
   REQUEST_FORMATS.map((format) => ({
     ...format,
     label: t('home.servicePreview.formats.' + format.key),
+    client: t('home.landing.endpoints.clients.' + format.key),
   }))
 )
 
@@ -890,8 +1008,8 @@ html.dark .home-shell {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
   width: 100%;
-  max-width: 620px;
-  margin-top: 48px;
+  max-width: none;
+  margin-top: 56px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -903,7 +1021,7 @@ html.dark .home-shell {
 .hero-stats dd { margin-top: 4px; color: var(--text-muted); font-size: 12.5px; }
 
 /* Capability grid (2x2) */
-.capability-section { background: var(--canvas); padding-top: 72px; padding-bottom: 0; }
+.capability-section { background: var(--canvas); padding-top: 0; padding-bottom: 0; }
 .capability-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .capability-card {
   display: grid;
@@ -985,54 +1103,215 @@ html.dark .home-shell {
 }
 .pricing-action:hover { color: var(--accent); }
 
-/* Developer first */
-.developer-section { background: var(--canvas-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.developer-grid { display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: 56px; }
-.developer-copy { min-width: 0; }
-.developer-copy h2 { margin-top: 14px; color: var(--text); font-size: clamp(34px, 4.2vw, 52px); font-weight: 700; line-height: 1.2; letter-spacing: -.035em; }
-.developer-copy h2 > span { display: block; }
-.developer-title-accent { color: var(--text-dim); }
-.developer-points { display: grid; gap: 11px; margin-top: 26px; }
-.developer-points li { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 15.5px; }
-.developer-points svg { flex: none; color: var(--text-dim); }
-.developer-action { margin-top: 30px; }
-.code-card {
+/* Hero layout: 左文案 / 右配置台 */
+.hero-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
+  align-items: start;
+  gap: 56px;
+}
+.hero-copy { min-width: 0; }
+.hero-copy .hero-title { margin-top: 22px; max-width: none; font-size: clamp(36px, 3.8vw, 52px); }
+.hero-copy .hero-lead { margin-top: 18px; max-width: 520px; }
+.hero-copy .hero-actions { justify-content: flex-start; margin-top: 26px; }
+.hero-copy .model-chip-row { justify-content: flex-start; margin-top: 28px; }
+
+.base-url {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 8px 8px 12px;
+  background: var(--surface-alt);
+}
+.base-url-label {
+  flex: none;
+  color: var(--text-dim);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.base-url code {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.icon-copy {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: color .16s ease, background .16s ease;
+}
+.icon-copy:hover { color: var(--text); background: var(--surface); }
+
+/* 接入配置台 */
+.setup-console {
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--code-bg);
+  background: var(--surface);
   box-shadow: var(--shadow-md);
 }
-.code-topbar {
+.setup-tabs {
   display: flex;
-  height: 44px;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid var(--border);
-  padding: 0 16px;
-  background: var(--canvas-alt);
-}
-.code-dots { display: flex; gap: 6px; }
-.code-dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--border-strong); }
-.code-label { color: var(--text-muted); font-size: 11px; font-weight: 600; letter-spacing: .08em; }
-.code-body {
   overflow-x: auto;
-  padding: 22px;
-  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+.setup-tab {
+  position: relative;
+  flex: none;
+  border: 0;
+  padding: 12px 16px;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12.5px;
-  line-height: 1.85;
+  white-space: nowrap;
+  transition: color .16s ease;
 }
-.code-endpoints { border-top: 1px solid var(--border); padding: 8px; }
-.code-endpoints > div { display: flex; align-items: center; gap: 10px; border-radius: 10px; padding: 9px 12px; }
-.code-endpoints > div:hover { background: var(--surface-alt); }
-.code-method { flex: none; border: 1px solid var(--border); border-radius: 5px; padding: 2px 6px; color: var(--text-muted); background: var(--surface-alt); font-size: 10px; font-weight: 500; }
-.code-endpoints code { min-width: 0; flex: 1; overflow: hidden; color: var(--text-muted); font-size: 11.5px; text-overflow: ellipsis; white-space: nowrap; }
-.code-endpoints small { flex: none; color: var(--text-dim); font-size: 10.5px; }
+.setup-tab:hover { color: var(--text); }
+.setup-tab-active { color: var(--text); background: var(--surface); }
+.setup-tab-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--surface);
+}
+.setup-body { display: flex; flex-direction: column; }
+.setup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+}
+.setup-file {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-dim);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.copy-button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 9px;
+  color: var(--text-muted);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 500;
+  transition: color .16s ease, border-color .16s ease;
+}
+.copy-button:hover { color: var(--text); border-color: var(--border-strong); }
+.setup-code {
+  overflow-x: auto;
+  min-height: 232px;
+  padding: 18px;
+  color: var(--text);
+  background: var(--code-bg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+.setup-note {
+  border-top: 1px solid var(--border);
+  padding: 11px 14px;
+  color: var(--text-dim);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+/* 端点表 */
+.endpoints-section { background: var(--canvas); border-top: 1px solid var(--border); padding-bottom: 64px; }
+.endpoint-table {
+  margin-top: 36px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.endpoint-row {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr) minmax(0, 260px);
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  background: var(--surface);
+}
+.endpoint-row:last-child { border-bottom: 0; }
+.endpoint-row:not(.endpoint-head):hover { background: var(--surface-alt); }
+.endpoint-head {
+  background: var(--surface-alt);
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.endpoint-format { display: inline-flex; align-items: center; gap: 9px; color: var(--text); font-size: 13.5px; font-weight: 500; }
+.endpoint-method {
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 2px 6px;
+  color: var(--text-muted);
+  background: var(--surface-alt);
+  font-size: 9.5px;
+  font-style: normal;
+  font-weight: 500;
+}
+.endpoint-row code {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.endpoint-client { color: var(--text-dim); font-size: 12.5px; }
+
+/* Developer first */
+.developer-section { background: var(--canvas-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.section-head-left { max-width: 640px; margin: 0; text-align: left; }
+.developer-points { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 32px; margin-top: 32px; }
+.developer-points li { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 14px; }
+.developer-points svg { flex: none; color: var(--text-dim); }
+.developer-action { margin-top: 32px; }
 
 /* Final CTA */
-.final-cta { padding: 104px 0; background: var(--canvas); }
+.final-cta { padding: 88px 0; background: var(--canvas); }
 .final-cta-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .final-cta-eyebrow { color: var(--text-dim); font-size: 11.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
 .final-cta-inner h2 { margin-top: 14px; color: var(--text); font-size: clamp(34px, 4.4vw, 54px); font-weight: 700; letter-spacing: -.035em; }
@@ -1161,7 +1440,9 @@ html.dark .home-shell {
 @media (max-width: 1023px) {
   .nav-links { display: none; }
   .pricing-grid { grid-template-columns: 1fr; max-width: 560px; margin-left: auto; margin-right: auto; }
-  .developer-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero-layout { grid-template-columns: 1fr; gap: 44px; }
+  .endpoint-row { grid-template-columns: minmax(0, 170px) minmax(0, 1fr); }
+  .endpoint-client { display: none; }
   .footer-top { grid-template-columns: 1fr; gap: 40px; }
 }
 @media (max-width: 640px) {
@@ -1176,6 +1457,11 @@ html.dark .home-shell {
   .hero-title { font-size: 42px; }
   .hero-lead { font-size: 16.5px; }
   .hero-stats { grid-template-columns: 1fr; max-width: 340px; }
+  .setup-code { min-height: 0; font-size: 11.5px; padding: 14px; }
+  .base-url code { font-size: 12px; }
+  .developer-points { grid-template-columns: 1fr; }
+  .endpoint-row { grid-template-columns: 1fr; gap: 6px; align-items: start; }
+  .endpoint-head { display: none; }
   .hero-stats > div { border-right: 0; border-bottom: 1px solid var(--border); }
   .hero-stats > div:last-child { border-bottom: 0; }
   .section { padding: 72px 0; }

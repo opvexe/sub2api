@@ -261,34 +261,47 @@
         </div>
       </section>
 
-      <!-- Compact promotion for one other product -->
-      <section id="ecosystem" class="section ecosystem-section">
+      <!-- Contact / support channels -->
+      <section id="support" class="section contact-section">
         <div class="section-inner">
-          <a
-            href="https://shop.origincoder.ai"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="ecosystem-card"
-          >
-            <span class="ecosystem-grid" aria-hidden="true"></span>
-            <div class="ecosystem-art" aria-hidden="true">
-              <span class="ecosystem-orbit orbit-one"></span>
-              <span class="ecosystem-orbit orbit-two"></span>
-              <span class="ecosystem-cube"><Icon name="cube" size="xl" :stroke-width="1.5" /></span>
-            </div>
-            <div class="ecosystem-copy">
-              <p class="ecosystem-eyebrow">{{ t('home.ecosystem.eyebrow') }}</p>
-              <h2>{{ t('home.ecosystem.title') }}</h2>
-              <p>{{ t('home.ecosystem.description') }}</p>
-              <ul>
-                <li v-for="tag in ecosystemTags" :key="tag">{{ tag }}</li>
-              </ul>
-            </div>
-            <span class="ecosystem-action">
-              {{ t('home.ecosystem.action') }}
-              <Icon name="arrowRight" size="sm" :stroke-width="2.4" />
-            </span>
-          </a>
+          <div class="section-head">
+            <p class="section-eyebrow">{{ t('home.landing.contact.eyebrow') }}</p>
+            <h2>{{ t('home.landing.contact.title') }}</h2>
+            <p class="section-lead">{{ t('home.landing.contact.description') }}</p>
+          </div>
+
+          <div class="contact-grid">
+            <a
+              v-for="channel in supportLinks"
+              :key="channel.key"
+              :href="channel.href"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contact-card"
+              :class="'contact-' + channel.key"
+            >
+              <span class="contact-logo">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path :d="channel.path" /></svg>
+              </span>
+              <div class="contact-body">
+                <div class="contact-title">
+                  <strong>{{ channel.label }}</strong>
+                  <span class="contact-online"><i></i>{{ t('home.landing.contact.online') }}</span>
+                </div>
+                <code class="contact-handle">{{ channel.handle }}</code>
+                <p>{{ channel.description }}</p>
+              </div>
+              <span class="contact-action">
+                {{ t('home.landing.contact.open') }}
+                <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
+              </span>
+            </a>
+          </div>
+
+          <p class="contact-note">
+            <Icon name="chat" size="sm" :stroke-width="2" aria-hidden="true" />
+            {{ t('home.landing.contact.note') }}
+          </p>
         </div>
       </section>
 
@@ -330,8 +343,8 @@
               {{ t('home.landing.footer.quickStart') }}
             </a>
             <router-link to="/key-usage">{{ t('keyUsage.title') }}</router-link>
-            <a href="#ecosystem">{{ t('home.nav.ecosystem') }}</a>
             <a href="#support">{{ t('home.community.support') }}</a>
+            <a href="#developers">{{ t('home.landing.nav.developers') }}</a>
           </nav>
 
           <nav v-if="legalDocuments.length" class="footer-col" :aria-label="t('home.landing.footer.legal')">
@@ -354,7 +367,7 @@
     </footer>
 
     <!-- Floating multi-channel support -->
-    <details id="support" class="support-dock">
+    <details class="support-dock">
       <summary :aria-label="t('home.community.openSupport')">
         <span class="support-online" aria-hidden="true"></span>
         <Icon name="chat" size="lg" :stroke-width="1.9" />
@@ -461,11 +474,10 @@ const navLinks = computed(() => [
 // 头像色块与下方模型标签共用同一份数据。
 const modelChips = [
   { name: 'Claude', short: 'C', color: '#4964f4' },
-  { name: 'GPT', short: 'G', color: '#3f57dc' },
-  { name: 'Gemini', short: 'GM', color: '#6366f1' },
-  { name: 'DeepSeek', short: 'DS', color: '#354bd2' },
-  { name: 'Grok', short: 'GR', color: '#7b8ef8' },
-  { name: 'Qwen', short: 'Q', color: '#2c3ea8' },
+  { name: 'Claude Code', short: 'CC', color: '#3f57dc' },
+  { name: 'GPT', short: 'G', color: '#6366f1' },
+  { name: 'Codex', short: 'CX', color: '#354bd2' },
+  { name: 'CC-Switch', short: 'CCS', color: '#7b8ef8' },
 ]
 
 const heroStats = computed(() => [
@@ -538,6 +550,7 @@ const developerPoints = computed(() => [
   t('home.landing.developer.points.endpoint'),
   t('home.landing.developer.points.routing'),
   t('home.landing.developer.points.streaming'),
+  t('home.landing.developer.points.ccswitch'),
 ])
 
 const curlSnippet = `curl -X POST https://origincoder.com/v1/chat/completions \\
@@ -577,25 +590,22 @@ const trustBarItems = computed(() =>
   }))
 )
 
-const ecosystemTags = computed(() => [
-  t('home.ecosystem.tags.subscription'),
-  t('home.ecosystem.tags.codes'),
-  t('home.ecosystem.tags.delivery'),
-])
 const supportLinks = computed(() =>
   [
     {
       key: 'telegram',
       href: CONTACT.telegram,
-      label: t('home.community.telegram'),
-      description: t('home.community.telegramDescription'),
+      label: t('home.landing.contact.telegram.name'),
+      handle: t('home.landing.contact.telegram.handle'),
+      description: t('home.landing.contact.telegram.description'),
       path: TELEGRAM_PATH,
     },
     {
       key: 'discord',
       href: CONTACT.discord,
-      label: t('home.community.discord'),
-      description: t('home.community.discordDescription'),
+      label: t('home.landing.contact.discord.name'),
+      handle: t('home.landing.contact.discord.handle'),
+      description: t('home.landing.contact.discord.description'),
       path: DISCORD_PATH,
     },
   ].filter((item) => item.href)
@@ -957,41 +967,100 @@ onMounted(() => {
 .code-endpoints code { min-width: 0; flex: 1; overflow: hidden; color: #374151; font-size: 11.5px; text-overflow: ellipsis; white-space: nowrap; }
 .code-endpoints small { flex: none; color: #9ca3af; font-size: 10.5px; }
 
-/* Ecosystem promo */
-.ecosystem-section { background: #fff; }
-.ecosystem-card {
+/* Contact channels */
+.contact-section { background: #fff; }
+.contact-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 42px; }
+.contact-card {
   position: relative;
   display: grid;
-  min-height: 268px;
-  grid-template-columns: 240px 1fr auto;
-  align-items: center;
-  gap: 36px;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 18px;
   overflow: hidden;
-  border-radius: 20px;
-  padding: 38px 42px 38px 28px;
-  border: 1px solid #e0e7ff;
-  color: #111827;
-  background: linear-gradient(120deg, #f7f8fc 0%, #eef2ff 70%, #e0e7ff 130%);
-  box-shadow: 0 16px 48px rgba(73, 100, 244, .1);
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 26px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(73, 100, 244, .05);
   text-decoration: none;
   transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
-.ecosystem-card:hover { transform: translateY(-3px); border-color: #a5b4fc; box-shadow: 0 20px 56px rgba(73, 100, 244, .14); }
-.ecosystem-card:focus-visible { outline: 3px solid rgba(73, 100, 244, .3); outline-offset: 4px; }
-.ecosystem-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(73,100,244,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(73,100,244,.07) 1px, transparent 1px); background-size: 32px 32px; mask-image: linear-gradient(to right, #000, transparent 80%); -webkit-mask-image: linear-gradient(to right, #000, transparent 80%); }
-.ecosystem-art { position: relative; height: 168px; }
-.ecosystem-orbit { position: absolute; border: 1px solid rgba(73,100,244,.24); border-radius: 50%; }
-.orbit-one { width: 144px; height: 144px; left: 34px; top: 12px; }
-.orbit-two { width: 96px; height: 96px; left: 58px; top: 36px; }
-.ecosystem-cube { position: absolute; display: flex; width: 64px; height: 64px; left: 74px; top: 52px; align-items: center; justify-content: center; border: 1px solid #c7d2fe; border-radius: 18px; color: #4964f4; background: rgba(255,255,255,.8); box-shadow: 0 16px 48px rgba(73,100,244,.14); backdrop-filter: blur(10px); }
-.ecosystem-copy { position: relative; z-index: 1; }
-.ecosystem-eyebrow { color: #4964f4 !important; font-size: 12px !important; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
-.ecosystem-copy h2 { max-width: 700px; margin-top: 10px; color: #111827; font-size: 32px; font-weight: 700; line-height: 1.22; letter-spacing: -.035em; }
-.ecosystem-copy > p { max-width: 660px; margin-top: 13px; color: #6b7280; font-size: 14px; line-height: 1.75; }
-.ecosystem-copy ul { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-.ecosystem-copy li { border: 1px solid #c7d2fe; border-radius: 999px; padding: 6px 12px; color: #354bd2; background: rgba(255,255,255,.82); font-size: 11.5px; font-weight: 500; }
-.ecosystem-action { position: relative; z-index: 1; display: inline-flex; min-height: 46px; align-items: center; gap: 8px; border-radius: 12px; padding: 0 20px; color: #fff; background: #4964f4; font-size: 13.5px; font-weight: 600; text-decoration: none; white-space: nowrap; box-shadow: 0 16px 48px rgba(73,100,244,.2); transition: .18s ease; }
-.ecosystem-card:hover .ecosystem-action { background: #3f57dc; }
+.contact-card::after {
+  content: "";
+  position: absolute;
+  right: -70px;
+  top: -70px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  opacity: .1;
+  background: currentColor;
+  pointer-events: none;
+}
+.contact-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(73, 100, 244, .12); }
+.contact-card:focus-visible { outline: 3px solid rgba(73, 100, 244, .3); outline-offset: 4px; }
+.contact-telegram { color: #229ed9; }
+.contact-telegram:hover { border-color: #229ed9; }
+.contact-discord { color: #5865f2; }
+.contact-discord:hover { border-color: #5865f2; }
+.contact-logo {
+  display: flex;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  color: #fff;
+}
+.contact-telegram .contact-logo { background: #229ed9; box-shadow: 0 10px 26px rgba(34, 158, 217, .28); }
+.contact-discord .contact-logo { background: #5865f2; box-shadow: 0 10px 26px rgba(88, 101, 242, .28); }
+.contact-logo svg { width: 26px; height: 26px; }
+.contact-body { min-width: 0; }
+.contact-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.contact-title strong { color: #111827; font-size: 17px; font-weight: 700; letter-spacing: -.02em; }
+.contact-online {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  padding: 3px 9px;
+  color: #047857;
+  background: #ecfdf5;
+  font-size: 11px;
+  font-weight: 600;
+}
+.contact-online i { width: 5px; height: 5px; border-radius: 50%; background: #10b981; }
+.contact-handle {
+  display: inline-block;
+  margin-top: 10px;
+  border-radius: 7px;
+  padding: 3px 8px;
+  color: #374151;
+  background: #f7f8fc;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+}
+.contact-body p { margin-top: 10px; color: #6b7280; font-size: 13.5px; line-height: 1.7; }
+.contact-action {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.contact-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  color: #9ca3af;
+  font-size: 12.5px;
+  text-align: center;
+}
 
 /* Final CTA */
 .final-cta { border-top: 1px solid #e5e7eb; padding: 88px 0; background: #f7f8fc; }
@@ -1045,11 +1114,10 @@ onMounted(() => {
   .nav-links { display: none; }
   .pricing-grid { grid-template-columns: 1fr; max-width: 560px; margin-left: auto; margin-right: auto; }
   .developer-grid { grid-template-columns: 1fr; gap: 40px; }
+  .contact-grid { grid-template-columns: 1fr; max-width: 560px; margin-left: auto; margin-right: auto; }
   .trust-grid { grid-template-columns: repeat(2, 1fr); }
   .trust-bar-item:nth-child(2) { border-right: 0; }
   .trust-bar-item:nth-child(-n+2) { border-bottom: 1px solid #e5e7eb; }
-  .ecosystem-card { grid-template-columns: 190px 1fr; }
-  .ecosystem-action { grid-column: 2; justify-self: start; }
   .footer-main { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
@@ -1070,10 +1138,7 @@ onMounted(() => {
   .final-cta { padding: 64px 0; }
   .pricing-card { padding: 24px 20px; }
   .code-body { font-size: 11.5px; }
-  .ecosystem-card { min-height: auto; grid-template-columns: 1fr; gap: 16px; padding: 26px 22px; }
-  .ecosystem-art { display: none; }
-  .ecosystem-action { grid-column: 1; }
-  .ecosystem-copy h2 { font-size: 26px; }
+  .contact-card { padding: 22px 20px; gap: 14px; }
   .footer-main { grid-template-columns: 1fr; gap: 28px; }
   .footer-bottom { flex-direction: column; }
   .support-dock { right: 14px; top: auto; bottom: 14px; transform: none; }

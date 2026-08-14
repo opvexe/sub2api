@@ -31,6 +31,19 @@ function upsertLink(rel: string, href: string): void {
   link.href = href
 }
 
+function upsertAlternate(hreflang: string, href: string): void {
+  let link = document.head.querySelector<HTMLLinkElement>(
+    `link[rel="alternate"][hreflang="${hreflang}"]`
+  )
+  if (!link) {
+    link = document.createElement('link')
+    link.rel = 'alternate'
+    link.hreflang = hreflang
+    document.head.appendChild(link)
+  }
+  link.href = href
+}
+
 function upsertJsonLd(id: string, data: Record<string, unknown>): void {
   let script = document.head.querySelector<HTMLScriptElement>(`script[data-seo="${id}"]`)
   if (!script) {
@@ -64,6 +77,13 @@ export function applyHomeSeo({ siteName, description, logoUrl }: HomeSeoOptions)
   upsertMeta('meta[name="twitter:image"]', 'name', 'twitter:image', absoluteLogo)
   upsertLink('canonical', canonical)
 
+  // 海外版同时服务中英文用户：og:locale 跟随当前语言，两种语言都声明 alternate。
+  const lang = document.documentElement.lang || 'en'
+  upsertMeta('meta[property="og:locale"]', 'property', 'og:locale', lang.startsWith('zh') ? 'zh_CN' : 'en_US')
+  upsertAlternate('en', canonical)
+  upsertAlternate('zh-CN', canonical)
+  upsertAlternate('x-default', canonical)
+
   upsertJsonLd('organization', {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -78,6 +98,6 @@ export function applyHomeSeo({ siteName, description, logoUrl }: HomeSeoOptions)
     name,
     url: canonical,
     description,
-    inLanguage: document.documentElement.lang || 'zh-CN',
+    inLanguage: ['en', 'zh-CN'],
   })
 }

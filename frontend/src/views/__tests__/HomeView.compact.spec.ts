@@ -109,10 +109,13 @@ describe('HomeView compact mode', () => {
     expect(links).toHaveLength(2)
   })
 
-  it('links the ecosystem marketplace card to the OriginCoder shop', () => {
+  it('renders Telegram and Discord contact cards in the support section', () => {
     const wrapper = mountHome()
+    const cards = wrapper.findAll('#support .contact-card')
 
-    expect(wrapper.get('.ecosystem-card').attributes('href')).toBe('https://shop.origincoder.ai')
+    expect(cards).toHaveLength(2)
+    expect(cards[0].attributes('href')).toBe('https://t.me/origincoder998')
+    expect(cards[1].attributes('href')).toBe('https://discord.gg/2C6Qvd36pq')
   })
 
   it('shows OpenAI, Claude, and Gemini request formats', () => {

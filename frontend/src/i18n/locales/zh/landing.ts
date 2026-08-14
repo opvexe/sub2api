@@ -12,8 +12,7 @@ export default {
       models: '支持模型',
       reputation: '服务口碑',
       service: 'API 服务',
-      guarantees: '服务保障',
-      ecosystem: '生态商城'
+      guarantees: '服务保障'
     },
     highlights: '平台优势',
     brandCaption: '可信赖的 AI API 服务',
@@ -47,7 +46,7 @@ export default {
         billingRules: '计费规则'
       },
       hero: {
-        badge: 'OpenAI 兼容 · 多模型统一接入',
+        badge: 'Claude 与 OpenAI 统一接入 · 支持 CC-Switch 一键切换',
         headline: 'One API. Every AI Model.',
         lead: 'OriginCoder 为开发者提供统一的模型与工具入口。一套接口接入主流模型，让开发、切换与扩展更简单。',
         primaryCta: '免费开始使用',
@@ -69,12 +68,12 @@ export default {
         recommended: '推荐',
         payg: {
           eyebrow: 'PAY AS YOU GO',
-          title: '模型按量计费',
-          description: '按实际调用量结算，适合需求波动明显的项目和多模型评测。',
+          title: '美金余额，按量扣费',
+          description: '充值美金余额，按实际调用量扣费，适合需求波动明显的项目和多模型评测。',
           points: {
-            price: '按模型查看输入与输出价格',
-            lockIn: '无需绑定单一模型',
-            switch: '随时切换，弹性使用'
+            price: '余额以美金计价，按模型查看输入与输出单价',
+            lockIn: '无需绑定单一模型，随时切换',
+            switch: '每笔调用都有明细，用多少扣多少'
           },
           action: '查看模型价格'
         },
@@ -107,12 +106,31 @@ export default {
         titleAccent: '然后专注于构建。',
         description: '接口兼容 OpenAI 调用方式。替换请求地址和密钥，即可在已有项目中使用不同模型。',
         points: {
-          endpoint: 'OpenAI 兼容端点',
+          endpoint: 'OpenAI 兼容端点，同时支持 Anthropic Messages',
           routing: '统一密钥与模型路由',
-          streaming: '流式响应与多工具支持'
+          streaming: '流式响应与多工具支持',
+          ccswitch: '支持 CC-Switch 一键导入，客户端秒切分组'
         },
         action: '阅读完整文档',
         codeLabel: 'bash'
+      },
+      contact: {
+        eyebrow: 'Support',
+        title: '需要人工协助？直接找我们。',
+        description: 'Telegram 与 Discord 两个渠道都有人值守，接入问题、账单疑问、故障反馈都可以直接问。',
+        note: '工作时间通常几分钟内回复；非工作时间会在上线后依次处理。',
+        online: '在线',
+        open: '打开',
+        telegram: {
+          name: 'Telegram',
+          handle: 't.me/origincoder998',
+          description: '一对一咨询：接入配置、账号与账单问题'
+        },
+        discord: {
+          name: 'Discord',
+          handle: 'OriginCoder Community',
+          description: '社区交流：版本公告、故障通报与经验分享'
+        }
       },
       finalCta: {
         eyebrow: 'Ready to build?',
@@ -335,17 +353,6 @@ export default {
         choice: '不用复杂规则限制选择'
       },
       promiseFooter: '长期主义，认真服务每一次调用'
-    },
-    ecosystem: {
-      eyebrow: '虚拟数字产品商城 · 即买即用',
-      title: 'Claude、GPT 成品号与代充服务',
-      description: '需要现成账号或快速充值？商城提供 Claude 成品号、GPT 成品号、GPT 代充及普通账号购买，产品分类清晰、下单便捷、交付快速。',
-      action: '进入商城选购',
-      tags: {
-        subscription: 'Claude 成品号购买',
-        codes: 'GPT 成品号与代充',
-        delivery: '普通账号购买'
-      }
     },
     // CTA 区块
     cta: {

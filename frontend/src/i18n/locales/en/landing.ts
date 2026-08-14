@@ -12,8 +12,7 @@ export default {
       models: 'Models',
       reputation: 'Reputation',
       service: 'API Service',
-      guarantees: 'Service Assurance',
-      ecosystem: 'Marketplace'
+      guarantees: 'Service Assurance'
     },
     highlights: 'Platform highlights',
     brandCaption: 'Trusted AI API Service',
@@ -47,7 +46,7 @@ export default {
         billingRules: 'Billing rules'
       },
       hero: {
-        badge: 'OpenAI compatible · One gateway, every model',
+        badge: 'One gateway for Claude and OpenAI · CC-Switch ready',
         headline: 'One API. Every AI Model.',
         lead: 'OriginCoder gives developers a single entry point for models and tools. One interface for the major providers, so building, switching, and scaling stay simple.',
         primaryCta: 'Start for free',
@@ -69,12 +68,12 @@ export default {
         recommended: 'Recommended',
         payg: {
           eyebrow: 'PAY AS YOU GO',
-          title: 'Per-model usage billing',
-          description: 'Settled on actual usage — a fit for projects with uneven demand and multi-model evaluation.',
+          title: 'USD balance, billed per call',
+          description: 'Top up a USD balance and pay for what you actually call — a fit for uneven demand and multi-model evaluation.',
           points: {
-            price: 'Input and output prices per model',
-            lockIn: 'No lock-in to a single model',
-            switch: 'Switch any time, stay flexible'
+            price: 'Balance in USD, with input/output prices per model',
+            lockIn: 'No lock-in to a single model — switch any time',
+            switch: 'Every call itemized; you pay only for usage'
           },
           action: 'View model pricing'
         },
@@ -107,12 +106,31 @@ export default {
         titleAccent: 'Then focus on building.',
         description: 'The API follows OpenAI call conventions. Swap the base URL and key, and use different models inside your existing project.',
         points: {
-          endpoint: 'OpenAI-compatible endpoints',
+          endpoint: 'OpenAI-compatible endpoints, plus Anthropic Messages',
           routing: 'One key, unified model routing',
-          streaming: 'Streaming responses and tool calls'
+          streaming: 'Streaming responses and tool calls',
+          ccswitch: 'One-click CC-Switch import — swap groups from the client'
         },
         action: 'Read the full docs',
         codeLabel: 'bash'
+      },
+      contact: {
+        eyebrow: 'Support',
+        title: 'Need a human? Reach us directly.',
+        description: 'Telegram and Discord are both staffed. Bring integration questions, billing questions, or incident reports.',
+        note: 'Usually a few minutes during working hours; off-hours messages are handled in order once we are back.',
+        online: 'Online',
+        open: 'Open',
+        telegram: {
+          name: 'Telegram',
+          handle: 't.me/origincoder998',
+          description: 'One-to-one help with setup, accounts, and billing'
+        },
+        discord: {
+          name: 'Discord',
+          handle: 'OriginCoder Community',
+          description: 'Community channel for release notes, incidents, and tips'
+        }
       },
       finalCta: {
         eyebrow: 'Ready to build?',
@@ -335,17 +353,6 @@ export default {
         choice: 'Never lock choice behind needless rules'
       },
       promiseFooter: 'Built for the long term, one request at a time'
-    },
-    ecosystem: {
-      eyebrow: 'Digital goods marketplace · Ready to use',
-      title: 'Ready-to-use Claude & GPT accounts and recharge services',
-      description: 'Need a ready account or a quick recharge? Shop for Claude accounts, GPT accounts, GPT recharge services, and standard accounts with clear categories and convenient delivery.',
-      action: 'Shop now',
-      tags: {
-        subscription: 'Claude account purchase',
-        codes: 'GPT accounts & recharge',
-        delivery: 'Standard account purchase'
-      }
     },
     // CTA section
     cta: {

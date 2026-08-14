@@ -14,6 +14,14 @@ export function normalizeSiteName(siteName?: string | null): string {
     : normalized
 }
 
+// 首页标题：搜索结果里要展示「品牌 + 定位」，而不是路由名（Home - 品牌）。
+// 与 index.html 的静态 <title> 和后端 injectSiteTitle 保持一致。
+export const HOME_TITLE_SUFFIX = 'AI API Gateway'
+
+export function resolveHomeTitle(siteName?: string | null): string {
+  return `${normalizeSiteName(siteName)} - ${HOME_TITLE_SUFFIX}`
+}
+
 export function updateFavicon(logoUrl: string): void {
   const sanitizedLogoUrl = sanitizeUrl(logoUrl, {
     allowRelative: true,

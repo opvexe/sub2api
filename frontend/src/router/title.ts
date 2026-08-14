@@ -1,7 +1,7 @@
 import { i18n } from '@/i18n'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import type { CustomMenuItem } from '@/types'
-import { normalizeSiteName } from '@/utils/branding'
+import { normalizeSiteName, resolveHomeTitle } from '@/utils/branding'
 
 /**
  * 统一生成页面标题，避免多处写入 document.title 产生覆盖冲突。
@@ -29,6 +29,11 @@ export function resolveRouteDocumentTitle(
   siteName: string | undefined,
   customMenuItems: CustomMenuItem[] = [],
 ): string {
+  // 首页保留品牌标题，避免 SERP 里显示成 "Home - 品牌"。
+  if (route.name === 'Home') {
+    return resolveHomeTitle(siteName)
+  }
+
   const id = typeof route.params.id === 'string' ? route.params.id : ''
   const menuItem = route.name === 'CustomPage' && id
     ? customMenuItems.find((item) => item.id === id)

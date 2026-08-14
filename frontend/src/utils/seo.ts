@@ -1,4 +1,4 @@
-import { DEFAULT_SITE_NAME, SITE_ORIGIN } from '@/utils/branding'
+import { DEFAULT_SITE_NAME, SITE_ORIGIN, resolveHomeTitle } from '@/utils/branding'
 import { sanitizeUrl } from '@/utils/url'
 
 /**
@@ -44,7 +44,7 @@ function upsertJsonLd(id: string, data: Record<string, unknown>): void {
 
 export function applyHomeSeo({ siteName, description, logoUrl }: HomeSeoOptions): void {
   const name = siteName?.trim() || DEFAULT_SITE_NAME
-  const title = `${name} - AI API Gateway`
+  const title = resolveHomeTitle(name)
   const canonical = SITE_ORIGIN
   const logo = sanitizeUrl(logoUrl || '', { allowRelative: true }) || `${SITE_ORIGIN}/logo-v2.png`
   const absoluteLogo = logo.startsWith('http') ? logo : `${SITE_ORIGIN}${logo}`

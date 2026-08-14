@@ -102,7 +102,7 @@ describe('HomeView compact mode', () => {
 
   it('shows the configured Telegram and Discord support links', () => {
     const wrapper = mountHome()
-    const links = wrapper.findAll('.support-list a')
+    const links = wrapper.findAll('.support-rail a')
 
     expect(links.some((link) => link.attributes('href') === 'https://t.me/origincoder998')).toBe(true)
     expect(links.some((link) => link.attributes('href') === 'https://discord.gg/2C6Qvd36pq')).toBe(true)

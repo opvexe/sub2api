@@ -370,35 +370,35 @@
       </div>
     </footer>
 
-    <!-- Floating multi-channel support -->
-    <details class="support-dock">
-      <summary :aria-label="t('home.community.openSupport')">
-        <span class="support-online" aria-hidden="true"></span>
-        <Icon name="chat" size="lg" :stroke-width="1.9" />
-        <span>{{ t('home.community.support') }}</span>
-      </summary>
-      <div class="support-panel">
-        <div class="support-head">
-          <div><strong>{{ t('home.community.title') }}</strong><p>{{ t('home.community.description') }}</p></div>
-          <span><i></i>{{ t('home.community.online') }}</span>
-        </div>
-        <div class="support-list">
-          <a
-            v-for="support in supportLinks"
-            :key="support.key"
-            :href="support.href"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span class="support-logo" :class="'support-' + support.key">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path :d="support.path" /></svg>
-            </span>
-            <span><strong>{{ support.label }}</strong><small>{{ support.description }}</small></span>
-            <Icon name="arrowRight" size="sm" :stroke-width="2" />
-          </a>
-        </div>
-      </div>
-    </details>
+    <!-- Floating support rail: channels are visible without a click -->
+    <nav class="support-rail" :aria-label="t('home.community.title')">
+      <span class="rail-caption" aria-hidden="true">
+        <Icon name="chat" size="sm" :stroke-width="2" />
+        {{ t('home.community.support') }}
+      </span>
+      <a
+        v-for="channel in supportLinks"
+        :key="channel.key"
+        :href="channel.href"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="rail-item"
+        :class="'rail-' + channel.key"
+        :aria-label="channel.label"
+      >
+        <span class="rail-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path :d="channel.path" /></svg>
+        </span>
+        <span class="rail-label">
+          <strong>{{ channel.label }}</strong>
+          <small>{{ channel.handle }}</small>
+        </span>
+      </a>
+      <span class="rail-status">
+        <i></i>
+        <span>{{ t('home.community.online') }}</span>
+      </span>
+    </nav>
   </div>
 </template>
 
@@ -1095,28 +1095,89 @@ onMounted(() => {
 .footer-note { max-width: 260px; color: #6b7280; font-size: 12px; line-height: 1.7; }
 .footer-bottom { display: flex; justify-content: space-between; gap: 20px; margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 22px; color: #9ca3af; font-size: 11.5px; }
 
-/* Floating support */
-.support-dock { position: fixed; right: 18px; top: 50%; z-index: 50; transform: translateY(-50%); }
-.support-dock summary { position: relative; display: flex; width: 56px; min-height: 66px; cursor: pointer; list-style: none; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 1px solid rgba(255,255,255,.35); border-radius: 16px; padding: 8px 5px; color: #fff; background: #4964f4; font-size: 10.5px; font-weight: 600; box-shadow: 0 16px 48px rgba(73,100,244,.28); transition: .18s ease; }
-.support-dock summary::-webkit-details-marker { display: none; }
-.support-dock summary:hover { transform: translateY(-2px); background: #3f57dc; }
-.support-online { position: absolute; right: -2px; top: -2px; width: 11px; height: 11px; border: 2px solid #fff; border-radius: 50%; background: #34d399; }
-.support-panel { position: absolute; right: calc(100% + 12px); top: 50%; width: 330px; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 18px; background: #fff; box-shadow: 0 16px 48px rgba(73,100,244,.18); transform: translateY(-50%); }
-.support-head { display: flex; align-items: start; justify-content: space-between; gap: 14px; padding: 18px; color: #fff; background: #4964f4; }
-.support-head strong { font-size: 13px; font-weight: 700; }
-.support-head p { margin-top: 4px; color: rgba(255,255,255,.78); font-size: 11px; }
-.support-head > span { display: flex; flex: none; align-items: center; gap: 5px; border-radius: 999px; padding: 4px 8px; color: #fff; background: rgba(255,255,255,.16); font-size: 10px; font-weight: 600; }
-.support-head i { width: 5px; height: 5px; border-radius: 50%; background: #34d399; }
-.support-list { padding: 7px; }
-.support-list a { display: flex; align-items: center; gap: 11px; border-radius: 12px; padding: 10px; color: #9ca3af; text-decoration: none; transition: .18s ease; }
-.support-list a:hover { color: #4964f4; background: #f7f8fc; }
-.support-logo { display: flex; width: 38px; height: 38px; flex: none; align-items: center; justify-content: center; border-radius: 11px; color: #fff; }
-.support-logo svg { width: 18px; height: 18px; }
-.support-telegram { background: #229ed9; }
-.support-discord { background: #5865f2; }
-.support-list a > span:nth-child(2) { min-width: 0; flex: 1; }
-.support-list strong { display: block; color: #111827; font-size: 12px; font-weight: 600; }
-.support-list small { display: block; margin-top: 2px; overflow: hidden; color: #9ca3af; font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
+/* Floating support rail — 渠道常驻可见，hover 才展开名称 */
+.support-rail {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  transform: translateY(-50%);
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 10px;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 16px 48px rgba(73, 100, 244, .16);
+  backdrop-filter: blur(14px);
+}
+.rail-caption {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  align-self: center;
+  color: #6b7280;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.rail-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  border-radius: 13px;
+  padding: 5px;
+  text-decoration: none;
+  transition: background .18s ease;
+}
+.rail-item:hover { background: #f7f8fc; }
+.rail-item:focus-visible { outline: 2px solid #4964f4; outline-offset: 2px; }
+.rail-icon {
+  display: flex;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  color: #fff;
+  transition: transform .18s ease;
+}
+.rail-icon svg { width: 21px; height: 21px; }
+.rail-item:hover .rail-icon { transform: translateY(-1px); }
+.rail-telegram .rail-icon { background: #229ed9; box-shadow: 0 8px 20px rgba(34, 158, 217, .3); }
+.rail-discord .rail-icon { background: #5865f2; box-shadow: 0 8px 20px rgba(88, 101, 242, .3); }
+/* 名称默认折叠，hover / 键盘聚焦时展开，避免长期遮挡内容 */
+.rail-label {
+  display: grid;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  text-align: right;
+  white-space: nowrap;
+  transition: max-width .22s ease, opacity .18s ease;
+}
+.rail-item:hover .rail-label,
+.rail-item:focus-visible .rail-label { max-width: 150px; opacity: 1; }
+.rail-label strong { color: #111827; font-size: 12px; font-weight: 600; }
+.rail-label small { margin-top: 1px; color: #9ca3af; font-size: 10px; }
+.rail-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  align-self: center;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 8px;
+  width: 100%;
+  justify-content: center;
+  color: #047857;
+  font-size: 10px;
+  font-weight: 600;
+}
+.rail-status i { width: 5px; height: 5px; border-radius: 50%; background: #10b981; }
 
 .home-shell :deep(.home-locale button) { color: #6b7280; }
 .home-shell :deep(.home-locale > div) { border-color: #e5e7eb; background: #fff; }
@@ -1152,10 +1213,11 @@ onMounted(() => {
   .contact-card { padding: 22px 20px; gap: 14px; }
   .footer-main { grid-template-columns: 1fr; gap: 28px; }
   .footer-bottom { flex-direction: column; }
-  .support-dock { right: 14px; top: auto; bottom: 14px; transform: none; }
-  .support-dock summary { width: 50px; height: 50px; min-height: 50px; justify-content: center; padding: 0; border-radius: 50%; }
-  .support-dock summary > span:last-child { display: none; }
-  .support-panel { right: 0; top: auto; bottom: calc(100% + 12px); width: min(320px, calc(100vw - 28px)); transform: none; }
+  .support-rail { right: 12px; top: auto; bottom: 12px; flex-direction: row; align-items: center; gap: 6px; padding: 7px; border-radius: 999px; transform: none; }
+  .rail-caption, .rail-status span { display: none; }
+  .rail-status { width: auto; border-top: 0; border-left: 1px solid #e5e7eb; padding: 0 0 0 8px; margin-left: 2px; }
+  .rail-icon { width: 38px; height: 38px; border-radius: 50%; }
+  .rail-label { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .home-shell { scroll-behavior: auto; }

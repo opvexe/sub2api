@@ -43,7 +43,8 @@ export default {
         models: 'Model pricing',
         pricing: 'Plans',
         developers: 'Developers',
-        billingRules: 'Billing rules'
+        billingRules: 'Billing rules',
+        docs: 'Docs'
       },
       hero: {
         badge: 'One gateway for Claude and OpenAI · CC-Switch ready',

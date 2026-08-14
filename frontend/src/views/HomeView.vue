@@ -97,7 +97,9 @@
 
         <div class="nav-links">
           <router-link v-for="link in navLinks" :key="link.to" :to="link.to">{{ link.label }}</router-link>
-          <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">{{ t('home.docs') }}</a>
+          <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">
+            {{ t('home.landing.nav.docs') }}
+          </a>
         </div>
 
         <div class="nav-actions">
@@ -477,11 +479,7 @@ const pricingEntry = computed(() =>
 )
 
 const navLinks = computed(() =>
-  [
-    modelPlazaEnabled.value ? { to: '/model-plaza', label: t('home.landing.nav.models') } : null,
-    { to: '/purchase', label: t('home.landing.nav.pricing') },
-    { to: '/key-usage', label: t('keyUsage.title') },
-  ].filter((link): link is { to: string; label: string } => link !== null)
+  modelPlazaEnabled.value ? [{ to: '/model-plaza', label: t('modelPlaza.title') }] : []
 )
 
 // 头像色块与下方模型标签共用同一份数据。

@@ -43,7 +43,8 @@ export default {
         models: '模型价格',
         pricing: '套餐价格',
         developers: '开发者接入',
-        billingRules: '计费规则'
+        billingRules: '计费规则',
+        docs: '使用文档'
       },
       hero: {
         badge: 'Claude 与 OpenAI 统一接入 · 支持 CC-Switch 一键切换',

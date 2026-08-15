@@ -260,8 +260,8 @@ const siteName = computed(() => appStore.siteName)
 const siteLogo = computed(() => sanitizeUrl(appStore.siteLogo || '', { allowRelative: true, allowDataUrl: true }))
 const navigationLogo = computed(() =>
   siteName.value.toLowerCase() === 'llm provider'
-    ? '/logo-v2.png?v=llm-provider-20260805'
-    : siteLogo.value || '/logo-v2.png?v=llm-provider-20260805'
+    ? '/logo-v2.png?v=brand-20260815'
+    : siteLogo.value || '/logo-v2.png?v=brand-20260815'
 )
 const siteVersion = computed(() => appStore.siteVersion)
 const settingsLoaded = computed(() => appStore.publicSettingsLoaded)

@@ -386,9 +386,9 @@ import { sanitizeUrl } from '@/utils/url'
 const { t } = useI18n()
 const authStore = useAuthStore()
 const appStore = useAppStore()
-const BRAND_LOGO_URL = '/logo-v2.png?v=frame-20260815'
+const BRAND_LOGO_URL = '/logo-v2.png?v=brand-20260815'
 // 标记是单色的：近黑框在深色底上会看不见，所以按主题换文件。
-const BRAND_LOGO_URL_DARK = '/logo-v2-dark.png?v=frame-20260815'
+const BRAND_LOGO_URL_DARK = '/logo-v2-dark.png?v=brand-20260815'
 
 // 留空的客服渠道不会展示。
 const CONTACT = {

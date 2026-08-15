@@ -209,14 +209,14 @@ export default {
 
   // Auth
   auth: {
-    brandEyebrow: 'ORIGINCODER · AI API PLATFORM',
+    brandEyebrow: 'OriginCoder',
     brandCaption: 'AI API 服务平台',
-    brandTitle: '一个值得长期信赖的 AI API 服务平台',
-    brandDescription: '统一接入 Claude、GPT、Gemini 等主流模型，用清晰计费、稳定路由与可达客服，认真服务每一次 API 调用。',
-    brandTrustStatus: '服务机制透明',
-    brandTrustBilling: '请求计费清晰',
-    brandTrustSupport: '多渠道客服可达',
-    brandEndpoint: '统一 API 接入',
+    brandTitle: '一个 Key，跑通所有模型',
+    brandDescription: '登录后即可创建密钥、查看每一次调用的用量与费用，并管理余额与套餐。',
+    brandTrustStatus: '创建并管理 API Key',
+    brandTrustBilling: '查看逐请求的用量与费用',
+    brandTrustSupport: '充值余额或选择订阅套餐',
+    brandEndpoint: '登录后可以',
     brandRoute: 'OriginCoder 智能选择可用上游',
     multiFormatCompatible: '兼容三种主流格式',
     openaiFormat: 'OpenAI 格式',

@@ -209,14 +209,14 @@ export default {
 
   // Auth
   auth: {
-    brandEyebrow: 'ORIGINCODER · AI API PLATFORM',
+    brandEyebrow: 'OriginCoder',
     brandCaption: 'AI API Service Platform',
-    brandTitle: 'An AI API service platform built for long-term trust',
-    brandDescription: 'Access Claude, GPT, Gemini, and other leading models through one gateway—with clear billing, dependable routing, and support you can reach.',
-    brandTrustStatus: 'Transparent service safeguards',
-    brandTrustBilling: 'Clear request-level billing',
-    brandTrustSupport: 'Reachable multi-channel support',
-    brandEndpoint: 'Unified API access',
+    brandTitle: 'One key, every model',
+    brandDescription: 'Sign in to create keys, review the usage and cost of every call, and manage your balance and plan.',
+    brandTrustStatus: 'Create and manage API keys',
+    brandTrustBilling: 'Review per-request usage and cost',
+    brandTrustSupport: 'Top up your balance or pick a plan',
+    brandEndpoint: 'After signing in',
     brandRoute: 'OriginCoder selects an available upstream',
     multiFormatCompatible: 'Three major API formats',
     openaiFormat: 'OpenAI format',

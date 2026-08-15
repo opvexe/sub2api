@@ -9,10 +9,6 @@
           <strong class="brand-name">OriginCoder</strong>
         </router-link>
 
-        <router-link to="/home" class="auth-back">
-          {{ t('auth.backHome') }}
-          <Icon name="arrowRight" size="xs" :stroke-width="2" aria-hidden="true" />
-        </router-link>
       </div>
     </header>
 
@@ -23,30 +19,17 @@
           <h1 class="brand-title">{{ t('auth.brandTitle') }}</h1>
           <p class="brand-lead">{{ t('auth.brandDescription') }}</p>
 
-          <ul class="trust">
-            <li v-for="item in trustItems" :key="item.label">
-              <span class="trust-ic">
-                <Icon :name="item.icon" size="xs" :stroke-width="2" aria-hidden="true" />
-              </span>
-              {{ item.label }}
-            </li>
-          </ul>
 
           <div class="panel">
             <div class="panel-head">
               <span class="panel-title">{{ t('auth.brandEndpoint') }}</span>
-              <span class="pill">
-                <i aria-hidden="true"></i>
-                {{ t('auth.multiFormatCompatible') }}
-              </span>
             </div>
-            <div class="fmt-list">
-              <div v-for="format in gatewayFormats" :key="format.key" class="endpoint-row">
-                <span class="endpoint-method">POST</span>
-                <code>{{ format.endpoint }}</code>
-                <small>{{ format.label }}</small>
-              </div>
-            </div>
+            <ol class="after-list">
+              <li v-for="(item, index) in afterSignIn" :key="item">
+                <span class="after-n">{{ index + 1 }}</span>
+                {{ item }}
+              </li>
+            </ol>
           </div>
         </section>
 
@@ -72,7 +55,6 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores'
-import Icon from '@/components/icons/Icon.vue'
 import { normalizeSiteName } from '@/utils/branding'
 import { sanitizeUrl } from '@/utils/url'
 
@@ -100,19 +82,10 @@ const brandLogo = computed(() => {
 })
 
 const currentYear = computed(() => new Date().getFullYear())
-const trustItems = computed(() => [
-  { icon: 'eye' as const, label: t('auth.brandTrustStatus') },
-  { icon: 'document' as const, label: t('auth.brandTrustBilling') },
-  { icon: 'chat' as const, label: t('auth.brandTrustSupport') },
-])
-const gatewayFormats = computed(() => [
-  { key: 'openai', endpoint: '/v1/chat/completions', label: t('auth.openaiFormat') },
-  { key: 'claude', endpoint: '/v1/messages', label: t('auth.claudeFormat') },
-  {
-    key: 'gemini',
-    endpoint: '/v1beta/models/{model}:generateContent',
-    label: t('auth.geminiFormat'),
-  },
+const afterSignIn = computed(() => [
+  t('auth.brandTrustStatus'),
+  t('auth.brandTrustBilling'),
+  t('auth.brandTrustSupport'),
 ])
 
 onMounted(() => {
@@ -192,17 +165,6 @@ html.dark .auth-shell {
 }
 .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
 .brand-name { font-size: 15.5px; font-weight: 700; letter-spacing: -.02em; }
-.auth-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: auto;
-  color: var(--muted);
-  font-size: 13.5px;
-  text-decoration: none;
-  transition: color .16s ease;
-}
-.auth-back:hover { color: var(--fg); }
 
 /* 主体：左品牌 / 右表单 */
 .auth-main { display: flex; flex: 1; align-items: center; padding: 20px 0 44px; }
@@ -219,19 +181,6 @@ html.dark .auth-shell {
 }
 .brand-lead { margin-top: 14px; max-width: 46ch; color: var(--muted); font-size: 15px; line-height: 1.7; }
 
-.trust { display: grid; gap: 10px; margin-top: 26px; }
-.trust li { display: flex; align-items: center; gap: 11px; color: var(--muted); font-size: 13.5px; }
-.trust-ic {
-  display: grid;
-  width: 30px;
-  height: 30px;
-  flex: none;
-  place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  background: var(--surface-2);
-  color: var(--fg);
-}
 
 .panel {
   margin-top: 28px;
@@ -249,44 +198,22 @@ html.dark .auth-shell {
   border-bottom: 1px solid var(--border);
   padding: 13px 18px;
 }
-.panel-title { font-size: 13.5px; font-weight: 650; }
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 3px 10px;
-  background: var(--surface-2);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--muted);
-}
-.pill i { width: 6px; height: 6px; border-radius: 50%; background: var(--fg); }
-.fmt-list { padding: 8px; }
-.endpoint-row { display: flex; align-items: center; gap: 10px; border-radius: 10px; padding: 10px 12px; }
-.endpoint-row:hover { background: var(--surface-2); }
-.endpoint-method {
+.panel-title { font-size: 13px; font-weight: 650; }
+.after-list { list-style: none; margin: 0; padding: 14px 18px 18px; display: grid; gap: 12px; }
+.after-list li { display: flex; align-items: center; gap: 12px; color: var(--fg); font-size: 13.5px; }
+.after-n {
+  display: grid;
+  width: 24px;
+  height: 24px;
   flex: none;
+  place-items: center;
   border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 2px 6px;
+  border-radius: 7px;
   background: var(--surface-2);
-  font-size: 10px;
-  font-weight: 600;
   color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 650;
 }
-.endpoint-row code {
-  min-width: 0;
-  flex: 1;
-  overflow: hidden;
-  color: var(--fg);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.endpoint-row small { flex: none; color: var(--dim); font-size: 11.5px; }
 
 /* 右侧表单 */
 .auth-form-side { min-width: 0; }

@@ -351,11 +351,12 @@
           </div>
         </div>
 
+        <p class="footer-legal">{{ t('home.landing.footer.disclaimer') }}</p>
+
         <div class="footer-bottom">
           <span>&copy; {{ currentYear }} OriginCoder. {{ t('home.footer.allRightsReserved') }}</span>
           <span class="footer-tags"><i>USD</i><i>Stripe</i><i>USDT</i></span>
         </div>
-        <p class="footer-legal">{{ t('home.landing.footer.disclaimer') }}</p>
       </div>
     </footer>
 
@@ -966,8 +967,6 @@ html.dark .hero-grid {
 
 .footer-bottom {
   margin-top: 44px;
-  padding-top: 22px;
-  border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   gap: 20px;
@@ -977,7 +976,7 @@ html.dark .hero-grid {
 }
 .footer-tags { display: flex; gap: 8px; }
 .footer-tags i { font-style: normal; border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; font-size: 11px; color: var(--muted); }
-.footer-legal { margin-top: 14px; color: var(--dim); font-size: 11.5px; line-height: 1.7; max-width: 900px; }
+.footer-legal { margin-top: 40px; color: var(--dim); font-size: 11.5px; line-height: 1.75; max-width: 640px; }
 
 /* Floating support rail */
 .support-rail {

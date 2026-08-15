@@ -593,15 +593,15 @@ onMounted(() => {
  */
 .home-shell {
   /* 全部引用 tailwind.config.js 的色阶，与后台控制台同源，改配置两边一起变 */
-  /* 浅灰主题：页面底浅灰、卡片纯白靠上来，避免纯黑白的硬对比 */
-  --bg: #f5f6f8;
+  /* 暖浅灰主题（对标 elevenlabs.io 实测：#f5f3f1 / #ebe8e4 暖灰 + 纯黑字） */
+  --bg: #f5f3f1;
   --surface: #ffffff;
-  --surface-2: #eef0f3;
-  --border: #e2e5ea;
-  --border-2: #cdd2d9;
-  --fg: #1f2328;
-  --muted: #59616b;
-  --dim: #878e98;
+  --surface-2: #ebe8e4;
+  --border: rgba(0, 0, 0, .08);
+  --border-2: rgba(0, 0, 0, .16);
+  --fg: #000000;
+  --muted: rgba(0, 0, 0, .58);
+  --dim: rgba(0, 0, 0, .40);
   --accent: #d97757;
   --accent-text: #b5502f;
   --accent-soft: rgba(217, 119, 87, .10);
@@ -611,7 +611,7 @@ onMounted(() => {
   --primary-fg: #ffffff;
   --glass: rgba(255, 255, 255, .82);
   --shadow: 0 1px 2px rgba(17, 24, 39, .04);
-  --r: 14px;
+  --r: 18px;
 
   min-height: 100vh;
   overflow-x: hidden;
@@ -642,7 +642,7 @@ html.dark .home-shell {
 
 .section-inner { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 28px; }
 .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
-.big { font-size: clamp(28px, 3.4vw, 44px); font-weight: 800; letter-spacing: -.035em; line-height: 1.1; }
+.big { font-size: clamp(27px, 3.2vw, 40px); font-weight: 500; letter-spacing: -.022em; line-height: 1.18; }
 .lead { margin-top: 14px; color: var(--muted); font-size: 15.5px; line-height: 1.7; max-width: 680px; }
 .sec { padding: 56px 0; }
 
@@ -695,8 +695,8 @@ html.dark .home-shell {
   justify-content: center;
   gap: 7px;
   border: 1px solid transparent;
-  border-radius: 10px;
-  padding: 0 17px;
+  border-radius: 9999px;
+  padding: 0 18px;
   min-height: 38px;
   font-size: 14px;
   font-weight: 600;
@@ -707,7 +707,7 @@ html.dark .home-shell {
 .btn-p:hover { background: var(--primary-hover); }
 .btn-g { background: var(--surface-2); border-color: var(--border); color: var(--fg); }
 .btn-g:hover { border-color: var(--border-2); }
-.btn-lg { min-height: 46px; padding: 0 24px; font-size: 15px; }
+.btn-lg { min-height: 46px; padding: 0 26px; font-size: 15px; }
 
 /* Hero */
 .hero { position: relative; padding: 80px 0 60px; text-align: center; overflow: hidden; }
@@ -754,7 +754,7 @@ html.dark .hero-grid {
 .hero-badge-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; }
 .hero-badges-hl { border-color: var(--border-2); color: var(--fg); font-weight: 600; background: var(--surface); }
 .hero-badges-hl b { width: 6px; height: 6px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, .16); }
-.hero-title { margin-top: 28px; font-size: clamp(40px, 6vw, 84px); font-weight: 800; letter-spacing: -.04em; line-height: 1.02; }
+.hero-title { margin-top: 28px; font-size: clamp(40px, 5.4vw, 76px); font-weight: 300; letter-spacing: -.022em; line-height: 1.06; }
 .hero-title span { display: block; color: var(--accent); }
 .hero-lead { margin: 22px auto 0; max-width: 660px; color: var(--muted); font-size: 16.5px; line-height: 1.7; }
 .hero-cta { display: flex; justify-content: center; gap: 12px; margin-top: 34px; }
@@ -768,7 +768,7 @@ html.dark .hero-grid {
   color: var(--muted);
 }
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 820px; margin: 44px auto 0; }
-.stats dt { font-size: 38px; font-weight: 800; letter-spacing: -.03em; }
+.stats dt { font-size: 38px; font-weight: 400; letter-spacing: -.025em; }
 .stats dd { margin-top: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 
 /* Popular paths */
@@ -903,7 +903,7 @@ html.dark .hero-grid {
 .step b { display: block; font-size: 14.5px; font-weight: 650; }
 .step p { margin-top: 4px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .bignum { display: flex; align-items: baseline; gap: 14px; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border); }
-.bignum b { font-size: 38px; font-weight: 800; letter-spacing: -.03em; }
+.bignum b { font-size: 38px; font-weight: 400; letter-spacing: -.025em; }
 .bignum p:first-child { font-size: 14px; font-weight: 650; }
 .bignum p:last-child { margin-top: 3px; color: var(--dim); font-size: 12.5px; }
 .fmt-list { padding: 8px; }

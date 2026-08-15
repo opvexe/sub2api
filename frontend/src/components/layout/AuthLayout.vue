@@ -109,15 +109,15 @@ onBeforeUnmount(() => {
  */
 .auth-shell {
   /* 全部引用 tailwind.config.js 的色阶，与首页 / 控制台同源，改配置三处一起变 */
-  /* 浅灰主题：页面底浅灰、卡片纯白靠上来，避免纯黑白的硬对比 */
-  --bg: #f5f6f8;
+  /* 暖浅灰主题（对标 elevenlabs.io 实测：#f5f3f1 / #ebe8e4 暖灰 + 纯黑字） */
+  --bg: #f5f3f1;
   --surface: #ffffff;
-  --surface-2: #eef0f3;
-  --border: #e2e5ea;
-  --border-2: #cdd2d9;
-  --fg: #1f2328;
-  --muted: #59616b;
-  --dim: #878e98;
+  --surface-2: #ebe8e4;
+  --border: rgba(0, 0, 0, .08);
+  --border-2: rgba(0, 0, 0, .16);
+  --fg: #000000;
+  --muted: rgba(0, 0, 0, .58);
+  --dim: rgba(0, 0, 0, .40);
   --accent: #d97757;
   --accent-text: #b5502f;
   --accent-soft: rgba(217, 119, 87, .10);
@@ -183,7 +183,7 @@ html.dark .auth-shell {
 .brand-title {
   margin-top: 13px;
   font-size: clamp(28px, 3.2vw, 40px);
-  font-weight: 800;
+  font-weight: 300;
   letter-spacing: -.035em;
   line-height: 1.12;
   max-width: 16ch;

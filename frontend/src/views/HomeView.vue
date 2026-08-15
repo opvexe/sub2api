@@ -588,28 +588,29 @@ onMounted(() => {
 
 <style scoped>
 /*
- * 令牌取自 openrouter.ai 实测：亮色 cloud/ink，深色近黑。
- * 全站无彩，层次靠明度；主按钮为中性深灰（浅色）/ 浅灰（深色）。
+ * 奶油橙主题：暖白底（#faf9f5）+ 橙色主按钮（#d97757），文字用暖中性灰。
+ * 小字用 --accent-text（更深一档）保证 4.5:1，大字/图标才用 --accent。
+ * 分区之间不画分割线，只靠留白。
  */
 .home-shell {
-  /* 全部引用 tailwind.config.js 的色阶，与后台控制台同源，改配置两边一起变 */
-  --bg: #ffffff;
+  /* 奶油橙：暖白底 + Claude 橙主色，中性文字走暖灰而非冷灰 */
+  --bg: #faf9f5;
   --surface: #ffffff;
-  --surface-2: theme('colors.gray.50');
-  --border: theme('colors.gray.200');
-  --border-2: theme('colors.gray.300');
-  --fg: theme('colors.gray.900');
-  --muted: theme('colors.gray.500');
-  --dim: theme('colors.gray.400');
-  --accent: #ec1a8d;
-  --accent-text: #d1147d;
-  --accent-soft: rgba(236, 26, 141, .09);
-  --accent-line: rgba(236, 26, 141, .24);
-  --primary: #de1681;
-  --primary-hover: #c41274;
+  --surface-2: #f4efe4;
+  --border: rgba(25, 24, 23, .10);
+  --border-2: rgba(25, 24, 23, .20);
+  --fg: #191817;
+  --muted: #6f6a60;
+  --dim: #746f66;
+  --accent: #b6522c;
+  --accent-text: #a04a29;
+  --accent-soft: #f7ece2;
+  --accent-line: rgba(217, 119, 87, .30);
+  --primary: #d97757;
+  --primary-hover: #c4643f;
   --primary-fg: #ffffff;
-  --glass: rgba(255, 255, 255, .82);
-  --shadow: 0 1px 2px rgba(17, 24, 39, .04);
+  --glass: rgba(250, 249, 245, .85);
+  --shadow: 0 1px 2px rgba(25, 24, 23, .05);
   --r: 14px;
 
   min-height: 100vh;
@@ -620,23 +621,25 @@ onMounted(() => {
   letter-spacing: -.006em;
 }
 html.dark .home-shell {
-  --bg: theme('colors.dark.950');
-  --surface: theme('colors.dark.900');
-  --surface-2: theme('colors.dark.800');
-  --border: theme('colors.dark.700');
-  --border-2: theme('colors.dark.600');
-  --fg: #ffffff;
-  --muted: theme('colors.dark.300');
-  --dim: theme('colors.dark.400');
-  --accent: #ff5cb4;
-  --accent-text: #ff8ccb;
-  --accent-soft: rgba(255, 92, 180, .14);
-  --accent-line: rgba(255, 92, 180, .30);
-  --primary: #ff5cb4;
-  --primary-hover: #ff8ccb;
-  --primary-fg: #09090b;
-  --glass: rgba(9, 9, 11, .82);
+  /* 深色同样走暖中性，橙色提亮一档保证在深底上的对比度 */
+  --bg: #1a1917;
+  --surface: #232220;
+  --surface-2: #2c2a27;
+  --border: #35322e;
+  --border-2: #454037;
+  --fg: #f5f4f0;
+  --muted: #a8a29a;
+  --dim: #a8a29a;
+  --accent: #e08a68;
+  --accent-text: #e8a184;
+  --accent-soft: rgba(217, 119, 87, .16);
+  --accent-line: rgba(217, 119, 87, .32);
+  --primary: #d97757;
+  --primary-hover: #e08a68;
+  --primary-fg: #1a1917;
+  --glass: rgba(26, 25, 23, .84);
   --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+
 }
 
 .section-inner { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 28px; }
@@ -718,17 +721,17 @@ html.dark .home-shell {
   width: 1000px;
   height: 620px;
   transform: translateX(-50%);
-  background: radial-gradient(closest-side, rgba(236, 26, 141, .10), transparent 72%);
+  background: radial-gradient(closest-side, rgba(217, 119, 87, .20), transparent 72%);
   pointer-events: none;
 }
-html.dark .hero-glow { background: radial-gradient(closest-side, rgba(255, 92, 180, .14), transparent 72%); }
+html.dark .hero-glow { background: radial-gradient(closest-side, rgba(217, 119, 87, .18), transparent 72%); }
 .hero-grid {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(17, 24, 39, .035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(17, 24, 39, .035) 1px, transparent 1px);
+    linear-gradient(rgba(25, 24, 23, .05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25, 24, 23, .05) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse 62% 55% at 50% 18%, #000, transparent 76%);
   -webkit-mask-image: radial-gradient(ellipse 62% 55% at 50% 18%, #000, transparent 76%);
@@ -755,7 +758,7 @@ html.dark .hero-grid {
 .hero-badges-hl { border-color: var(--border-2); color: var(--fg); font-weight: 600; background: var(--surface); }
 .hero-badges-hl b { width: 6px; height: 6px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, .16); }
 .hero-title { margin-top: 28px; font-size: clamp(40px, 6vw, 84px); font-weight: 800; letter-spacing: -.04em; line-height: 1.02; }
-.hero-title span { display: block; color: var(--accent); }
+.hero-title span { display: block; }
 .hero-lead { margin: 22px auto 0; max-width: 660px; color: var(--muted); font-size: 16.5px; line-height: 1.7; }
 .hero-cta { display: flex; justify-content: center; gap: 12px; margin-top: 34px; }
 .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 34px; }
@@ -771,7 +774,7 @@ html.dark .hero-grid {
 .chips li:hover { border-color: var(--accent-line); color: var(--accent-text); }
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 820px; margin: 44px auto 0; }
 .stats dt { font-size: 38px; font-weight: 800; letter-spacing: -.03em; color: var(--accent); }
-.stats dd { margin-top: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+.stats dd { margin-top: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 
 /* Popular paths */
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
@@ -938,9 +941,7 @@ html.dark .hero-grid {
   border-radius: 20px;
   padding: 48px 32px;
   text-align: center;
-  background:
-    radial-gradient(ellipse 70% 120% at 50% 0%, var(--accent-soft), transparent 70%),
-    var(--surface);
+  background: var(--surface);
 }
 .final .big { margin-top: 14px; }
 .final .lead { margin: 14px auto 0; }

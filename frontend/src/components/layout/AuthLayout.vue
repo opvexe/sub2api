@@ -105,26 +105,27 @@ onBeforeUnmount(() => {
 
 <style scoped>
 /*
- * 与 HomeView 同一套令牌：全站无彩，层次靠明度；分区之间不画分割线，只留白。
+ * 与 HomeView 同一套奶油橙令牌，改一处两边要同步。
  */
 .auth-shell {
-  /* 全部引用 tailwind.config.js 的色阶，与首页 / 控制台同源，改配置三处一起变 */
-  --bg: #ffffff;
+  /* 奶油橙：暖白底 + Claude 橙主色，中性文字走暖灰而非冷灰 */
+  --bg: #faf9f5;
   --surface: #ffffff;
-  --surface-2: theme('colors.gray.50');
-  --border: theme('colors.gray.200');
-  --border-2: theme('colors.gray.300');
-  --fg: theme('colors.gray.900');
-  --muted: theme('colors.gray.500');
-  --dim: theme('colors.gray.400');
-  --accent: #ec1a8d;
-  --accent-text: #d1147d;
-  --accent-soft: rgba(236, 26, 141, .09);
-  --accent-line: rgba(236, 26, 141, .24);
-  --primary: #de1681;
-  --primary-hover: #c41274;
+  --surface-2: #f4efe4;
+  --border: rgba(25, 24, 23, .10);
+  --border-2: rgba(25, 24, 23, .20);
+  --fg: #191817;
+  --muted: #6f6a60;
+  --dim: #746f66;
+  --accent: #b6522c;
+  --accent-text: #a04a29;
+  --accent-soft: #f7ece2;
+  --accent-line: rgba(217, 119, 87, .30);
+  --primary: #d97757;
+  --primary-hover: #c4643f;
   --primary-fg: #ffffff;
-  --shadow: 0 1px 2px rgba(17, 24, 39, .04);
+  --glass: rgba(250, 249, 245, .85);
+  --shadow: 0 1px 2px rgba(25, 24, 23, .05);
   --r: 14px;
 
   display: flex;
@@ -137,22 +138,25 @@ onBeforeUnmount(() => {
   letter-spacing: -.006em;
 }
 html.dark .auth-shell {
-  --bg: theme('colors.dark.950');
-  --surface: theme('colors.dark.900');
-  --surface-2: theme('colors.dark.800');
-  --border: theme('colors.dark.700');
-  --border-2: theme('colors.dark.600');
-  --fg: #ffffff;
-  --muted: theme('colors.dark.300');
-  --dim: theme('colors.dark.400');
-  --accent: #ff5cb4;
-  --accent-text: #ff8ccb;
-  --accent-soft: rgba(255, 92, 180, .14);
-  --accent-line: rgba(255, 92, 180, .30);
-  --primary: #ff5cb4;
-  --primary-hover: #ff8ccb;
-  --primary-fg: #09090b;
+  /* 深色同样走暖中性，橙色提亮一档保证在深底上的对比度 */
+  --bg: #1a1917;
+  --surface: #232220;
+  --surface-2: #2c2a27;
+  --border: #35322e;
+  --border-2: #454037;
+  --fg: #f5f4f0;
+  --muted: #a8a29a;
+  --dim: #a8a29a;
+  --accent: #e08a68;
+  --accent-text: #e8a184;
+  --accent-soft: rgba(217, 119, 87, .16);
+  --accent-line: rgba(217, 119, 87, .32);
+  --primary: #d97757;
+  --primary-hover: #e08a68;
+  --primary-fg: #1a1917;
+  --glass: rgba(26, 25, 23, .84);
   --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+
 }
 
 .auth-inner { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 28px; }

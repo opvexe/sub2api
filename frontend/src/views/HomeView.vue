@@ -593,14 +593,15 @@ onMounted(() => {
  */
 .home-shell {
   /* 全部引用 tailwind.config.js 的色阶，与后台控制台同源，改配置两边一起变 */
-  --bg: #ffffff;
+  /* 浅灰主题：页面底浅灰、卡片纯白靠上来，避免纯黑白的硬对比 */
+  --bg: #f5f6f8;
   --surface: #ffffff;
-  --surface-2: theme('colors.gray.50');
-  --border: theme('colors.gray.200');
-  --border-2: theme('colors.gray.300');
-  --fg: theme('colors.gray.900');
-  --muted: theme('colors.gray.500');
-  --dim: theme('colors.gray.400');
+  --surface-2: #eef0f3;
+  --border: #e2e5ea;
+  --border-2: #cdd2d9;
+  --fg: #1f2328;
+  --muted: #59616b;
+  --dim: #878e98;
   --accent: #d97757;
   --accent-text: #b5502f;
   --accent-soft: rgba(217, 119, 87, .10);

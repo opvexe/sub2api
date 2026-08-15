@@ -348,7 +348,7 @@
     </footer>
 
     <!-- 悬浮客服：默认只露一个按钮，点开才展示渠道；渠道始终在 DOM 里，只切换可见性 -->
-    <div class="support-dock">
+    <div ref="supportDock" class="support-dock">
       <div v-show="supportOpen" id="support-panel" class="support-panel">
         <div class="panel-head">
           <strong>{{ t('home.community.title') }}</strong>
@@ -402,7 +402,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore, useAppStore } from '@/stores'
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
@@ -576,6 +576,17 @@ const supportLinks = computed(() =>
 )
 
 const supportOpen = ref(false)
+const supportDock = ref<HTMLElement | null>(null)
+
+// 面板外任意位置按下、或按 Esc，都收起
+function closeSupportOnOutside(event: PointerEvent) {
+  if (!supportOpen.value) return
+  if (supportDock.value?.contains(event.target as Node)) return
+  supportOpen.value = false
+}
+function closeSupportOnEscape(event: KeyboardEvent) {
+  if (event.key === 'Escape') supportOpen.value = false
+}
 
 // Theme
 const isDark = ref(document.documentElement.classList.contains('dark'))
@@ -601,6 +612,13 @@ onMounted(() => {
     description: t('home.landing.hero.lead'),
     logoUrl: siteLogo.value || BRAND_LOGO_URL,
   })
+  document.addEventListener('pointerdown', closeSupportOnOutside)
+  document.addEventListener('keydown', closeSupportOnEscape)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', closeSupportOnOutside)
+  document.removeEventListener('keydown', closeSupportOnEscape)
 })
 </script>
 
@@ -773,27 +791,27 @@ html.dark .hero-grid {
 }
 .hero-badges i { width: 3px; height: 3px; border-radius: 50%; background: var(--dim); }
 .hero-badge-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; }
-/* 主打款式：整块走红，是首屏唯一的高饱和信号 */
+/* 主打款式：整块走绿，是首屏唯一的高饱和信号 */
 .hero-badges-hl {
-  border-color: rgba(220, 38, 38, .32);
-  background: rgba(220, 38, 38, .07);
-  color: #b91c1c;
+  border-color: rgba(22, 163, 74, .34);
+  background: rgba(22, 163, 74, .08);
+  color: #137a3a;
   font-weight: 650;
 }
 .hero-badges-hl b {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #dc2626;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, .16);
-  animation: rail-pulse-red 2.4s ease-in-out infinite;
+  background: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, .18);
+  animation: badge-pulse 2.4s ease-in-out infinite;
 }
-@keyframes rail-pulse-red {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(220, 38, 38, .16); }
-  50% { box-shadow: 0 0 0 6px rgba(220, 38, 38, .05); }
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(22, 163, 74, .18); }
+  50% { box-shadow: 0 0 0 6px rgba(22, 163, 74, .05); }
 }
-html.dark .hero-badges-hl { border-color: rgba(248, 113, 113, .36); background: rgba(248, 113, 113, .12); color: #fca5a5; }
-html.dark .hero-badges-hl b { background: #f87171; box-shadow: 0 0 0 3px rgba(248, 113, 113, .18); }
+html.dark .hero-badges-hl { border-color: rgba(134, 239, 172, .34); background: rgba(134, 239, 172, .12); color: #86efac; }
+html.dark .hero-badges-hl b { background: #4ade80; box-shadow: 0 0 0 3px rgba(74, 222, 128, .20); }
 .hero-title { margin-top: 28px; font-size: clamp(40px, 6vw, 84px); font-weight: 800; letter-spacing: -.04em; line-height: 1.02; }
 .hero-title span { display: block; }
 .hero-lead { margin: 22px auto 0; max-width: 660px; color: var(--muted); font-size: 16.5px; line-height: 1.7; }

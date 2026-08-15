@@ -634,7 +634,7 @@ html.dark .home-shell {
 .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 .big { font-size: clamp(28px, 3.4vw, 44px); font-weight: 800; letter-spacing: -.035em; line-height: 1.1; }
 .lead { margin-top: 14px; color: var(--muted); font-size: 15.5px; line-height: 1.7; max-width: 680px; }
-.sec { padding: 92px 0; }
+.sec { padding: 56px 0; }
 
 .sec-head { text-align: center; max-width: 680px; margin: 0 auto; }
 .sec-head .lead { margin-left: auto; margin-right: auto; }
@@ -700,7 +700,7 @@ html.dark .home-shell {
 .btn-lg { min-height: 46px; padding: 0 24px; font-size: 15px; }
 
 /* Hero */
-.hero { position: relative; padding: 96px 0 84px; text-align: center; overflow: hidden; }
+.hero { position: relative; padding: 80px 0 60px; text-align: center; overflow: hidden; }
 .hero-glow {
   position: absolute;
   left: 50%;
@@ -748,7 +748,7 @@ html.dark .hero-grid {
 .hero-title span { display: block; color: var(--muted); }
 .hero-lead { margin: 22px auto 0; max-width: 660px; color: var(--muted); font-size: 16.5px; line-height: 1.7; }
 .hero-cta { display: flex; justify-content: center; gap: 12px; margin-top: 34px; }
-.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 44px; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 34px; }
 .chips li {
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -757,12 +757,12 @@ html.dark .hero-grid {
   font-size: 13px;
   color: var(--muted);
 }
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 820px; margin: 56px auto 0; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 820px; margin: 44px auto 0; }
 .stats dt { font-size: 38px; font-weight: 800; letter-spacing: -.03em; }
 .stats dd { margin-top: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 
 /* Popular paths */
-.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 44px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
 .card {
   border: 1px solid var(--border);
   border-radius: var(--r);
@@ -794,7 +794,7 @@ html.dark .hero-grid {
 }
 
 /* Developer first */
-.dev { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
+.dev { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: center; }
 .dev .big { margin-top: 12px; }
 .dev .big span { display: block; color: var(--muted); }
 .dev-list { display: grid; gap: 18px; margin-top: 30px; }
@@ -847,7 +847,7 @@ html.dark .hero-grid {
 }
 
 /* Architecture */
-.arch { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+.arch { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 26px; }
 .panel { border: 1px solid var(--border); border-radius: var(--r); background: var(--surface); overflow: hidden; }
 .panel-head {
   display: flex;
@@ -924,7 +924,7 @@ html.dark .hero-grid {
 .final {
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 64px 32px;
+  padding: 48px 32px;
   text-align: center;
   background: var(--surface);
 }
@@ -932,7 +932,7 @@ html.dark .hero-grid {
 .final .lead { margin: 14px auto 0; }
 
 /* Footer */
-.site-footer { border-top: 1px solid var(--border); padding: 56px 0 30px; margin-top: 92px; }
+.site-footer { border-top: 1px solid var(--border); padding: 48px 0 28px; margin-top: 56px; }
 .footer-top { display: grid; grid-template-columns: 1.7fr repeat(3, 1fr); gap: 36px; }
 .footer-brand > p { margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.7; max-width: 300px; }
 .footer-mail {
@@ -1019,14 +1019,14 @@ html.dark .hero-grid {
 @media (max-width: 640px) {
   .section-inner { padding: 0 18px; }
   .grid4, .stats { grid-template-columns: 1fr; }
-  .hero { padding: 64px 0 60px; }
+  .hero { padding: 56px 0 44px; }
   .hero-title { font-size: 40px; }
   .hero-cta { flex-direction: column; }
-  .sec { padding: 64px 0; }
-  .final { padding: 44px 22px; }
+  .sec { padding: 40px 0; }
+  .final { padding: 36px 20px; }
   .footer-top { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; }
-  .site-footer { margin-top: 64px; }
+  .site-footer { margin-top: 40px; }
   .support-rail { right: 12px; top: auto; bottom: 12px; flex-direction: row; gap: 6px; padding: 7px; border-radius: 999px; transform: none; }
   .rail-caption, .rail-label { display: none; }
   .rail-icon { width: 36px; height: 36px; border-radius: 50%; }

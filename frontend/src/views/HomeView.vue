@@ -297,20 +297,6 @@
             </router-link>
             <p>{{ t('home.landing.footer.brandDesc') }}</p>
             <a class="footer-mail" :href="`mailto:${SUPPORT_EMAIL}`">{{ SUPPORT_EMAIL }}</a>
-            <div class="footer-channels">
-              <a
-                v-for="channel in supportLinks"
-                :key="channel.key"
-                :href="channel.href"
-                target="_blank"
-                rel="noopener noreferrer"
-                :class="'rail-' + channel.key"
-                :aria-label="channel.label"
-                :title="channel.label"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path :d="channel.path" /></svg>
-              </a>
-            </div>
           </div>
 
           <nav class="footer-col" :aria-label="t('home.landing.footer.product')">
@@ -327,7 +313,7 @@
             </router-link>
           </nav>
 
-          <nav class="footer-col" :aria-label="t('home.landing.footer.support')">
+          <nav class="footer-col footer-col--support" :aria-label="t('home.landing.footer.support')">
             <strong>{{ t('home.landing.footer.support') }}</strong>
             <a :href="`mailto:${SUPPORT_EMAIL}`">{{ t('home.landing.footer.contact') }}</a>
             <a
@@ -351,11 +337,12 @@
           </div>
         </div>
 
-        <p class="footer-legal">{{ t('home.landing.footer.disclaimer') }}</p>
-
         <div class="footer-bottom">
-          <span>&copy; {{ currentYear }} OriginCoder. {{ t('home.footer.allRightsReserved') }}</span>
-          <span class="footer-tags"><i>USD</i><i>Stripe</i><i>USDT</i></span>
+          <p class="footer-legal">{{ t('home.landing.footer.disclaimer') }}</p>
+          <div class="footer-meta">
+            <span>&copy; {{ currentYear }} OriginCoder. {{ t('home.footer.allRightsReserved') }}</span>
+            <span class="footer-tags"><i>USD</i><i>Stripe</i><i>USDT</i></span>
+          </div>
         </div>
       </div>
     </footer>
@@ -946,51 +933,37 @@ html.dark .hero-grid {
 .final .big { margin-top: 14px; }
 .final .lead { margin: 14px auto 0; }
 
-/* Footer */
-.site-footer { border-top: 1px solid var(--border); padding: 48px 0 28px; margin-top: 56px; }
-.footer-top { display: grid; grid-template-columns: 1.7fr repeat(3, 1fr); gap: 36px; }
-.footer-brand > p { margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.7; max-width: 300px; }
+/* Footer：信息不减，间距全部收一档；免责声明与版权同处一条水平带 */
+.site-footer { border-top: 1px solid var(--border); padding: 40px 0 24px; margin-top: 48px; }
+.footer-top { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: 30px; align-items: start; }
+.footer-brand > p { margin-top: 10px; color: var(--muted); font-size: 12.5px; line-height: 1.65; max-width: 320px; line-break: strict; }
 .footer-mail {
   display: inline-block;
-  margin-top: 12px;
+  margin-top: 10px;
   color: var(--fg);
-  font-size: 13px;
+  font-size: 12.5px;
   text-decoration: underline;
   text-underline-offset: 4px;
 }
-.footer-channels { display: flex; gap: 8px; margin-top: 18px; }
-.footer-channels a {
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  color: var(--muted);
-  background: var(--surface);
-  transition: color .16s ease, border-color .16s ease;
-}
-.footer-channels svg { width: 16px; height: 16px; }
-.footer-channels a:hover { color: var(--fg); border-color: var(--border-2); }
-.footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
-.footer-col > strong { font-size: 12.5px; font-weight: 650; margin-bottom: 3px; }
-.footer-col a { color: var(--muted); font-size: 13px; text-decoration: none; }
+.footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.footer-col > strong { font-size: 12px; font-weight: 650; margin-bottom: 2px; }
+.footer-col a { color: var(--muted); font-size: 12.5px; line-height: 1.5; text-decoration: none; }
 .footer-col a:hover { color: var(--fg); }
-.footer-note { max-width: 260px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
-
+.footer-note { max-width: 260px; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
 
 .footer-bottom {
-  margin-top: 44px;
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-  color: var(--dim);
-  font-size: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 14px 32px;
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
 }
-.footer-tags { display: flex; gap: 8px; }
-.footer-tags i { font-style: normal; border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; font-size: 11px; color: var(--muted); }
-.footer-legal { margin-top: 40px; color: var(--dim); font-size: 11.5px; line-height: 1.75; max-width: 640px; }
+.footer-legal { margin: 0; max-width: 620px; color: var(--dim); font-size: 11.5px; line-height: 1.65; }
+.footer-meta { display: flex; align-items: center; gap: 12px; color: var(--dim); font-size: 12px; white-space: nowrap; }
+.footer-tags { display: flex; gap: 6px; }
+.footer-tags i { font-style: normal; border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px; font-size: 10.5px; color: var(--muted); }
 
 /* Floating support rail */
 .support-rail {
@@ -1038,7 +1011,8 @@ html.dark .hero-grid {
   .sec { padding: 40px 0; }
   .final { padding: 36px 20px; }
   .footer-top { grid-template-columns: 1fr; }
-  .footer-bottom { flex-direction: column; }
+  .footer-bottom { grid-template-columns: 1fr; align-items: start; }
+  .footer-meta { flex-wrap: wrap; white-space: normal; }
   .site-footer { margin-top: 40px; }
   .support-rail { right: 12px; top: auto; bottom: 12px; flex-direction: row; gap: 6px; padding: 7px; border-radius: 999px; transform: none; }
   .rail-caption, .rail-label { display: none; }

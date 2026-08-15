@@ -109,9 +109,9 @@ describe('HomeView compact mode', () => {
     expect(links).toHaveLength(2)
   })
 
-  it('surfaces Telegram and Discord in the footer channel row', () => {
+  it('surfaces Telegram and Discord in the footer support column', () => {
     const wrapper = mountHome()
-    const channels = wrapper.findAll('.footer-channels a')
+    const channels = wrapper.findAll('.footer-col--support a[target="_blank"]')
 
     expect(channels).toHaveLength(2)
     expect(channels[0].attributes('href')).toBe('https://t.me/origincoder998')

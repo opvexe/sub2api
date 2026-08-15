@@ -173,9 +173,9 @@
         </div>
 
         <!-- Usage Note -->
-        <div v-if="showPlatformNote" class="flex items-start gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
-          <Icon name="infoCircle" size="md" class="text-blue-500 flex-shrink-0 mt-0.5" />
-          <p class="text-sm text-blue-700 dark:text-blue-300">
+        <div v-if="showPlatformNote" class="flex items-start gap-3 p-3 rounded-lg bg-gray-100 dark:bg-dark-800 border border-gray-200 dark:border-dark-700">
+          <Icon name="infoCircle" size="md" class="text-gray-500 dark:text-gray-400 flex-shrink-0 mt-0.5" />
+          <p class="text-sm text-gray-700 dark:text-gray-300">
             {{ platformNote }}
           </p>
         </div>

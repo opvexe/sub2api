@@ -298,12 +298,12 @@ onMounted(() => {
               <span
                 v-for="email in draft.alert.recipients"
                 :key="email"
-                class="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                class="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-dark-700 dark:text-gray-300"
               >
                 {{ email }}
                 <button
                   type="button"
-                  class="text-blue-700/80 hover:text-blue-900 dark:text-blue-300"
+                  class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   @click="removeRecipient('alert', email)"
                 >
                   ×
@@ -363,12 +363,12 @@ onMounted(() => {
               <span
                 v-for="email in draft.report.recipients"
                 :key="email"
-                class="inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                class="inline-flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-dark-700 dark:text-gray-300"
               >
                 {{ email }}
                 <button
                   type="button"
-                  class="text-blue-700/80 hover:text-blue-900 dark:text-blue-300"
+                  class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   @click="removeRecipient('report', email)"
                 >
                   ×

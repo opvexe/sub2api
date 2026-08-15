@@ -56,7 +56,7 @@
         <template #cell-group="{ row }">
           <span
             v-if="row.group_id"
-            class="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200"
+            class="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-800 dark:bg-dark-700 dark:text-gray-200"
             :title="t('admin.ops.errorLog.id') + ' ' + row.group_id"
           >
             {{ row.group_name || '#' + row.group_id }}

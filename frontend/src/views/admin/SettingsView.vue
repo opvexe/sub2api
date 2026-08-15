@@ -1826,15 +1826,15 @@
               <template v-else>
                 <!-- 计数维度说明：按账号计数，反代部署无误伤 -->
                 <div
-                  class="rounded-lg border border-sky-200 bg-sky-50 p-4 dark:border-sky-800 dark:bg-sky-900/20"
+                  class="rounded-lg border border-gray-200 bg-gray-100 p-4 dark:border-dark-600 dark:bg-dark-800"
                 >
                   <div class="flex items-start">
                     <Icon
                       name="infoCircle"
                       size="md"
-                      class="mt-0.5 flex-shrink-0 text-sky-500"
+                      class="mt-0.5 flex-shrink-0 text-gray-400 dark:text-gray-500"
                     />
-                    <p class="ml-3 text-sm text-sky-700 dark:text-sky-300">
+                    <p class="ml-3 text-sm text-gray-700 dark:text-gray-300">
                       {{ t("admin.settings.panelRateLimit.proxySafeNote") }}
                     </p>
                   </div>
@@ -6121,7 +6121,7 @@
                   <a
                     :href="r.url"
                     target="_blank"
-                    class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
+                    class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-400"
                     >{{ r.title }}</a
                   >
                   <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
@@ -12810,7 +12810,7 @@ watch(
   @apply sticky z-20 -mx-1 rounded-2xl border border-white/80 bg-white/90 p-1.5 backdrop-blur-xl;
   top: 4.75rem;
   box-shadow:
-    0 12px 28px rgb(15 23 42 / 0.07),
+    0 12px 28px rgb(28 27 25 / 0.07),
     0 1px 0 rgb(255 255 255 / 0.9) inset;
 }
 
@@ -12849,7 +12849,7 @@ watch(
 .settings-tab::before {
   @apply absolute inset-0 -z-10 rounded-xl opacity-0 transition-opacity duration-200;
   content: "";
-  background: linear-gradient(135deg, rgb(248 250 252 / 0.95), rgb(241 245 249 / 0.8));
+  background: linear-gradient(135deg, rgb(250 249 245 / 0.95), rgb(244 241 234 / 0.8));
 }
 
 .settings-tab:hover::before,
@@ -12864,7 +12864,7 @@ watch(
 .settings-tab-active {
   @apply border-primary-200/80 bg-white text-primary-700 shadow-sm dark:border-primary-400/30 dark:bg-dark-700/95 dark:text-primary-200;
   box-shadow:
-    0 8px 18px rgb(15 23 42 / 0.08),
+    0 8px 18px rgb(28 27 25 / 0.08),
     0 1px 0 rgb(255 255 255 / 0.92) inset;
 }
 
@@ -12880,7 +12880,7 @@ watch(
   height: 2px;
   border-radius: 9999px;
   content: "";
-  background: linear-gradient(90deg, #14b8a6, #0ea5e9);
+  background: linear-gradient(90deg, theme('colors.primary.500'), theme('colors.primary.600'));
 }
 
 .settings-tab-icon {
@@ -12906,15 +12906,15 @@ watch(
    because Vue's scoped-CSS compiler was dropping the `:global(.dark) ...`
    rules in the production build, leaving inactive tabs unreadable on dark. */
 .dark .settings-tabs-shell {
-  border-color: rgb(51 65 85 / 0.65);
-  background: rgb(15 23 42 / 0.86);
+  border-color: rgb(53 50 46 / 0.65);
+  background: rgb(26 25 23 / 0.86);
   box-shadow:
     0 16px 36px rgb(0 0 0 / 0.28),
     0 1px 0 rgb(255 255 255 / 0.06) inset;
 }
 
 .dark .settings-tab::before {
-  background: linear-gradient(135deg, rgb(30 41 59 / 0.9), rgb(51 65 85 / 0.62));
+  background: linear-gradient(135deg, rgb(44 42 39 / 0.9), rgb(53 50 46 / 0.62));
 }
 
 .dark .settings-tab-active {

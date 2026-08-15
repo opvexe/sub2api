@@ -59,8 +59,10 @@ const isDarkMode = computed(() => {
 })
 
 const chartColors = computed(() => ({
-  text: isDarkMode.value ? '#e5e7eb' : '#374151',
-  grid: isDarkMode.value ? '#374151' : '#e5e7eb',
+  // 坐标轴文字与网格线走暖中性灰（tailwind.config.js 的 gray / dark 色阶），
+  // 下方各数据系列的颜色用于区分序列，保持不变。
+  text: isDarkMode.value ? '#e7e2d8' : '#44403a',
+  grid: isDarkMode.value ? '#35322e' : '#e7e2d8',
   input: '#3b82f6',
   output: '#10b981',
   cacheCreation: '#f59e0b',

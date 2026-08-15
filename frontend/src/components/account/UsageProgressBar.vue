@@ -100,9 +100,12 @@ watch(
 // Label background colors
 const labelClass = computed(() => {
   const colors = {
-    indigo: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300',
+    // 四个配额窗口是同屏并列的数据系列。品牌橙不参与：这组徽章每行账号都出现，
+    // 用品牌色会跟真正的操作抢注意力，而 primary-100 与 amber-100 两个浅调也难分辨。
+    // 改用「深灰 / 翠绿 / 浅灰 / 琥珀」，四档在浅底和深底上都能区分。
+    indigo: 'bg-gray-200 text-gray-700 dark:bg-dark-600 dark:text-gray-200',
     emerald: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-    purple: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
+    purple: 'bg-gray-100 text-gray-600 dark:bg-dark-800 dark:text-dark-300',
     amber: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300'
   }
   return colors[props.color]

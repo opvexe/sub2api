@@ -699,7 +699,7 @@
 	        <div class="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100">
 	          {{ t('batchImage.create.cancelNotice') }}
 	        </div>
-	        <div v-if="submitting" class="rounded-lg border border-sky-200 bg-sky-50 p-3 text-sm leading-6 text-sky-800 dark:border-sky-800 dark:bg-sky-950/30 dark:text-sky-100">
+	        <div v-if="submitting" class="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm leading-6 text-gray-700 dark:border-dark-700 dark:bg-dark-800/50 dark:text-gray-200">
 	          {{ t('batchImage.create.submittingNotice') }}
 	        </div>
 	      </form>

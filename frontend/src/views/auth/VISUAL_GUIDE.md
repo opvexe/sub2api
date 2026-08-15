@@ -26,7 +26,7 @@ Both LoginView and RegisterView use the AuthLayout component, which provides:
 │                                             │
 └─────────────────────────────────────────────┘
 
-Background: Gradient (Indigo → White → Purple)
+Background: Flat warm cream (gray-50 `#faf9f5`, dark-950 `#1a1917` in dark mode)
 Card: White with rounded corners and shadow
 Max Width: 28rem (448px)
 Centered: Both horizontally and vertically
@@ -234,21 +234,38 @@ Centered: Both horizontally and vertically
 
 ## Color Palette
 
-### Primary Colors
+All values below come from the `primary` / `gray` / `dark` scales in
+`tailwind.config.js`. Reference them as Tailwind classes (`text-primary-600`,
+`bg-gray-50`, …) rather than hardcoding the hex.
 
-- **Indigo-600**: `#4F46E5` - Primary buttons, links, brand color
-- **Indigo-700**: `#4338CA` - Button hover state
-- **Indigo-500**: `#6366F1` - Focus ring
+### Primary Colors (cream orange)
 
-### Neutral Colors
+- **Primary-500**: `#d97757` - Brand base: button fill, borders, focus ring, icon tiles
+- **Primary-600**: `#b5562f` - Small text on light backgrounds (4.84:1), button hover fill
+- **Primary-700**: `#9c4726` - Link/text hover, heavier emphasis
+- **Primary-400**: `#e39471` - Text and icons in dark mode (7.37:1 on `#1a1917`)
+- **Primary-50 / 100**: `#fdf7f4` / `#fbeae3` - Light badge and selected-row backgrounds
+- **Primary-900 / 950**: `#5e2d19` / `#33170d` - Dark-mode badge backgrounds (used with `/20` `/30` alpha)
 
-- **Gray-900**: `#111827` - Headings
-- **Gray-700**: `#374151` - Labels
-- **Gray-600**: `#4B5563` - Body text
-- **Gray-500**: `#6B7280` - Helper text
-- **Gray-300**: `#D1D5DB` - Borders
-- **Gray-100**: `#F3F4F6` - Disabled backgrounds
+### Neutral Colors (warm gray)
+
+- **Gray-900**: `#1c1b19` - Headings and body copy
+- **Gray-700**: `#44403a` - Labels
+- **Gray-600**: `#57534b` - Body text
+- **Gray-500**: `#6f6a60` - Helper text (5.38:1 on white)
+- **Gray-300**: `#d3cdc0` - Borders
+- **Gray-100**: `#f4f1ea` - Disabled backgrounds
+- **Gray-50**: `#faf9f5` - Page background
 - **White**: `#FFFFFF` - Card backgrounds
+
+### Dark Mode Neutrals
+
+- **Dark-950**: `#1a1917` - Page background
+- **Dark-900**: `#232220` - Card surface
+- **Dark-800**: `#2c2a27` - Secondary surface
+- **Dark-700**: `#35322e` - Borders
+- **Dark-600**: `#454037` - Stronger borders
+- **Dark-300 / 400**: `#a8a29a` / `#837d74` - Secondary and muted text
 
 ### Error Colors
 
@@ -262,11 +279,11 @@ Centered: Both horizontally and vertically
 - **Green-600**: `#16A34A` - Success text
 - **Green-50**: `#F0FDF4` - Success banner background
 
-### Background Gradient
+### Page Background
 
-- **From**: Indigo-100 (`#E0E7FF`)
-- **Via**: White (`#FFFFFF`)
-- **To**: Purple-100 (`#F3E8FF`)
+- **Light**: Gray-50 (`#faf9f5`) - flat warm cream, no gradient
+- **Dark**: Dark-950 (`#1a1917`)
+- Cards sit on top as White / Dark-900 (`#232220`) surfaces
 
 ## Typography
 
@@ -314,8 +331,8 @@ Centered: Both horizontally and vertically
 **Default:**
 
 ```css
-border: 1px solid #D1D5DB (gray-300)
-focus: 2px ring #6366F1 (indigo-500)
+border: 1px solid #d3cdc0 (gray-300)
+focus: 2px ring #d97757 (primary-500)
 ```
 
 **Error:**
@@ -328,7 +345,7 @@ focus: 2px ring #EF4444 (red-500)
 **Disabled:**
 
 ```css
-background: #F3F4F6 (gray-100)
+background: #f4f1ea (gray-100)
 cursor: not-allowed
 opacity: 0.6
 ```
@@ -338,7 +355,7 @@ opacity: 0.6
 **Default:**
 
 ```css
-background: #4F46E5 (indigo-600)
+background: #d97757 (primary-500)
 text: #FFFFFF (white)
 shadow: shadow-sm
 ```
@@ -346,7 +363,7 @@ shadow: shadow-sm
 **Hover:**
 
 ```css
-background: #4338CA (indigo-700)
+background: #b5562f (primary-600)
 transition: colors 150ms
 ```
 
@@ -354,7 +371,7 @@ transition: colors 150ms
 
 ```css
 outline: none
-ring: 2px offset-2 #6366F1 (indigo-500)
+ring: 2px offset-2 #d97757 (primary-500)
 ```
 
 **Disabled:**
@@ -377,14 +394,14 @@ cursor: not-allowed
 **Default:**
 
 ```css
-color: #4F46E5 (indigo-600)
+color: #b5562f (primary-600)
 font-weight: 500 (medium)
 ```
 
 **Hover:**
 
 ```css
-color: #6366F1 (indigo-500)
+color: #9c4726 (primary-700)
 transition: colors 150ms
 ```
 
@@ -542,10 +559,12 @@ animation: spin 1s linear infinite;
 - Adjusted color palette for dark backgrounds
 
 ```css
-/* Example dark mode colors (not implemented yet) */
-dark:bg-gray-900
-dark:text-white
-dark:border-gray-700
+/* Dark mode uses the warm `dark-*` scale, not Tailwind's default gray */
+dark:bg-dark-950        /* page background  #1a1917 */
+dark:bg-dark-900        /* card surface     #232220 */
+dark:text-gray-100
+dark:border-dark-700    /* borders          #35322e */
+dark:text-primary-400   /* brand text/icons #e39471 */
 ```
 
 ## Performance Metrics

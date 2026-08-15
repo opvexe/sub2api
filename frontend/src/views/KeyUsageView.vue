@@ -103,7 +103,7 @@
               @click="setDateRange(range.key)"
               class="text-xs px-3 py-1.5 rounded-lg border transition-all"
               :class="currentRange === range.key
-                ? 'bg-primary-500 text-white border-primary-500'
+                ? 'bg-primary-600 text-white border-primary-600'
                 : 'border-gray-200 bg-white text-gray-700 dark:border-dark-700 dark:bg-dark-900 dark:text-dark-200 hover:border-primary-300 dark:hover:border-dark-600'"
             >{{ range.label }}</button>
             <div v-if="currentRange === 'custom'" class="flex items-center gap-2 ml-1">
@@ -120,7 +120,7 @@
               />
               <button
                 @click="queryKey"
-                class="text-xs px-3 py-1.5 rounded-lg bg-primary-500 text-white hover:bg-primary-600"
+                class="text-xs px-3 py-1.5 rounded-lg bg-primary-600 text-white hover:bg-primary-700"
               >{{ t('keyUsage.apply') }}</button>
             </div>
           </div>
@@ -303,7 +303,7 @@
                   @click="setDailyUsageDays(option.value)"
                   class="min-w-12 rounded-md px-3 py-1.5 text-xs font-medium transition-colors"
                   :class="dailyUsageDays === option.value
-                    ? 'bg-primary-500 text-white'
+                    ? 'bg-primary-600 text-white'
                     : 'text-gray-600 hover:bg-gray-100 dark:text-dark-300 dark:hover:bg-dark-800'"
                 >
                   {{ option.label }}
@@ -529,17 +529,29 @@ function setDailyUsageDays(days: 7 | 30 | 90) {
 // ==================== Ring Animation ====================
 
 const CIRCUMFERENCE = 2 * Math.PI * 68
-const RING_GRADIENTS = [
-  { from: '#14b8a6', to: '#5eead4' },
-  { from: '#6366F1', to: '#A5B4FC' },
+// 环形进度配色随主题走：品牌橙(第 1 环)与中性灰(第 2 环)为装饰位，
+// 绿/琥珀为语义位保持不变。`from` 同时用作环内数值文字色，
+// 因此浅色模式取 primary-600 / gray-600（小字 ≥4.5:1），
+// 深色模式取 primary-400 / dark-300。
+const RING_GRADIENTS_LIGHT = [
+  { from: '#b5562f', to: '#d97757' },
+  { from: '#57534b', to: '#a8a196' },
   { from: '#10B981', to: '#6EE7B7' },
   { from: '#F59E0B', to: '#FCD34D' },
 ]
+const RING_GRADIENTS_DARK = [
+  { from: '#e39471', to: '#eeb69f' },
+  { from: '#a8a29a', to: '#d3cdc0' },
+  { from: '#10B981', to: '#6EE7B7' },
+  { from: '#F59E0B', to: '#FCD34D' },
+]
+const RING_GRADIENTS = computed(() => (isDark.value ? RING_GRADIENTS_DARK : RING_GRADIENTS_LIGHT))
 
 const ringAnimated = ref(false)
 const displayPcts = ref<number[]>([])
 
-const ringTrackColor = computed(() => isDark.value ? '#222222' : '#F0F0EE')
+// 环形轨道底色走中性令牌：dark-800 / gray-100
+const ringTrackColor = computed(() => isDark.value ? '#2c2a27' : '#f4f1ea')
 
 interface RingItem {
   title: string
@@ -746,7 +758,7 @@ const detailRows = computed<DetailRow[]>(() => {
       if (sub.weekly_limit_usd > 0) {
         const pct = (sub.weekly_usage_usd / sub.weekly_limit_usd) * 100
         rows.push({
-          iconBg: 'bg-indigo-500/10', iconColor: 'text-indigo-500', iconSvg: ICON_DOLLAR,
+          iconBg: 'bg-primary-500/10', iconColor: 'text-primary-500', iconSvg: ICON_DOLLAR,
           label: `${t('keyUsage.usedQuota')} (${locale.value === 'zh' ? '周' : 'W'})`, value: `${usd(sub.weekly_usage_usd)} / ${usd(sub.weekly_limit_usd)}`, valueClass: getUsageColor(pct),
         })
       }
@@ -948,8 +960,8 @@ onUnmounted(() => {
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .input-ring:focus {
-  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
-  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px theme('colors.primary.500 / 20%');
+  border-color: theme('colors.primary.500');
   outline: none;
 }
 
@@ -966,13 +978,23 @@ onUnmounted(() => {
   100% { background-position: 200% 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background: linear-gradient(
+    90deg,
+    theme('colors.gray.200') 25%,
+    theme('colors.gray.100') 50%,
+    theme('colors.gray.200') 75%
+  );
   background-size: 200% 100%;
   animation: shimmer-kv 1.8s ease-in-out infinite;
   border-radius: 8px;
 }
 :global(.dark) .skeleton {
-  background: linear-gradient(90deg, #334155 25%, #1e293b 50%, #334155 75%);
+  background: linear-gradient(
+    90deg,
+    theme('colors.dark.700') 25%,
+    theme('colors.dark.800') 50%,
+    theme('colors.dark.700') 75%
+  );
   background-size: 200% 100%;
 }
 

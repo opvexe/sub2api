@@ -5,7 +5,7 @@
     <div class="card-header mb-4 flex shrink-0 flex-wrap items-start justify-between gap-3 !border-0 !p-0">
       <div class="min-w-0">
         <h2 class="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
-          <span class="inline-flex h-4 w-4 text-sky-500" aria-hidden="true">
+          <span class="inline-flex h-4 w-4 text-gray-400 dark:text-dark-400" aria-hidden="true">
             <Icon name="chart" size="sm" />
           </span>
           {{ t('channelMonitorV2.chart.title') }}
@@ -205,11 +205,12 @@ function smoothTrend(values: Array<number | null>): Array<number | null> {
 }
 
 const chartOptions = computed(() => {
-  const text = isDark.value ? '#9ca3af' : '#6b7280'
-  const grid = isDark.value ? '#374151' : '#f3f4f6'
-  const tooltipBg = isDark.value ? '#1f2937' : '#ffffff'
-  const tooltipTitle = isDark.value ? '#f3f4f6' : '#111827'
-  const tooltipBody = isDark.value ? '#d1d5db' : '#4b5563'
+  // 中性色取自 tailwind.config.js 的暖灰令牌（gray / dark 色阶），与全站同源
+  const text = isDark.value ? '#a8a29a' : '#6f6a60'
+  const grid = isDark.value ? '#35322e' : '#f4f1ea'
+  const tooltipBg = isDark.value ? '#2c2a27' : '#ffffff'
+  const tooltipTitle = isDark.value ? '#f4f1ea' : '#1c1b19'
+  const tooltipBody = isDark.value ? '#d3cdc0' : '#57534b'
   return {
     responsive: true,
     maintainAspectRatio: false,

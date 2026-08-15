@@ -83,9 +83,9 @@
             :class="[
               'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
               geminiOAuthType === 'google_one'
-                ? 'bg-purple-500 text-white'
+                ? 'bg-gray-600 text-white'
                 : geminiOAuthType === 'code_assist'
-                  ? 'bg-blue-500 text-white'
+                  ? 'bg-gray-500 text-white'
                   : 'bg-amber-500 text-white'
             ]"
           >

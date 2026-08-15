@@ -22,7 +22,7 @@
 
         <div class="rounded-lg bg-white p-6 shadow">
           <div class="text-sm text-gray-600">Balance</div>
-          <div class="text-2xl font-bold text-indigo-600">${{ balance }}</div>
+          <div class="text-2xl font-bold text-primary-600">${{ balance }}</div>
         </div>
 
         <div class="rounded-lg bg-white p-6 shadow">
@@ -68,7 +68,7 @@ const balance = computed(() => authStore.user?.balance.toFixed(2) || '0.00')
           v-model="form.username"
           type="text"
           required
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-indigo-500"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-primary-500"
           placeholder="Enter your username"
         />
       </div>
@@ -82,7 +82,7 @@ const balance = computed(() => authStore.user?.balance.toFixed(2) || '0.00')
           v-model="form.password"
           type="password"
           required
-          class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-indigo-500"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-primary-500"
           placeholder="Enter your password"
         />
       </div>
@@ -90,7 +90,7 @@ const balance = computed(() => authStore.user?.balance.toFixed(2) || '0.00')
       <button
         type="submit"
         :disabled="loading"
-        class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+        class="w-full rounded-lg bg-primary-500 px-4 py-2 text-white transition-colors hover:bg-primary-600 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {{ loading ? 'Logging in...' : 'Login' }}
       </button>
@@ -99,7 +99,7 @@ const balance = computed(() => authStore.user?.balance.toFixed(2) || '0.00')
     <template #footer>
       <p class="text-gray-600">
         Don't have an account?
-        <router-link to="/register" class="font-medium text-indigo-600 hover:underline">
+        <router-link to="/register" class="font-medium text-primary-600 hover:underline">
           Sign up
         </router-link>
       </p>
@@ -152,7 +152,7 @@ async function handleSubmit() {
         <h1 class="text-3xl font-bold text-gray-900">API Keys</h1>
         <button
           @click="showCreateModal = true"
-          class="rounded-lg bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700"
+          class="rounded-lg bg-primary-500 px-4 py-2 text-white transition-colors hover:bg-primary-600"
         >
           Create New Key
         </button>
@@ -231,7 +231,7 @@ const apiKeys = ref<ApiKey[]>([])
         <h1 class="text-3xl font-bold text-gray-900">User Management</h1>
         <button
           @click="showCreateUser = true"
-          class="rounded-lg bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700"
+          class="rounded-lg bg-primary-500 px-4 py-2 text-white transition-colors hover:bg-primary-600"
         >
           Create User
         </button>
@@ -255,8 +255,8 @@ const apiKeys = ref<ApiKey[]>([])
                   class="rounded-full px-2 py-1 text-xs"
                   :class="
                     user.role === 'admin'
-                      ? 'bg-purple-100 text-purple-800'
-                      : 'bg-blue-100 text-blue-800'
+                      ? 'bg-primary-100 text-primary-700'
+                      : 'bg-gray-100 text-gray-700'
                   "
                 >
                   {{ user.role }}
@@ -264,7 +264,7 @@ const apiKeys = ref<ApiKey[]>([])
                 <span class="text-sm font-medium text-gray-700">
                   ${{ user.balance.toFixed(2) }}
                 </span>
-                <button class="text-sm text-indigo-600 hover:text-indigo-800">Edit</button>
+                <button class="text-sm text-primary-600 hover:text-primary-700">Edit</button>
               </div>
             </div>
           </div>
@@ -323,8 +323,8 @@ const users = ref<User[]>([])
                 class="rounded-full px-2 py-1 text-xs"
                 :class="
                   user?.role === 'admin'
-                    ? 'bg-purple-100 text-purple-800'
-                    : 'bg-blue-100 text-blue-800'
+                    ? 'bg-primary-100 text-primary-700'
+                    : 'bg-gray-100 text-gray-700'
                 "
               >
                 {{ user?.role }}
@@ -334,7 +334,7 @@ const users = ref<User[]>([])
 
           <div>
             <label class="mb-1 block text-sm font-medium text-gray-700"> Balance </label>
-            <div class="rounded-lg bg-gray-50 px-3 py-2 font-semibold text-indigo-600">
+            <div class="rounded-lg bg-gray-50 px-3 py-2 font-semibold text-primary-600">
               ${{ user?.balance.toFixed(2) }}
             </div>
           </div>
@@ -355,7 +355,7 @@ const users = ref<User[]>([])
               v-model="passwordForm.old_password"
               type="password"
               required
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
@@ -368,13 +368,13 @@ const users = ref<User[]>([])
               v-model="passwordForm.new_password"
               type="password"
               required
-              class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
           <button
             type="submit"
-            class="rounded-lg bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700"
+            class="rounded-lg bg-primary-500 px-4 py-2 text-white transition-colors hover:bg-primary-600"
           >
             Update Password
           </button>

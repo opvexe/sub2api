@@ -44,6 +44,7 @@ const displayValue = computed(() => {
 
 const colorStyle = computed(() => {
   const colour = hslForPct(props.value)
-  return colour ? { color: colour } : { color: 'rgb(156 163 175)' }
+  // 无数据时退回暖中性灰（gray-400 #a8a196），与全站灰阶同源
+  return colour ? { color: colour } : { color: 'rgb(168 161 150)' }
 })
 </script>

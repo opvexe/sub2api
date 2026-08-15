@@ -114,7 +114,7 @@ Simple centered layout for authentication pages (login/register).
     <template #footer>
       <p>
         Don't have an account?
-        <router-link to="/register" class="text-indigo-600 hover:underline"> Sign up </router-link>
+        <router-link to="/register" class="text-primary-600 hover:underline"> Sign up </router-link>
       </p>
     </template>
   </AuthLayout>

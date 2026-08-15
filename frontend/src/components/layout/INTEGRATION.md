@@ -212,7 +212,7 @@ import { AppLayout } from '@/components/layout'
     <template #footer>
       <p class="text-gray-600">
         Don't have an account?
-        <router-link to="/register" class="text-indigo-600 hover:underline"> Sign up </router-link>
+        <router-link to="/register" class="text-primary-600 hover:underline"> Sign up </router-link>
       </p>
     </template>
   </AuthLayout>
@@ -231,13 +231,26 @@ import { AuthLayout } from '@/components/layout'
 
 ### Changing Colors
 
-The components use Tailwind's indigo color scheme by default. To change:
+The components use the themed `primary-*` (cream orange) and `gray-*` / `dark-*`
+(warm neutral) scales defined in `tailwind.config.js`. Never hardcode a raw
+Tailwind palette (`indigo-*`, `blue-*`, `purple-*`) or a hex value in a
+component — always go through a token:
 
 ```vue
-<!-- Change all instances of indigo-* to your preferred color -->
-<div class="bg-blue-600">   <!-- Instead of bg-indigo-600 -->
-<div class="text-blue-600">  <!-- Instead of text-indigo-600 -->
+<!-- Brand emphasis: primary action, active nav item, focus ring -->
+<div class="bg-primary-500">       <!-- #d97757, brand base -->
+<div class="text-primary-600">     <!-- #b5562f, small text on light backgrounds -->
+<div class="dark:text-primary-400"><!-- #e39471, text/icons on dark backgrounds -->
+
+<!-- Neutral chrome: surfaces, borders, body copy -->
+<div class="bg-gray-50 dark:bg-dark-950">
+<div class="border-gray-200 dark:border-dark-700">
+<div class="text-gray-900 dark:text-gray-100">
 ```
+
+To rebrand, edit the `primary` scale in `tailwind.config.js` — every component
+follows automatically. Semantic colors (`red` for errors, `green` for success,
+`amber` for warnings) stay outside the brand scale and should not be swapped.
 
 ### Adding Custom Icons
 

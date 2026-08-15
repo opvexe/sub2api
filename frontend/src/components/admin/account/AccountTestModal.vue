@@ -830,7 +830,7 @@ const startTest = async () => {
 
   resetState()
   status.value = 'connecting'
-  addLine(t('admin.accounts.startingTestForAccount', { name: props.account.name }), 'text-blue-400')
+  addLine(t('admin.accounts.startingTestForAccount', { name: props.account.name }), 'text-primary-400')
   addLine(t('admin.accounts.testAccountTypeLabel', { type: props.account.type }), 'text-gray-400')
   if (isGrokAccount.value) {
     const modeLabel =
@@ -953,7 +953,7 @@ const handleEvent = (event: {
     case 'test_start':
       addLine(t('admin.accounts.connectedToApi'), 'text-green-400')
       if (event.model) {
-        addLine(t('admin.accounts.usingModel', { model: event.model }), 'text-cyan-400')
+        addLine(t('admin.accounts.usingModel', { model: event.model }), 'text-gray-200')
       }
       addLine(
         isGrokAccount.value
@@ -992,7 +992,7 @@ const handleEvent = (event: {
           url: event.image_url,
           mimeType: event.mime_type
         })
-        addLine(t('admin.accounts.imageReceived', { count: generatedImages.value.length }), 'text-purple-300')
+        addLine(t('admin.accounts.imageReceived', { count: generatedImages.value.length }), 'text-gray-200')
       }
       break
 
@@ -1002,7 +1002,7 @@ const handleEvent = (event: {
           url: event.audio_url,
           mimeType: event.mime_type
         })
-        addLine(t('admin.accounts.audioReceived', { count: generatedAudios.value.length }), 'text-purple-300')
+        addLine(t('admin.accounts.audioReceived', { count: generatedAudios.value.length }), 'text-gray-200')
       }
       break
 
@@ -1012,13 +1012,13 @@ const handleEvent = (event: {
           url: event.video_url,
           mimeType: event.mime_type
         })
-        addLine(t('admin.accounts.videoReceived', { count: generatedVideos.value.length }), 'text-purple-300')
+        addLine(t('admin.accounts.videoReceived', { count: generatedVideos.value.length }), 'text-gray-200')
       }
       break
 
     case 'status':
       if (event.text) {
-        addLine(event.text, 'text-cyan-300')
+        addLine(event.text, 'text-gray-100')
       }
       break
 

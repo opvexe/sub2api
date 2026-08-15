@@ -40,9 +40,9 @@ const colors = computed(() => ({
   redAlpha: '#ef444420',
   purple: '#8b5cf6',
   purpleAlpha: '#8b5cf620',
-  gray: '#9ca3af',
-  grid: isDarkMode.value ? '#374151' : '#f3f4f6',
-  text: isDarkMode.value ? '#9ca3af' : '#6b7280'
+  gray: '#a8a196',
+  grid: isDarkMode.value ? '#35322e' : '#f4f1ea',
+  text: isDarkMode.value ? '#a8a196' : '#6f6a60'
 }))
 
 const totalRequestErrors = computed(() => sumNumbers(props.points.map((p) => p.error_count_sla ?? 0)))
@@ -119,9 +119,9 @@ const options = computed(() => {
         labels: { color: c.text, usePointStyle: true, boxWidth: 6, font: { size: 10 } }
       },
       tooltip: {
-        backgroundColor: isDarkMode.value ? '#1f2937' : '#ffffff',
-        titleColor: isDarkMode.value ? '#f3f4f6' : '#111827',
-        bodyColor: isDarkMode.value ? '#d1d5db' : '#4b5563',
+        backgroundColor: isDarkMode.value ? '#2c2a27' : '#ffffff',
+        titleColor: isDarkMode.value ? '#f4f1ea' : '#1c1b19',
+        bodyColor: isDarkMode.value ? '#d3cdc0' : '#57534b',
         borderColor: c.grid,
         borderWidth: 1,
         padding: 10,

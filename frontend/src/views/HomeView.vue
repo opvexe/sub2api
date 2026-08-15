@@ -127,11 +127,17 @@
         <div class="hero-glow" aria-hidden="true"></div>
         <div class="hero-grid" aria-hidden="true"></div>
         <div class="section-inner hero-inner">
-          <div class="hero-badges">
-            <span aria-hidden="true">✦</span>
-            {{ t('home.landing.hero.badgeCompatible') }}
-            <i></i>{{ t('home.landing.hero.badgeUsd') }}
-            <i></i>{{ t('home.landing.hero.badgeCancel') }}
+          <div class="hero-badge-row">
+            <span class="hero-badges">
+              <span aria-hidden="true">✦</span>
+              {{ t('home.landing.hero.badgeCompatible') }}
+              <i></i>{{ t('home.landing.hero.badgeUsd') }}
+              <i></i>{{ t('home.landing.hero.badgeCancel') }}
+            </span>
+            <span class="hero-badges hero-badges-hl">
+              <b aria-hidden="true"></b>
+              {{ t('home.landing.hero.badgeFable') }}
+            </span>
           </div>
 
           <h1 class="hero-title">
@@ -738,6 +744,9 @@ html.dark .hero-grid {
   color: var(--muted);
 }
 .hero-badges i { width: 3px; height: 3px; border-radius: 50%; background: var(--dim); }
+.hero-badge-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; }
+.hero-badges-hl { border-color: var(--border-2); color: var(--fg); font-weight: 600; background: var(--surface); }
+.hero-badges-hl b { width: 6px; height: 6px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, .16); }
 .hero-title { margin-top: 28px; font-size: clamp(40px, 6vw, 84px); font-weight: 800; letter-spacing: -.04em; line-height: 1.02; }
 .hero-title span { display: block; color: var(--muted); }
 .hero-lead { margin: 22px auto 0; max-width: 660px; color: var(--muted); font-size: 16.5px; line-height: 1.7; }

@@ -50,6 +50,7 @@ export default {
         badgeCompatible: 'OpenAI 兼容',
         badgeUsd: '美元计价',
         badgeCancel: '随时取消',
+        badgeFable: '满血稳定 Fable 5',
         headline: 'One API.',
         headlineAccent: 'Every AI Model.',
         lead: '统一网关，接入 Claude、GPT、Gemini、DeepSeek 等数十种模型。改一行代码即可切换服务商，账单合并到一处结算。',

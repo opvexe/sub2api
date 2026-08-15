@@ -50,6 +50,7 @@ export default {
         badgeCompatible: 'OpenAI-compatible',
         badgeUsd: 'Pay in USD',
         badgeCancel: 'Cancel any time',
+        badgeFable: 'Fable 5 — full-strength & stable',
         headline: 'One API.',
         headlineAccent: 'Every AI Model.',
         lead: 'The unified gateway to Claude, GPT, Gemini, DeepSeek and dozens more. Switch providers with one line of code — and settle it all on one invoice.',

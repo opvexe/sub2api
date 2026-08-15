@@ -121,8 +121,8 @@ onBeforeUnmount(() => {
   --accent-text: #d1147d;
   --accent-soft: rgba(236, 26, 141, .09);
   --accent-line: rgba(236, 26, 141, .24);
-  --primary: theme('colors.primary.700');
-  --primary-hover: theme('colors.primary.800');
+  --primary: #de1681;
+  --primary-hover: #c41274;
   --primary-fg: #ffffff;
   --shadow: 0 1px 2px rgba(17, 24, 39, .04);
   --r: 14px;
@@ -149,9 +149,9 @@ html.dark .auth-shell {
   --accent-text: #ff8ccb;
   --accent-soft: rgba(255, 92, 180, .14);
   --accent-line: rgba(255, 92, 180, .30);
-  --primary: theme('colors.primary.50');
-  --primary-hover: #ffffff;
-  --primary-fg: theme('colors.primary.950');
+  --primary: #ff5cb4;
+  --primary-hover: #ff8ccb;
+  --primary-fg: #09090b;
   --shadow: 0 1px 2px rgba(0, 0, 0, .4);
 }
 

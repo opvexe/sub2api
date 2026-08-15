@@ -109,19 +109,14 @@ onBeforeUnmount(() => {
  */
 .auth-shell {
   /* 全部引用 tailwind.config.js 的色阶，与首页 / 控制台同源，改配置三处一起变 */
-  /* 暖浅灰主题（对标 elevenlabs.io 实测：#f5f3f1 / #ebe8e4 暖灰 + 纯黑字） */
-  --bg: #f5f3f1;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --surface-2: #ebe8e4;
-  --border: rgba(0, 0, 0, .08);
-  --border-2: rgba(0, 0, 0, .16);
-  --fg: #000000;
-  --muted: rgba(0, 0, 0, .58);
-  --dim: rgba(0, 0, 0, .40);
-  --accent: #0284c7;
-  --accent-text: #0369a1;
-  --accent-soft: rgba(2, 132, 199, .10);
-  --accent-line: rgba(2, 132, 199, .26);
+  --surface-2: theme('colors.gray.50');
+  --border: theme('colors.gray.200');
+  --border-2: theme('colors.gray.300');
+  --fg: theme('colors.gray.900');
+  --muted: theme('colors.gray.500');
+  --dim: theme('colors.gray.400');
   --primary: theme('colors.primary.700');
   --primary-hover: theme('colors.primary.800');
   --primary-fg: #ffffff;
@@ -146,10 +141,6 @@ html.dark .auth-shell {
   --fg: #ffffff;
   --muted: theme('colors.dark.300');
   --dim: theme('colors.dark.400');
-  --accent: #38bdf8;
-  --accent-text: #7dd3fc;
-  --accent-soft: rgba(56, 189, 248, .14);
-  --accent-line: rgba(56, 189, 248, .30);
   --primary: theme('colors.primary.50');
   --primary-hover: #ffffff;
   --primary-fg: theme('colors.primary.950');
@@ -157,7 +148,7 @@ html.dark .auth-shell {
 }
 
 .auth-inner { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 28px; }
-.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 
 /* Header：不加底边框，靠留白分区 */
 .auth-header-inner { display: flex; align-items: center; gap: 20px; height: 62px; }
@@ -183,7 +174,7 @@ html.dark .auth-shell {
 .brand-title {
   margin-top: 13px;
   font-size: clamp(28px, 3.2vw, 40px);
-  font-weight: 300;
+  font-weight: 800;
   letter-spacing: -.035em;
   line-height: 1.12;
   max-width: 16ch;
@@ -218,9 +209,8 @@ html.dark .auth-shell {
   place-items: center;
   border: 1px solid var(--border);
   border-radius: 7px;
-  background: var(--accent-soft);
-  border-color: var(--accent-line);
-  color: var(--accent-text);
+  background: var(--surface-2);
+  color: var(--muted);
   font-size: 11.5px;
   font-weight: 650;
 }

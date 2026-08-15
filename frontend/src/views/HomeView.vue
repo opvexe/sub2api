@@ -593,25 +593,20 @@ onMounted(() => {
  */
 .home-shell {
   /* 全部引用 tailwind.config.js 的色阶，与后台控制台同源，改配置两边一起变 */
-  /* 暖浅灰主题（对标 elevenlabs.io 实测：#f5f3f1 / #ebe8e4 暖灰 + 纯黑字） */
-  --bg: #f5f3f1;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --surface-2: #ebe8e4;
-  --border: rgba(0, 0, 0, .08);
-  --border-2: rgba(0, 0, 0, .16);
-  --fg: #000000;
-  --muted: rgba(0, 0, 0, .58);
-  --dim: rgba(0, 0, 0, .40);
-  --accent: #0284c7;
-  --accent-text: #0369a1;
-  --accent-soft: rgba(2, 132, 199, .10);
-  --accent-line: rgba(2, 132, 199, .26);
+  --surface-2: theme('colors.gray.50');
+  --border: theme('colors.gray.200');
+  --border-2: theme('colors.gray.300');
+  --fg: theme('colors.gray.900');
+  --muted: theme('colors.gray.500');
+  --dim: theme('colors.gray.400');
   --primary: theme('colors.primary.700');
   --primary-hover: theme('colors.primary.800');
   --primary-fg: #ffffff;
   --glass: rgba(255, 255, 255, .82);
   --shadow: 0 1px 2px rgba(17, 24, 39, .04);
-  --r: 18px;
+  --r: 14px;
 
   min-height: 100vh;
   overflow-x: hidden;
@@ -629,10 +624,6 @@ html.dark .home-shell {
   --fg: #ffffff;
   --muted: theme('colors.dark.300');
   --dim: theme('colors.dark.400');
-  --accent: #38bdf8;
-  --accent-text: #7dd3fc;
-  --accent-soft: rgba(56, 189, 248, .14);
-  --accent-line: rgba(56, 189, 248, .30);
   --primary: theme('colors.primary.50');
   --primary-hover: #ffffff;
   --primary-fg: theme('colors.primary.950');
@@ -641,8 +632,8 @@ html.dark .home-shell {
 }
 
 .section-inner { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 28px; }
-.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
-.big { font-size: clamp(27px, 3.2vw, 40px); font-weight: 500; letter-spacing: -.022em; line-height: 1.18; }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.big { font-size: clamp(28px, 3.4vw, 44px); font-weight: 800; letter-spacing: -.035em; line-height: 1.1; }
 .lead { margin-top: 14px; color: var(--muted); font-size: 15.5px; line-height: 1.7; max-width: 680px; }
 .sec { padding: 56px 0; }
 
@@ -695,8 +686,8 @@ html.dark .home-shell {
   justify-content: center;
   gap: 7px;
   border: 1px solid transparent;
-  border-radius: 9999px;
-  padding: 0 18px;
+  border-radius: 10px;
+  padding: 0 17px;
   min-height: 38px;
   font-size: 14px;
   font-weight: 600;
@@ -707,7 +698,7 @@ html.dark .home-shell {
 .btn-p:hover { background: var(--primary-hover); }
 .btn-g { background: var(--surface-2); border-color: var(--border); color: var(--fg); }
 .btn-g:hover { border-color: var(--border-2); }
-.btn-lg { min-height: 46px; padding: 0 26px; font-size: 15px; }
+.btn-lg { min-height: 46px; padding: 0 24px; font-size: 15px; }
 
 /* Hero */
 .hero { position: relative; padding: 80px 0 60px; text-align: center; overflow: hidden; }
@@ -754,8 +745,8 @@ html.dark .hero-grid {
 .hero-badge-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; }
 .hero-badges-hl { border-color: var(--border-2); color: var(--fg); font-weight: 600; background: var(--surface); }
 .hero-badges-hl b { width: 6px; height: 6px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, .16); }
-.hero-title { margin-top: 28px; font-size: clamp(40px, 5.4vw, 76px); font-weight: 300; letter-spacing: -.022em; line-height: 1.06; }
-.hero-title span { display: block; color: var(--accent); }
+.hero-title { margin-top: 28px; font-size: clamp(40px, 6vw, 84px); font-weight: 800; letter-spacing: -.04em; line-height: 1.02; }
+.hero-title span { display: block; color: var(--muted); }
 .hero-lead { margin: 22px auto 0; max-width: 660px; color: var(--muted); font-size: 16.5px; line-height: 1.7; }
 .hero-cta { display: flex; justify-content: center; gap: 12px; margin-top: 34px; }
 .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 34px; }
@@ -768,8 +759,8 @@ html.dark .hero-grid {
   color: var(--muted);
 }
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 820px; margin: 44px auto 0; }
-.stats dt { font-size: 38px; font-weight: 400; letter-spacing: -.025em; }
-.stats dd { margin-top: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+.stats dt { font-size: 38px; font-weight: 800; letter-spacing: -.03em; }
+.stats dd { margin-top: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 
 /* Popular paths */
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
@@ -788,15 +779,15 @@ html.dark .hero-grid {
   place-items: center;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--surface-2);
+  color: var(--fg);
 }
 .card b { display: block; margin-top: 16px; font-size: 15.5px; font-weight: 650; }
 .card p { margin-top: 9px; color: var(--muted); font-size: 13.5px; line-height: 1.7; }
 .card-go {
   display: inline-block;
   margin-top: 16px;
-  color: var(--accent-text);
+  color: var(--fg);
   font-size: 13px;
   font-weight: 600;
   text-decoration: underline;
@@ -816,8 +807,8 @@ html.dark .hero-grid {
   place-items: center;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--surface-2);
+  color: var(--fg);
 }
 .dev-item b { display: block; font-size: 14.5px; font-weight: 650; }
 .dev-item p { margin-top: 4px; color: var(--muted); font-size: 13px; line-height: 1.6; }
@@ -893,9 +884,7 @@ html.dark .hero-grid {
   place-items: center;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: var(--accent-soft);
-  border-color: var(--accent-line);
-  color: var(--accent-text);
+  background: var(--surface-2);
   font-size: 12px;
   font-weight: 700;
   z-index: 1;
@@ -903,7 +892,7 @@ html.dark .hero-grid {
 .step b { display: block; font-size: 14.5px; font-weight: 650; }
 .step p { margin-top: 4px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .bignum { display: flex; align-items: baseline; gap: 14px; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border); }
-.bignum b { font-size: 38px; font-weight: 400; letter-spacing: -.025em; }
+.bignum b { font-size: 38px; font-weight: 800; letter-spacing: -.03em; }
 .bignum p:first-child { font-size: 14px; font-weight: 650; }
 .bignum p:last-child { margin-top: 3px; color: var(--dim); font-size: 12.5px; }
 .fmt-list { padding: 8px; }

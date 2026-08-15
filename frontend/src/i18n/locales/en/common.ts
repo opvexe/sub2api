@@ -211,7 +211,7 @@ export default {
   auth: {
     brandEyebrow: 'OriginCoder',
     brandCaption: 'AI API Service Platform',
-    brandTitle: 'One key, every model',
+    brandTitle: 'Integrate once. Switch freely.',
     brandDescription: 'Sign in to create keys, review the usage and cost of every call, and manage your balance and plan.',
     brandTrustStatus: 'Create and manage API keys',
     brandTrustBilling: 'Review per-request usage and cost',

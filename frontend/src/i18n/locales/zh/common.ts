@@ -211,7 +211,7 @@ export default {
   auth: {
     brandEyebrow: 'OriginCoder',
     brandCaption: 'AI API 服务平台',
-    brandTitle: '一个 Key，跑通所有模型',
+    brandTitle: '接入一次，随便换',
     brandDescription: '登录后即可创建密钥、查看每一次调用的用量与费用，并管理余额与套餐。',
     brandTrustStatus: '创建并管理 API Key',
     brandTrustBilling: '查看逐请求的用量与费用',

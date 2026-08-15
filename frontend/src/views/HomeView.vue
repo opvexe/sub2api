@@ -293,6 +293,7 @@
               <strong class="brand-name">OriginCoder</strong>
             </router-link>
             <p>{{ t('home.landing.footer.brandDesc') }}</p>
+            <a class="footer-mail" :href="`mailto:${SUPPORT_EMAIL}`">{{ SUPPORT_EMAIL }}</a>
             <div class="footer-channels">
               <a
                 v-for="channel in supportLinks"
@@ -325,9 +326,7 @@
 
           <nav class="footer-col" :aria-label="t('home.landing.footer.support')">
             <strong>{{ t('home.landing.footer.support') }}</strong>
-            <a :href="supportLinks[0]?.href" target="_blank" rel="noopener noreferrer">
-              {{ t('home.landing.footer.contact') }}
-            </a>
+            <a :href="`mailto:${SUPPORT_EMAIL}`">{{ t('home.landing.footer.contact') }}</a>
             <router-link to="/key-usage">{{ t('keyUsage.title') }}</router-link>
             <a
               v-for="channel in supportLinks"
@@ -347,30 +346,6 @@
           <div v-else class="footer-col">
             <strong>{{ t('home.footer.contact') }}</strong>
             <p class="footer-note">{{ contactInfo || t('home.footer.contactDescription') }}</p>
-          </div>
-        </div>
-
-        <!-- 支付方式：Stripe 商户审核会检查官网是否说明收款方式与币种 -->
-        <div class="pay">
-          <div class="pay-col">
-            <strong>{{ t('home.landing.footer.payments') }}</strong>
-            <p>{{ t('home.landing.footer.paymentsLead', { currency: t('home.landing.footer.currency') }) }}</p>
-          </div>
-          <div class="pay-methods">
-            <div class="pm">
-              <span class="pm-badge">Stripe</span>
-              <div>
-                <b>{{ t('home.landing.footer.stripeTitle') }}</b>
-                <p>{{ t('home.landing.footer.stripeDesc') }}</p>
-              </div>
-            </div>
-            <div class="pm">
-              <span class="pm-badge">USDT</span>
-              <div>
-                <b>{{ t('home.landing.footer.usdtTitle') }}</b>
-                <p>{{ t('home.landing.footer.usdtDesc') }}</p>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -430,6 +405,7 @@ const CONTACT = {
   telegram: 'https://t.me/origincoder998',
   discord: 'https://discord.gg/2C6Qvd36pq',
 }
+const SUPPORT_EMAIL = 'support@origincoder.com'
 
 const TELEGRAM_PATH =
   'M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z'
@@ -953,6 +929,14 @@ html.dark .hero-grid {
 .site-footer { border-top: 1px solid var(--border); padding: 56px 0 30px; margin-top: 92px; }
 .footer-top { display: grid; grid-template-columns: 1.7fr repeat(3, 1fr); gap: 36px; }
 .footer-brand > p { margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.7; max-width: 300px; }
+.footer-mail {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--fg);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 .footer-channels { display: flex; gap: 8px; margin-top: 18px; }
 .footer-channels a {
   display: grid;
@@ -973,23 +957,6 @@ html.dark .hero-grid {
 .footer-col a:hover { color: var(--fg); }
 .footer-note { max-width: 260px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
 
-.pay { display: grid; grid-template-columns: 220px 1fr; gap: 32px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); }
-.pay-col strong { display: block; font-size: 12.5px; font-weight: 650; margin-bottom: 10px; }
-.pay-col p { color: var(--muted); font-size: 12.5px; line-height: 1.7; }
-.pay-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.pm { display: grid; grid-template-columns: auto 1fr; gap: 14px; border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; background: var(--surface); }
-.pm-badge {
-  align-self: start;
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  padding: 5px 10px;
-  background: var(--surface-2);
-  font-size: 11px;
-  font-weight: 650;
-  white-space: nowrap;
-}
-.pm b { display: block; font-size: 13px; font-weight: 650; }
-.pm p { margin-top: 6px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
 
 .footer-bottom {
   margin-top: 44px;
@@ -1039,13 +1006,13 @@ html.dark .hero-grid {
 
 @media (max-width: 1080px) {
   .grid4 { grid-template-columns: repeat(2, 1fr); }
-  .dev, .arch, .pay { grid-template-columns: 1fr; gap: 36px; }
+  .dev, .arch { grid-template-columns: 1fr; gap: 36px; }
   .footer-top { grid-template-columns: 1fr 1fr; }
   .nav-links { display: none; }
 }
 @media (max-width: 640px) {
   .section-inner { padding: 0 18px; }
-  .grid4, .stats, .pay-methods { grid-template-columns: 1fr; }
+  .grid4, .stats { grid-template-columns: 1fr; }
   .hero { padding: 64px 0 60px; }
   .hero-title { font-size: 40px; }
   .hero-cta { flex-direction: column; }

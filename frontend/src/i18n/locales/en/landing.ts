@@ -40,9 +40,9 @@ export default {
     // Landing page (OriginCoder marketing layout)
     landing: {
       nav: {
-        models: 'AI Models',
+        models: 'Models',
         pricing: 'Pricing',
-        docs: 'API Documentation',
+        docs: 'Docs',
         architecture: 'Architecture',
         contact: 'Contact'
       },

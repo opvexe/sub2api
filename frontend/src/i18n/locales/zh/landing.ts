@@ -40,9 +40,9 @@ export default {
     // 首页（OriginCoder 官网版式）
     landing: {
       nav: {
-        models: '模型',
+        models: '模型列表',
         pricing: '定价',
-        docs: 'API 文档',
+        docs: '使用文档',
         architecture: '架构',
         contact: '联系我们'
       },

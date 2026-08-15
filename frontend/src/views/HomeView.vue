@@ -92,18 +92,15 @@
           <strong class="brand-name">OriginCoder</strong>
         </router-link>
 
-        <div class="nav-links">
-          <router-link v-if="modelPlazaEnabled" to="/model-plaza">
-            {{ t('home.landing.nav.models') }}
-          </router-link>
-          <router-link to="/purchase">{{ t('home.landing.nav.pricing') }}</router-link>
-          <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">
-            {{ t('home.landing.nav.docs') }}
-          </a>
-          <a href="#architecture">{{ t('home.landing.nav.architecture') }}</a>
-        </div>
-
         <div class="nav-actions">
+          <span class="nav-links">
+            <router-link v-if="modelPlazaEnabled" to="/model-plaza">
+              {{ t('home.landing.nav.models') }}
+            </router-link>
+            <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">
+              {{ t('home.landing.nav.docs') }}
+            </a>
+          </span>
           <LocaleSwitcher class="home-locale" />
           <button
             type="button"
@@ -665,7 +662,7 @@ html.dark .home-shell {
 }
 .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
 .brand-name { font-size: 15.5px; font-weight: 700; letter-spacing: -.02em; }
-.nav-links { display: flex; gap: 24px; }
+.nav-links { display: flex; align-items: center; gap: 24px; margin-right: 8px; }
 .nav-links a { color: var(--muted); font-size: 14px; text-decoration: none; }
 .nav-links a:hover { color: var(--fg); }
 .nav-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }

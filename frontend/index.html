@@ -2,15 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/logo-v2.png?v=origincoder-20260814" />
+    <!-- rel="icon" 只保留一个，utils/branding.ts 的 updateFavicon 取的是第一个匹配项 -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=brand-20260815" />
+    <link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=brand-20260815" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=brand-20260815" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OriginCoder - AI API Gateway</title>
+    <title>Claude Code, Codex &amp; GPT API — AI Gateway | OriginCoder</title>
 
     <!-- SEO：自建实例改名后由 src/utils/seo.ts 在运行时覆盖 -->
-    <meta name="description" content="OriginCoder is an AI gateway for developers: one OpenAI-compatible API for Claude and OpenAI models, with USD pay-as-you-go balance, subscription plans, and one-click CC-Switch import." />
+    <meta name="description" content="One OpenAI-compatible endpoint for Claude, Claude Code, Codex and GPT. USD pay-as-you-go or subscription, with one-click CC-Switch import." />
     <meta
       name="keywords"
-      content="OriginCoder,AI API gateway,Claude API,OpenAI API,Codex,Claude Code,CC-Switch,OpenAI compatible,pay as you go,AI 网关,Claude 中转,订阅套餐"
+      content="claude code api,claude api,codex api,gpt api,openai compatible api,ai api gateway,llm api gateway,claude api alternative,anthropic api proxy,cc-switch,unified ai api,pay as you go ai api,claude code 中转,claude 中转 api,openai 兼容接口,ai 网关,按量计费 api,api 订阅套餐,codex 中转,gemini api"
     />
     <meta name="application-name" content="OriginCoder" />
     <meta name="author" content="OriginCoder" />
@@ -23,45 +26,99 @@
     />
     <meta name="category" content="technology" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="theme-color" content="#4964f4" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b" />
     <link rel="canonical" href="https://origincoder.com" />
     <link rel="alternate" hreflang="en" href="https://origincoder.com" />
     <link rel="alternate" hreflang="zh-CN" href="https://origincoder.com" />
     <link rel="alternate" hreflang="x-default" href="https://origincoder.com" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="OriginCoder - AI API Gateway for Developers" />
-    <meta property="og:description" content="OriginCoder is an AI gateway for developers: one OpenAI-compatible API for Claude and OpenAI models, with USD pay-as-you-go balance, subscription plans, and one-click CC-Switch import." />
+    <meta property="og:title" content="Claude Code, Codex &amp; GPT API — AI Gateway | OriginCoder" />
+    <meta property="og:description" content="One OpenAI-compatible endpoint for Claude, Claude Code, Codex and GPT. USD pay-as-you-go or subscription, with one-click CC-Switch import." />
     <meta property="og:url" content="https://origincoder.com" />
     <meta property="og:site_name" content="OriginCoder" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="zh_CN" />
-    <meta property="og:image" content="https://origincoder.com/logo-v2.png" />
+    <meta property="og:image" content="https://origincoder.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="OriginCoder - One API. Every AI Model." />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="OriginCoder - AI API Gateway for Developers" />
-    <meta name="twitter:description" content="OriginCoder is an AI gateway for developers: one OpenAI-compatible API for Claude and OpenAI models, with USD pay-as-you-go balance, subscription plans, and one-click CC-Switch import." />
-    <meta name="twitter:image" content="https://origincoder.com/logo-v2.png" />
+    <meta name="twitter:title" content="Claude Code, Codex &amp; GPT API — AI Gateway | OriginCoder" />
+    <meta name="twitter:description" content="One OpenAI-compatible endpoint for Claude, Claude Code, Codex and GPT. USD pay-as-you-go or subscription, with one-click CC-Switch import." />
+    <meta name="twitter:image" content="https://origincoder.com/og-image.png" />
 
     <script type="application/ld+json" data-seo="organization" nonce="__CSP_NONCE_VALUE__">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
+        "@id": "https://origincoder.com/#organization",
         "name": "OriginCoder",
         "url": "https://origincoder.com",
-        "logo": "https://origincoder.com/logo-v2.png",
-        "description": "OriginCoder is an AI gateway for developers: one OpenAI-compatible API for Claude and OpenAI models, with USD pay-as-you-go balance, subscription plans, and one-click CC-Switch import."
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://origincoder.com/logo-v2.png",
+          "width": 512,
+          "height": 512
+        },
+        "sameAs": [
+          "https://t.me/origincoder998",
+          "https://discord.gg/2C6Qvd36pq"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "support@origincoder.com",
+          "availableLanguage": ["en", "zh-CN"]
+        },
+        "description": "One OpenAI-compatible endpoint for Claude, Claude Code, Codex and GPT. USD pay-as-you-go or subscription, with one-click CC-Switch import."
       }
     </script>
     <script type="application/ld+json" data-seo="website" nonce="__CSP_NONCE_VALUE__">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
+        "@id": "https://origincoder.com/#website",
         "name": "OriginCoder",
         "url": "https://origincoder.com",
-        "description": "OriginCoder is an AI gateway for developers: one OpenAI-compatible API for Claude and OpenAI models, with USD pay-as-you-go balance, subscription plans, and one-click CC-Switch import.",
+        "publisher": { "@id": "https://origincoder.com/#organization" },
+        "description": "One OpenAI-compatible endpoint for Claude, Claude Code, Codex and GPT. USD pay-as-you-go or subscription, with one-click CC-Switch import.",
         "inLanguage": ["en", "zh-CN"]
+      }
+    </script>
+    <script type="application/ld+json" data-seo="software" nonce="__CSP_NONCE_VALUE__">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "@id": "https://origincoder.com/#software",
+        "name": "OriginCoder",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "url": "https://origincoder.com",
+        "image": "https://origincoder.com/logo-v2.png",
+        "publisher": { "@id": "https://origincoder.com/#organization" },
+        "isPartOf": { "@id": "https://origincoder.com/#website" },
+        "description": "One OpenAI-compatible endpoint for Claude, Claude Code, Codex and GPT. USD pay-as-you-go or subscription, with one-click CC-Switch import.",
+        "featureList": [
+          "OpenAI-compatible endpoint",
+          "Claude, GPT and Gemini request formats",
+          "Claude Code and Codex support",
+          "One-click CC-Switch import",
+          "USD pay-as-you-go balance",
+          "Subscription plans",
+          "Streaming responses",
+          "Per-request usage and billing records"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "5",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "url": "https://origincoder.com/purchase",
+          "description": "Minimum top-up. Usage is billed per request from the USD balance."
+        }
       }
     </script>
   </head>

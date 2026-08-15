@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="OriginCoder">
+  <style>
+    .mk { fill: #d97757; stroke: #d97757 }
+    @media (prefers-color-scheme: dark) { .mk { fill: #e08a68; stroke: #e08a68 } }
+  </style>
+  <path class="mk" d="M172 98 L310 98 M414 202 L414 340 A74 74 0 0 1 340 414 L172 414 A74 74 0 0 1 98 340 L98 172 A74 74 0 0 1 172 98" fill="none" stroke-width="96"/>
+  <rect class="mk" x="204" y="204" width="104" height="104" rx="20" stroke="none"/>
+</svg>

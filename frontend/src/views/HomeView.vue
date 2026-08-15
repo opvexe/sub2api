@@ -601,9 +601,10 @@ onMounted(() => {
   --fg: theme('colors.gray.900');
   --muted: theme('colors.gray.500');
   --dim: theme('colors.gray.400');
-  --accent: #0d9488;
-  --accent-soft: rgba(13, 148, 136, .09);
-  --accent-line: rgba(13, 148, 136, .22);
+  --accent: #d97757;
+  --accent-text: #b5502f;
+  --accent-soft: rgba(217, 119, 87, .10);
+  --accent-line: rgba(217, 119, 87, .26);
   --primary: theme('colors.primary.700');
   --primary-hover: theme('colors.primary.800');
   --primary-fg: #ffffff;
@@ -627,9 +628,10 @@ html.dark .home-shell {
   --fg: #ffffff;
   --muted: theme('colors.dark.300');
   --dim: theme('colors.dark.400');
-  --accent: #2dd4bf;
-  --accent-soft: rgba(45, 212, 191, .12);
-  --accent-line: rgba(45, 212, 191, .26);
+  --accent: #d97757;
+  --accent-text: #e08a6d;
+  --accent-soft: rgba(217, 119, 87, .14);
+  --accent-line: rgba(217, 119, 87, .30);
   --primary: theme('colors.primary.50');
   --primary-hover: #ffffff;
   --primary-fg: theme('colors.primary.950');
@@ -638,7 +640,7 @@ html.dark .home-shell {
 }
 
 .section-inner { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 28px; }
-.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
 .big { font-size: clamp(28px, 3.4vw, 44px); font-weight: 800; letter-spacing: -.035em; line-height: 1.1; }
 .lead { margin-top: 14px; color: var(--muted); font-size: 15.5px; line-height: 1.7; max-width: 680px; }
 .sec { padding: 56px 0; }
@@ -793,7 +795,7 @@ html.dark .hero-grid {
 .card-go {
   display: inline-block;
   margin-top: 16px;
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 13px;
   font-weight: 600;
   text-decoration: underline;
@@ -892,7 +894,7 @@ html.dark .hero-grid {
   border-radius: 9px;
   background: var(--accent-soft);
   border-color: var(--accent-line);
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 12px;
   font-weight: 700;
   z-index: 1;

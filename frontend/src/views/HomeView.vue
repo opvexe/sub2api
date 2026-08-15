@@ -330,7 +330,6 @@
           <nav class="footer-col" :aria-label="t('home.landing.footer.support')">
             <strong>{{ t('home.landing.footer.support') }}</strong>
             <a :href="`mailto:${SUPPORT_EMAIL}`">{{ t('home.landing.footer.contact') }}</a>
-            <router-link to="/key-usage">{{ t('keyUsage.title') }}</router-link>
             <a
               v-for="channel in supportLinks"
               :key="channel.key"
@@ -592,19 +591,20 @@ onMounted(() => {
  * 全站无彩，层次靠明度；主按钮为中性深灰（浅色）/ 浅灰（深色）。
  */
 .home-shell {
-  --bg: #fcfcfe;
+  /* 全部引用 tailwind.config.js 的色阶，与后台控制台同源，改配置两边一起变 */
+  --bg: #ffffff;
   --surface: #ffffff;
-  --surface-2: rgba(3, 8, 10, .031);
-  --border: rgba(3, 8, 10, .078);
-  --border-2: rgba(3, 8, 10, .16);
-  --fg: #03080a;
-  --muted: rgba(3, 8, 10, .69);
-  --dim: rgba(3, 8, 10, .45);
-  --primary: #2a2f33;
-  --primary-hover: #3a4045;
-  --primary-fg: #fcfcfe;
-  --glass: rgba(252, 252, 254, .82);
-  --shadow: 0 1px 2px rgba(3, 8, 10, .04);
+  --surface-2: theme('colors.gray.50');
+  --border: theme('colors.gray.200');
+  --border-2: theme('colors.gray.300');
+  --fg: theme('colors.gray.900');
+  --muted: theme('colors.gray.500');
+  --dim: theme('colors.gray.400');
+  --primary: theme('colors.primary.700');
+  --primary-hover: theme('colors.primary.800');
+  --primary-fg: #ffffff;
+  --glass: rgba(255, 255, 255, .82);
+  --shadow: 0 1px 2px rgba(17, 24, 39, .04);
   --r: 14px;
 
   min-height: 100vh;
@@ -615,18 +615,18 @@ onMounted(() => {
   letter-spacing: -.006em;
 }
 html.dark .home-shell {
-  --bg: #070709;
-  --surface: #0d0d10;
-  --surface-2: rgba(252, 252, 254, .04);
-  --border: rgba(252, 252, 254, .09);
-  --border-2: rgba(252, 252, 254, .18);
-  --fg: #f5f5f7;
-  --muted: rgba(252, 252, 254, .63);
-  --dim: rgba(252, 252, 254, .42);
-  --primary: #f5f5f7;
+  --bg: theme('colors.dark.950');
+  --surface: theme('colors.dark.900');
+  --surface-2: theme('colors.dark.800');
+  --border: theme('colors.dark.700');
+  --border-2: theme('colors.dark.600');
+  --fg: #ffffff;
+  --muted: theme('colors.dark.300');
+  --dim: theme('colors.dark.400');
+  --primary: theme('colors.primary.50');
   --primary-hover: #ffffff;
-  --primary-fg: #070709;
-  --glass: rgba(7, 7, 9, .82);
+  --primary-fg: theme('colors.primary.950');
+  --glass: rgba(9, 9, 11, .82);
   --shadow: 0 1px 2px rgba(0, 0, 0, .4);
 }
 
@@ -634,8 +634,8 @@ html.dark .home-shell {
 .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 .big { font-size: clamp(28px, 3.4vw, 44px); font-weight: 800; letter-spacing: -.035em; line-height: 1.1; }
 .lead { margin-top: 14px; color: var(--muted); font-size: 15.5px; line-height: 1.7; max-width: 680px; }
-.sec { padding: 92px 0; border-top: 1px solid var(--border); }
-.sec-flush { border-top: 0; }
+.sec { padding: 92px 0; }
+
 .sec-head { text-align: center; max-width: 680px; margin: 0 auto; }
 .sec-head .lead { margin-left: auto; margin-right: auto; }
 
@@ -708,25 +708,25 @@ html.dark .home-shell {
   width: 1000px;
   height: 620px;
   transform: translateX(-50%);
-  background: radial-gradient(closest-side, rgba(3, 8, 10, .05), transparent 72%);
+  background: radial-gradient(closest-side, rgba(17, 24, 39, .05), transparent 72%);
   pointer-events: none;
 }
-html.dark .hero-glow { background: radial-gradient(closest-side, rgba(252, 252, 254, .07), transparent 72%); }
+html.dark .hero-glow { background: radial-gradient(closest-side, rgba(255, 255, 255, .06), transparent 72%); }
 .hero-grid {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(3, 8, 10, .035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(3, 8, 10, .035) 1px, transparent 1px);
+    linear-gradient(rgba(17, 24, 39, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 24, 39, .035) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse 62% 55% at 50% 18%, #000, transparent 76%);
   -webkit-mask-image: radial-gradient(ellipse 62% 55% at 50% 18%, #000, transparent 76%);
 }
 html.dark .hero-grid {
   background-image:
-    linear-gradient(rgba(252, 252, 254, .022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(252, 252, 254, .022) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px);
 }
 .hero-inner { position: relative; }
 .hero-badges {

@@ -133,7 +133,7 @@ export default {
         secondary: '联系我们'
       },
       footer: {
-        brandDesc: '一个端点、一把密钥、一份账单，覆盖主流 AI 模型。由在美国注册的 Fvawi Drein INC 运营。',
+        brandDesc: 'One API. Every AI Model. 由 Fvawi Drein INC（美国）运营。',
         product: '产品',
         support: '支持',
         legal: '协议',
@@ -378,6 +378,8 @@ export default {
       title: '联系 OriginCoder',
       description: 'Telegram、Discord 客服渠道',
       online: '在线',
+      hours: '服务时间 09:00 – 24:00',
+      close: '收起客服面板',
       telegram: 'Telegram 客服',
       telegramDescription: '即时咨询与接入帮助',
       discord: 'Discord 社区',

@@ -347,28 +347,57 @@
       </div>
     </footer>
 
-    <!-- Floating support rail: channels are visible without a click -->
-    <nav class="support-rail" :aria-label="t('home.community.title')">
-      <span class="rail-caption" aria-hidden="true">
-        <Icon name="chat" size="sm" :stroke-width="2" />
-        {{ t('home.community.support') }}
-      </span>
-      <a
-        v-for="channel in supportLinks"
-        :key="channel.key"
-        :href="channel.href"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="rail-item"
-        :class="'rail-' + channel.key"
-        :aria-label="channel.label"
+    <!-- 悬浮客服：默认只露一个按钮，点开才展示渠道；渠道始终在 DOM 里，只切换可见性 -->
+    <div class="support-dock">
+      <div v-show="supportOpen" id="support-panel" class="support-panel">
+        <div class="panel-head">
+          <strong>{{ t('home.community.title') }}</strong>
+          <button
+            type="button"
+            class="panel-close"
+            :aria-label="t('home.community.close')"
+            @click="supportOpen = false"
+          >
+            <Icon name="x" size="sm" :stroke-width="2" />
+          </button>
+        </div>
+        <p class="panel-hours">
+          <Icon name="clock" size="sm" :stroke-width="2" aria-hidden="true" />
+          {{ t('home.community.hours') }}
+        </p>
+        <nav class="support-rail" :aria-label="t('home.community.title')">
+          <a
+            v-for="channel in supportLinks"
+            :key="channel.key"
+            :href="channel.href"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rail-item"
+            :class="'rail-' + channel.key"
+          >
+            <span class="rail-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path :d="channel.path" /></svg>
+            </span>
+            <span class="rail-label">
+              <strong>{{ channel.label }}</strong>
+              <small>{{ t(`home.community.${channel.key}Description`) }}</small>
+            </span>
+          </a>
+        </nav>
+      </div>
+
+      <button
+        type="button"
+        class="support-fab"
+        :class="{ 'is-open': supportOpen }"
+        :aria-expanded="supportOpen"
+        aria-controls="support-panel"
+        @click="supportOpen = !supportOpen"
       >
-        <span class="rail-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path :d="channel.path" /></svg>
-        </span>
-        <span class="rail-label"><strong>{{ channel.label }}</strong></span>
-      </a>
-    </nav>
+        <Icon :name="supportOpen ? 'x' : 'chat'" size="sm" :stroke-width="2.2" />
+        <span>{{ t('home.community.support') }}</span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -545,6 +574,8 @@ const supportLinks = computed(() =>
     { key: 'discord', href: CONTACT.discord, label: 'Discord', path: DISCORD_PATH },
   ].filter((item) => item.href)
 )
+
+const supportOpen = ref(false)
 
 // Theme
 const isDark = ref(document.documentElement.classList.contains('dark'))
@@ -742,8 +773,27 @@ html.dark .hero-grid {
 }
 .hero-badges i { width: 3px; height: 3px; border-radius: 50%; background: var(--dim); }
 .hero-badge-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; }
-.hero-badges-hl { border-color: var(--border-2); color: var(--fg); font-weight: 600; background: var(--surface); }
-.hero-badges-hl b { width: 6px; height: 6px; border-radius: 50%; background: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, .16); }
+/* 主打款式：整块走红，是首屏唯一的高饱和信号 */
+.hero-badges-hl {
+  border-color: rgba(220, 38, 38, .32);
+  background: rgba(220, 38, 38, .07);
+  color: #b91c1c;
+  font-weight: 650;
+}
+.hero-badges-hl b {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .16);
+  animation: rail-pulse-red 2.4s ease-in-out infinite;
+}
+@keyframes rail-pulse-red {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(220, 38, 38, .16); }
+  50% { box-shadow: 0 0 0 6px rgba(220, 38, 38, .05); }
+}
+html.dark .hero-badges-hl { border-color: rgba(248, 113, 113, .36); background: rgba(248, 113, 113, .12); color: #fca5a5; }
+html.dark .hero-badges-hl b { background: #f87171; box-shadow: 0 0 0 3px rgba(248, 113, 113, .18); }
 .hero-title { margin-top: 28px; font-size: clamp(40px, 6vw, 84px); font-weight: 800; letter-spacing: -.04em; line-height: 1.02; }
 .hero-title span { display: block; }
 .hero-lead { margin: 22px auto 0; max-width: 660px; color: var(--muted); font-size: 16.5px; line-height: 1.7; }
@@ -965,33 +1015,94 @@ html.dark .hero-grid {
 .footer-tags { display: flex; gap: 6px; }
 .footer-tags i { font-style: normal; border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px; font-size: 10.5px; color: var(--muted); }
 
-/* Floating support rail */
-.support-rail {
+/* 悬浮客服：右侧居中，收起时只有一颗橙色按钮，点开展出服务时间与渠道 */
+.support-dock {
   position: fixed;
-  right: 18px;
+  right: 20px;
   top: 50%;
   z-index: 50;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
+  gap: 10px;
   transform: translateY(-50%);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 10px;
-  background: var(--glass);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(14px);
 }
-.rail-caption { display: flex; align-items: center; gap: 5px; align-self: center; color: var(--muted); font-size: 10.5px; font-weight: 600; }
-.rail-item { display: flex; align-items: center; justify-content: flex-end; gap: 10px; border-radius: 12px; padding: 4px; text-decoration: none; }
-.rail-item:hover { background: var(--surface-2); }
+.support-fab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  color: #ffffff;
+  background: var(--primary);
+  font-size: 13.5px;
+  font-weight: 650;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(217, 119, 87, .34);
+  transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
+}
+.support-fab:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 14px 30px rgba(217, 119, 87, .40); }
+.support-fab:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+.support-fab.is-open { background: var(--fg); box-shadow: 0 10px 24px rgba(25, 24, 23, .26); }
+
+.support-panel {
+  width: 244px;
+  border: 1px solid var(--border-2);
+  border-radius: 16px;
+  padding: 14px;
+  background: var(--surface);
+  box-shadow: 0 16px 38px rgba(25, 24, 23, .15), 0 2px 6px rgba(25, 24, 23, .06);
+}
+html.dark .support-panel { box-shadow: 0 16px 38px rgba(0, 0, 0, .55), 0 2px 6px rgba(0, 0, 0, .4); }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.panel-head strong { font-size: 13.5px; font-weight: 700; }
+.panel-close {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: none;
+  border-radius: 7px;
+  color: var(--dim);
+  background: transparent;
+  cursor: pointer;
+}
+.panel-close:hover { color: var(--fg); background: var(--surface-2); }
+/* 服务时间：面板里唯一的说明文字，单独一条带底色，避免被当成链接忽略 */
+.panel-hours {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  border-radius: 9px;
+  padding: 7px 9px;
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.support-rail { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; }
+.rail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  padding: 7px 6px;
+  text-decoration: none;
+  transition: background .16s ease, border-color .16s ease;
+}
+.rail-item:hover { border-color: var(--border); background: var(--surface-2); }
 .rail-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail-icon { display: grid; width: 38px; height: 38px; flex: none; place-items: center; border: 1px solid var(--border); border-radius: 11px; color: var(--fg); background: var(--surface); }
+/* 图标用渠道官方色：在奶油底上最跳，也最好认 */
+.rail-icon { display: grid; width: 34px; height: 34px; flex: none; place-items: center; border-radius: 10px; color: #ffffff; }
+.rail-telegram .rail-icon { background: #229ed9; }
+.rail-discord .rail-icon { background: #5865f2; }
 .rail-icon svg { width: 18px; height: 18px; }
-.rail-label { display: grid; overflow: hidden; max-width: 0; opacity: 0; white-space: nowrap; transition: max-width .22s ease, opacity .18s ease; }
-.rail-item:hover .rail-label, .rail-item:focus-visible .rail-label { max-width: 120px; opacity: 1; }
-.rail-label strong { color: var(--fg); font-size: 12px; font-weight: 600; }
+.rail-label { display: grid; min-width: 0; gap: 1px; }
+.rail-label strong { color: var(--fg); font-size: 12.5px; font-weight: 600; }
+.rail-label small { color: var(--muted); font-size: 11px; line-height: 1.4; }
 
 .home-shell :deep(.home-locale button) { color: var(--muted); }
 .home-shell :deep(.home-locale > div) { border-color: var(--border); background: var(--surface); }
@@ -1014,9 +1125,10 @@ html.dark .hero-grid {
   .footer-bottom { grid-template-columns: 1fr; align-items: start; }
   .footer-meta { flex-wrap: wrap; white-space: normal; }
   .site-footer { margin-top: 40px; }
-  .support-rail { right: 12px; top: auto; bottom: 12px; flex-direction: row; gap: 6px; padding: 7px; border-radius: 999px; transform: none; }
-  .rail-caption, .rail-label { display: none; }
-  .rail-icon { width: 36px; height: 36px; border-radius: 50%; }
+  .support-dock { right: 14px; top: auto; bottom: 14px; transform: none; }
+  .support-panel { width: min(78vw, 244px); }
+  .support-fab span { display: none; }
+  .support-fab { padding: 14px; border-radius: 50%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .home-shell *, .home-shell *::before, .home-shell *::after {

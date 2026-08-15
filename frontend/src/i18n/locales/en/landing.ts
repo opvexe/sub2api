@@ -133,7 +133,7 @@ export default {
         secondary: 'Contact us'
       },
       footer: {
-        brandDesc: 'One endpoint, one key and one invoice for every major AI model. Operated by Fvawi Drein INC, a company registered in the United States.',
+        brandDesc: 'One API. Every AI Model. Operated by Fvawi Drein INC (United States).',
         product: 'Product',
         support: 'Support',
         legal: 'Legal',
@@ -378,6 +378,8 @@ export default {
       title: 'Contact OriginCoder',
       description: 'Support through Telegram and Discord',
       online: 'Online',
+      hours: 'Support hours 09:00 – 24:00',
+      close: 'Close support panel',
       telegram: 'Telegram support',
       telegramDescription: 'Fast questions and integration help',
       discord: 'Discord community',

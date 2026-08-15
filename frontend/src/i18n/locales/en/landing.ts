@@ -40,146 +40,117 @@ export default {
     // Landing page (OriginCoder marketing layout)
     landing: {
       nav: {
-        models: 'Model pricing',
-        pricing: 'Plans',
-        developers: 'Developers',
-        billingRules: 'Billing rules',
-        docs: 'Docs'
+        models: 'AI Models',
+        pricing: 'Pricing',
+        docs: 'API Documentation',
+        architecture: 'Architecture',
+        contact: 'Contact'
       },
       hero: {
-        badge: 'Speaks OpenAI and Anthropic · CC-Switch ready',
-        headline: 'One key. Every coding agent.',
-        lead: 'One base URL, one key. Claude Code, Codex, and your existing OpenAI code run unchanged. Pay per call from a USD balance, or take a subscription.',
-        primaryCta: 'Create a free API key',
-        secondaryCta: 'See the configs',
+        badgeCompatible: 'OpenAI-compatible',
+        badgeUsd: 'Pay in USD',
+        badgeCancel: 'Cancel any time',
+        headline: 'One API.',
+        headlineAccent: 'Every AI Model.',
+        lead: 'The unified gateway to Claude, GPT, Gemini, DeepSeek and dozens more. Switch providers with one line of code — and settle it all on one invoice.',
+        ctaPrimary: 'See pricing',
+        ctaSecondary: 'Read the quickstart',
         stats: {
-          modelsValue: '3',
-          modelsLabel: 'interchangeable formats',
-          compatibleValue: '4',
-          compatibleLabel: 'clients ready to go',
-          streamValue: 'USD',
-          streamLabel: 'balance, billed per call'
+          modelsValue: '60+',
+          modelsLabel: 'AI models',
+          uptimeValue: '99.9%',
+          uptimeLabel: 'Uptime target',
+          oneValue: '1',
+          oneLabel: 'Key, endpoint & invoice'
         }
       },
-      pricing: {
-        eyebrow: 'Pricing',
-        title: 'Pay per call, or per month.',
-        description: 'Balance settles in USD, and every call\'s input/output tokens and cost stay visible.',
-        link: 'See the full billing rules',
-        recommended: 'Recommended',
-        payg: {
-          eyebrow: 'PAY AS YOU GO',
-          title: 'USD balance, billed per call',
-          description: 'Top up a USD balance and pay for what you actually call — a fit for uneven demand and multi-model evaluation.',
-          points: {
-            price: 'Balance in USD, with input/output prices per model',
-            lockIn: 'No lock-in to a single model — switch any time',
-            switch: 'Every call itemized; you pay only for usage'
-          },
-          action: 'View model pricing'
+      paths: {
+        eyebrow: 'Popular paths',
+        title: 'Pick the client you actually use.',
+        lead: 'OriginCoder works as a custom OpenAI-compatible API for coding agents, chat clients, CLI tools and your own applications.',
+        action: 'View guide',
+        agents: {
+          title: 'Coding Agents',
+          desc: 'Cursor, Cline, Roo Code, Kilo Code, Continue, Zed and any editor that accepts a custom OpenAI-compatible base URL.'
         },
-        subscription: {
-          eyebrow: 'SUBSCRIPTION',
-          title: 'Subscription plans',
-          description: 'Fixed plans for high-frequency development workflows, with clear quotas and cycles.',
-          points: {
-            tiers: 'Multiple tiers to choose from',
-            steady: 'Built for steady, ongoing work',
-            records: 'All usage records in one place'
-          },
-          action: 'Choose a plan'
+        chat: {
+          title: 'Chat Clients',
+          desc: 'LibreChat, LobeChat, Open WebUI, Chatbox and other generic OpenAI-compatible front ends — no adapter needed.'
         },
-        support: {
-          eyebrow: 'SUPPORT',
-          title: 'Integration support',
-          description: 'Telegram and Discord reach a person, not a ticket queue.',
-          points: {
-            troubleshoot: 'Paste the error and config; we trace where it breaks',
-            guide: 'Setup walkthroughs for Claude Code, Codex, CC-Switch',
-            scope: 'Billing disputes get a call-by-call review'
-          },
-          action: 'Contact us'
-        }
-      },
-      setup: {
-        eyebrow: 'Quick start',
-        title: 'Pick a client, paste the config, start building.',
-        description: 'Every client shares one Base URL and one API key — switching models needs no code change.',
-        baseUrlLabel: 'Base URL',
-        keyHint: 'Replace sk-xxx with an API key created in your console.',
-        copy: 'Copy',
-        copied: 'Copied',
-        tabs: {
-          claudeCode: 'Claude Code',
-          codex: 'Codex',
-          ccSwitch: 'CC-Switch',
-          sdk: 'OpenAI SDK'
+        cli: {
+          title: 'CLI Tools',
+          desc: 'Claude Code, Codex CLI, Gemini CLI, Aider and terminal agents read the same key straight from your environment.'
         },
-        ccSwitchNote: 'Hit "Import to CCS" on any API key in the console — CC-Switch writes the config below for you.'
-      },
-      endpoints: {
-        eyebrow: 'Endpoints',
-        title: 'Your current code, just a new base URL.',
-        description: 'All three request formats land on the same gateway — keep speaking whichever your code already speaks.',
-        headers: {
-          format: 'Format',
-          endpoint: 'Endpoint',
-          client: 'Typical clients'
-        },
-        clients: {
-          openai: 'OpenAI SDK, Codex, OpenCode',
-          claude: 'Claude Code, Anthropic SDK',
-          gemini: 'Gemini CLI'
+        apps: {
+          title: 'Your Own Apps',
+          desc: 'Keep your existing OpenAI SDK calls in Python, Node or Go. Swap the base URL and the model string, ship the rest unchanged.'
         }
       },
       developer: {
-        eyebrow: 'Compatibility',
-        titleLead: 'Change models',
-        titleAccent: 'without rewriting requests.',
-        description: 'One key routes to different upstreams and fails over when one is down. Streaming and tool calls pass through untouched.',
-        points: {
-          endpoint: 'OpenAI-compatible endpoints, plus Anthropic Messages',
-          routing: 'One key, unified model routing',
-          streaming: 'Streaming responses and tool calls',
-          ccswitch: 'One-click CC-Switch import — swap groups from the client'
+        eyebrow: 'Developer first',
+        title: 'Integrate in Seconds.',
+        titleAccent: 'Scale to Infinity.',
+        lead: 'Fully OpenAI-compatible endpoints. Switch providers without changing your code. One API key, every model.',
+        codeLabel: 'Bash · curl',
+        copy: 'Copy',
+        copied: 'Copied',
+        endpoints: {
+          title: 'OpenAI-compatible endpoints',
+          desc: 'Works with the official OpenAI SDKs in Python, Node, Go and more.'
         },
-        action: 'Read the full docs',
-        codeLabel: 'bash'
-      },
-      contact: {
-        eyebrow: 'Support',
-        title: 'Need a human? Reach us directly.',
-        description: 'Telegram and Discord are both staffed. Bring integration questions, billing questions, or incident reports.',
-        note: 'Usually a few minutes during working hours; off-hours messages are handled in order once we are back.',
-        online: 'Online',
-        open: 'Open',
-        telegram: {
-          name: 'Telegram',
-          handle: 't.me/origincoder998',
-          description: 'One-to-one help with setup, accounts, and billing'
+        failover: {
+          title: 'Automatic provider failover',
+          desc: 'A degraded upstream is routed around instead of returning an error.'
         },
-        discord: {
-          name: 'Discord',
-          handle: 'OriginCoder Community',
-          description: 'Community channel for release notes, incidents, and tips'
+        protocol: {
+          title: 'Multi-protocol support',
+          desc: 'Streaming, function calling and embeddings supported end to end.'
+        },
+        records: {
+          title: 'Per-request usage records',
+          desc: 'Token counts and cost for every call, exportable for reconciliation.'
         }
       },
+      architecture: {
+        eyebrow: 'Architecture',
+        lifecycle: 'Request lifecycle',
+        active: 'Active',
+        step1: { title: 'Unified endpoint', desc: 'One API surface for OpenAI, Anthropic and Gemini request formats.' },
+        step2: { title: 'Smart routing', desc: 'Picks the fastest healthy provider by live latency and availability.' },
+        step3: { title: 'Automatic failover', desc: 'Failed requests are instantly rerouted to an alternative channel.' },
+        delivered: { value: '99.9%', title: 'Always delivered.', desc: 'Uptime target across every model.' },
+        formats: 'Supported formats',
+        autoDetected: 'Auto-detected',
+        formatsNote: 'All three request formats are auto-detected and routed to the correct provider, so you can keep the SDK your project already uses instead of rewriting the client layer.',
+        formatsCount: { value: '3', title: 'Request formats accepted.', desc: 'Detected automatically on every call.' }
+      },
       finalCta: {
-        eyebrow: 'Get started',
-        title: 'Grab a key and try it.',
-        description: 'Sign up, create an API key, and copy the config above — that is the whole setup.',
-        action: 'Create an API key'
+        eyebrow: 'Ready to build?',
+        title: 'Ready to build the future?',
+        lead: 'One key, one endpoint, one invoice. Pick a plan and make your first call in under five minutes.',
+        primary: 'Choose a plan',
+        secondary: 'Contact us'
       },
       footer: {
+        brandDesc: 'One endpoint, one key and one invoice for every major AI model. Operated by Fvawi Drein INC, a company registered in the United States.',
         product: 'Product',
-        resources: 'Resources',
+        support: 'Support',
         legal: 'Legal',
+        models: 'AI models',
+        pricing: 'Pricing',
         console: 'Console',
-        quickStart: 'Quick start',
-        guide: 'How-to guides',
+        docs: 'Documentation',
+        status: 'Status',
+        contact: 'Contact us',
         faq: 'FAQ',
-        terms: 'Terms of service',
-        privacy: 'Privacy policy'
+        payments: 'Payments',
+        paymentsLead: 'All prices are published and charged in { currency }, exclusive of taxes.',
+        currency: 'US dollars (USD)',
+        stripeTitle: 'Cards — Visa, Mastercard, American Express',
+        stripeDesc: 'Processed securely by Stripe, Inc. We never receive or store your full card number. Subscriptions renew monthly and can be cancelled at any time from the dashboard.',
+        usdtTitle: 'USDT — TRC20 & ERC20',
+        usdtDesc: 'Manual prepaid top-up credited after on-chain confirmation. One-time, non-recurring, and non-refundable once confirmed. Send only USDT on a listed network.',
+        disclaimer: 'OriginCoder is an independent platform. It is not affiliated with, endorsed by or sponsored by Anthropic, OpenAI, Google, Meta or any other model provider; all trademarks are the property of their respective owners. Model outputs are generated by third-party providers and may be inaccurate — review them before relying on them.'
       }
     },
     tags: {

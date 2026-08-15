@@ -87,19 +87,20 @@
       <nav class="section-inner home-nav" :aria-label="t('home.nav.primary')">
         <router-link to="/home" class="brand-link" :aria-label="siteName">
           <span class="brand-mark">
-            <img :src="brandLogo" :alt="siteName + ' logo'" class="h-full w-full object-contain" />
+            <img :src="brandLogo" :alt="siteName + ' logo'" />
           </span>
-          <span class="min-w-0">
-            <strong class="brand-name">OriginCoder</strong>
-            <small class="brand-caption">{{ t('home.brandCaption') }}</small>
-          </span>
+          <strong class="brand-name">OriginCoder</strong>
         </router-link>
 
         <div class="nav-links">
-          <router-link v-for="link in navLinks" :key="link.to" :to="link.to">{{ link.label }}</router-link>
+          <router-link v-if="modelPlazaEnabled" to="/model-plaza">
+            {{ t('home.landing.nav.models') }}
+          </router-link>
+          <router-link to="/purchase">{{ t('home.landing.nav.pricing') }}</router-link>
           <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">
             {{ t('home.landing.nav.docs') }}
           </a>
+          <a href="#architecture">{{ t('home.landing.nav.architecture') }}</a>
         </div>
 
         <div class="nav-actions">
@@ -113,10 +114,7 @@
           >
             <Icon :name="isDark ? 'sun' : 'moon'" size="sm" :stroke-width="2" />
           </button>
-          <router-link :to="isAuthenticated ? dashboardPath : '/login'" class="header-ghost">
-            {{ isAuthenticated ? t('home.dashboard') : t('home.login') }}
-          </router-link>
-          <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="header-action">
+          <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="btn btn-p">
             {{ isAuthenticated ? t('home.goToDashboard') : t('home.getStarted') }}
           </router-link>
         </div>
@@ -124,79 +122,42 @@
     </header>
 
     <main>
-      <!-- Hero: 左侧主张，右侧可直接复制的接入配置台 -->
-      <section id="service" class="hero-section">
+      <!-- Hero -->
+      <section class="hero">
         <div class="hero-glow" aria-hidden="true"></div>
         <div class="hero-grid" aria-hidden="true"></div>
-
-        <div class="section-inner hero-layout">
-          <div class="hero-copy">
-            <div class="hero-badge">
-              <span class="hero-badge-dot"></span>
-              {{ t('home.landing.hero.badge') }}
-            </div>
-
-            <h1 class="hero-title">{{ t('home.landing.hero.headline') }}</h1>
-            <p class="hero-lead">{{ t('home.landing.hero.lead') }}</p>
-
-            <div class="base-url">
-              <span class="base-url-label">{{ t('home.landing.setup.baseUrlLabel') }}</span>
-              <code>{{ baseUrl }}</code>
-              <button type="button" class="icon-copy" :aria-label="t('home.landing.setup.copy')" @click="copySnippet(baseUrl, 'base')">
-                <Icon :name="copiedKey === 'base' ? 'check' : 'copy'" size="sm" :stroke-width="2" />
-              </button>
-            </div>
-
-            <div class="hero-actions">
-              <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="primary-action">
-                {{ isAuthenticated ? t('home.goToDashboard') : t('home.landing.hero.primaryCta') }}
-                <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
-              </router-link>
-              <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="secondary-action">
-                {{ t('home.landing.hero.secondaryCta') }}
-              </a>
-              <router-link v-else :to="pricingEntry" class="secondary-action">
-                {{ t('home.landing.hero.secondaryCta') }}
-              </router-link>
-            </div>
-
-            <ul class="model-chip-row" :aria-label="t('home.landing.nav.models')">
-              <li v-for="chip in modelChips" :key="chip.name">{{ chip.name }}</li>
-            </ul>
+        <div class="section-inner hero-inner">
+          <div class="hero-badges">
+            <span aria-hidden="true">✦</span>
+            {{ t('home.landing.hero.badgeCompatible') }}
+            <i></i>{{ t('home.landing.hero.badgeUsd') }}
+            <i></i>{{ t('home.landing.hero.badgeCancel') }}
           </div>
 
-          <!-- 接入配置台：切客户端即得可复制配置 -->
-          <div class="setup-console">
-            <div class="setup-tabs" role="tablist" :aria-label="t('home.landing.setup.title')">
-              <button
-                v-for="client in setupClients"
-                :key="client.key"
-                type="button"
-                role="tab"
-                :aria-selected="activeClient === client.key"
-                :class="['setup-tab', { 'setup-tab-active': activeClient === client.key }]"
-                @click="activeClient = client.key"
-              >
-                {{ client.label }}
-              </button>
-            </div>
+          <h1 class="hero-title">
+            {{ t('home.landing.hero.headline') }}
+            <span>{{ t('home.landing.hero.headlineAccent') }}</span>
+          </h1>
+          <p class="hero-lead">{{ t('home.landing.hero.lead') }}</p>
 
-            <div class="setup-body">
-              <div class="setup-head">
-                <span class="setup-file">{{ activeSetup.file }}</span>
-                <button type="button" class="copy-button" @click="copySnippet(activeSetup.code, 'setup')">
-                  <Icon :name="copiedKey === 'setup' ? 'check' : 'copy'" size="xs" :stroke-width="2.2" />
-                  {{ copiedKey === 'setup' ? t('home.landing.setup.copied') : t('home.landing.setup.copy') }}
-                </button>
-              </div>
-              <pre class="setup-code"><code>{{ activeSetup.code }}</code></pre>
-              <p class="setup-note">{{ activeSetup.note }}</p>
-            </div>
+          <div class="hero-cta">
+            <router-link :to="pricingEntry" class="btn btn-p btn-lg">
+              {{ t('home.landing.hero.ctaPrimary') }}
+              <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
+            </router-link>
+            <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="btn btn-g btn-lg">
+              {{ t('home.landing.hero.ctaSecondary') }}
+            </a>
+            <a v-else href="#developers" class="btn btn-g btn-lg">
+              {{ t('home.landing.hero.ctaSecondary') }}
+            </a>
           </div>
-        </div>
 
-        <div class="section-inner">
-          <dl class="hero-stats">
+          <ul class="chips" :aria-label="t('home.landing.nav.models')">
+            <li v-for="name in modelChips" :key="name">{{ name }}</li>
+          </ul>
+
+          <dl class="stats">
             <div v-for="stat in heroStats" :key="stat.key">
               <dt>{{ stat.value }}</dt>
               <dd>{{ stat.label }}</dd>
@@ -205,145 +166,133 @@
         </div>
       </section>
 
-      <!-- 端点表：密集、可扫读 -->
-      <section id="endpoints" class="section endpoints-section">
-        <div class="section-inner">
-          <div class="section-head section-head-left">
-            <p class="section-eyebrow">{{ t('home.landing.endpoints.eyebrow') }}</p>
-            <h2>{{ t('home.landing.endpoints.title') }}</h2>
-            <p class="section-lead">{{ t('home.landing.endpoints.description') }}</p>
-          </div>
-
-          <div class="endpoint-table" role="table">
-            <div class="endpoint-row endpoint-head" role="row">
-              <span role="columnheader">{{ t('home.landing.endpoints.headers.format') }}</span>
-              <span role="columnheader">{{ t('home.landing.endpoints.headers.endpoint') }}</span>
-              <span role="columnheader">{{ t('home.landing.endpoints.headers.client') }}</span>
-            </div>
-            <div v-for="format in requestFormats" :key="format.key" class="endpoint-row" role="row">
-              <span role="cell" class="endpoint-format">
-                <i class="endpoint-method">POST</i>
-                {{ format.label }}
-              </span>
-              <code role="cell">{{ format.endpoint }}</code>
-              <span role="cell" class="endpoint-client">{{ format.client }}</span>
-            </div>
-          </div>
+      <!-- Popular paths -->
+      <section id="paths" class="sec"><div class="section-inner">
+        <div class="sec-head">
+          <p class="eyebrow">{{ t('home.landing.paths.eyebrow') }}</p>
+          <h2 class="big">{{ t('home.landing.paths.title') }}</h2>
+          <p class="lead">{{ t('home.landing.paths.lead') }}</p>
         </div>
-      </section>
-
-      <!-- Credibility facts, no fabricated volume -->
-      <section id="guarantees" class="section capability-section" :aria-label="t('home.trustBar.title')">
-        <div class="section-inner capability-grid">
-          <article v-for="item in trustBarItems" :key="item.key" class="capability-card">
-            <span class="capability-icon"><Icon :name="item.icon" size="md" :stroke-width="1.9" /></span>
-            <strong>{{ item.title }}</strong>
-            <p>{{ item.description }}</p>
+        <div class="grid4">
+          <article v-for="path in pathCards" :key="path.key" class="card">
+            <span class="card-ic"><Icon :name="path.icon" size="sm" :stroke-width="2" /></span>
+            <b>{{ path.title }}</b>
+            <p>{{ path.desc }}</p>
+            <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer" class="card-go">
+              {{ t('home.landing.paths.action') }} →
+            </a>
+            <a v-else href="#developers" class="card-go">{{ t('home.landing.paths.action') }} →</a>
           </article>
         </div>
-      </section>
-
-      <!-- Pricing -->
-      <section id="pricing" class="section pricing-section">
-        <div class="section-inner">
-          <div class="section-head">
-            <p class="section-eyebrow">{{ t('home.landing.pricing.eyebrow') }}</p>
-            <h2>{{ t('home.landing.pricing.title') }}</h2>
-            <p class="section-lead">{{ t('home.landing.pricing.description') }}</p>
-            <router-link v-if="modelPlazaEnabled" to="/model-plaza" class="section-link">
-              {{ t('home.landing.pricing.link') }}
-              <Icon name="arrowRight" size="xs" :stroke-width="2.4" aria-hidden="true" />
-            </router-link>
-          </div>
-
-          <div class="pricing-grid">
-            <article
-              v-for="plan in pricingPlans"
-              :key="plan.key"
-              class="pricing-card"
-              :class="{ 'pricing-card-featured': plan.featured }"
-            >
-              <span v-if="plan.featured" class="pricing-ribbon">
-                {{ t('home.landing.pricing.recommended') }}
-              </span>
-              <p class="pricing-eyebrow">{{ plan.eyebrow }}</p>
-              <h3>{{ plan.title }}</h3>
-              <p class="pricing-description">{{ plan.description }}</p>
-              <ul class="pricing-points">
-                <li v-for="point in plan.points" :key="point">
-                  <Icon name="checkCircle" size="sm" :stroke-width="2.2" aria-hidden="true" />
-                  {{ point }}
-                </li>
-              </ul>
-              <a
-                v-if="plan.anchor"
-                :href="plan.to"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="pricing-action"
-              >
-                {{ plan.action }}
-                <Icon name="arrowRight" size="xs" :stroke-width="2.4" aria-hidden="true" />
-              </a>
-              <router-link v-else :to="plan.to" class="pricing-action">
-                {{ plan.action }}
-                <Icon name="arrowRight" size="xs" :stroke-width="2.4" aria-hidden="true" />
-              </router-link>
-            </article>
-          </div>
-        </div>
-      </section>
+      </div></section>
 
       <!-- Developer first -->
-      <section id="developers" class="section developer-section">
-        <div class="section-inner">
-          <div class="section-head section-head-left">
-            <p class="section-eyebrow">{{ t('home.landing.developer.eyebrow') }}</p>
-            <h2>{{ t('home.landing.developer.titleLead') }}<br />{{ t('home.landing.developer.titleAccent') }}</h2>
-            <p class="section-lead">{{ t('home.landing.developer.description') }}</p>
+      <section id="developers" class="sec"><div class="section-inner dev">
+        <div>
+          <p class="eyebrow">{{ t('home.landing.developer.eyebrow') }}</p>
+          <h2 class="big">
+            {{ t('home.landing.developer.title') }}
+            <span>{{ t('home.landing.developer.titleAccent') }}</span>
+          </h2>
+          <p class="lead">{{ t('home.landing.developer.lead') }}</p>
+          <div class="dev-list">
+            <div v-for="item in devItems" :key="item.key" class="dev-item">
+              <span class="dev-ic"><Icon :name="item.icon" size="sm" :stroke-width="2" /></span>
+              <div><b>{{ item.title }}</b><p>{{ item.desc }}</p></div>
+            </div>
           </div>
-          <ul class="developer-points">
-            <li v-for="point in developerPoints" :key="point">
-              <Icon name="checkCircle" size="sm" :stroke-width="2.2" aria-hidden="true" />
-              {{ point }}
-            </li>
-          </ul>
-          <a
-            v-if="docUrl"
-            :href="docUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="secondary-action developer-action"
-          >
-            {{ t('home.landing.developer.action') }}
-            <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
-          </a>
         </div>
-      </section>
+        <div class="code-card">
+          <div class="code-top">
+            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="code-label">{{ t('home.landing.developer.codeLabel') }}</span>
+            <button type="button" class="code-copy" @click="copySnippet(curlSnippet, 'curl')">
+              <Icon :name="copiedKey === 'curl' ? 'check' : 'copy'" size="xs" :stroke-width="2.2" />
+              {{ copiedKey === 'curl' ? t('home.landing.developer.copied') : t('home.landing.developer.copy') }}
+            </button>
+          </div>
+          <pre class="code-body"><code>{{ curlSnippet }}</code></pre>
+        </div>
+      </div></section>
+
+      <!-- Architecture -->
+      <section id="architecture" class="sec"><div class="section-inner">
+        <p class="eyebrow">{{ t('home.landing.architecture.eyebrow') }}</p>
+        <div class="arch">
+          <div class="panel">
+            <div class="panel-head">
+              <span class="panel-title">{{ t('home.landing.architecture.lifecycle') }}</span>
+              <span class="pill"><i></i>{{ t('home.landing.architecture.active') }}</span>
+            </div>
+            <div class="panel-body">
+              <div v-for="(step, index) in archSteps" :key="step.key" class="step">
+                <span class="step-n">{{ index + 1 }}</span>
+                <div><b>{{ step.title }}</b><p>{{ step.desc }}</p></div>
+              </div>
+              <div class="bignum">
+                <b>{{ t('home.landing.architecture.delivered.value') }}</b>
+                <div>
+                  <p>{{ t('home.landing.architecture.delivered.title') }}</p>
+                  <p>{{ t('home.landing.architecture.delivered.desc') }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <span class="eyebrow">{{ t('home.landing.architecture.formats') }}</span>
+              <span class="pill"><i></i>{{ t('home.landing.architecture.autoDetected') }}</span>
+            </div>
+            <div class="fmt-list">
+              <div v-for="format in requestFormats" :key="format.key" class="endpoint-row">
+                <span class="endpoint-method">POST</span>
+                <code>{{ format.endpoint }}</code>
+                <small>{{ format.label }}</small>
+              </div>
+            </div>
+            <p class="panel-note">{{ t('home.landing.architecture.formatsNote') }}</p>
+            <div class="panel-body" style="padding-top: 0">
+              <div class="bignum" style="margin-top: 0">
+                <b>{{ t('home.landing.architecture.formatsCount.value') }}</b>
+                <div>
+                  <p>{{ t('home.landing.architecture.formatsCount.title') }}</p>
+                  <p>{{ t('home.landing.architecture.formatsCount.desc') }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></section>
 
       <!-- Final CTA -->
-      <section class="final-cta">
-        <div class="section-inner final-cta-inner">
-          <p class="final-cta-eyebrow">{{ t('home.landing.finalCta.eyebrow') }}</p>
-          <h2>{{ t('home.landing.finalCta.title') }}</h2>
-          <p>{{ t('home.landing.finalCta.description') }}</p>
-          <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="primary-action">
-            {{ isAuthenticated ? t('home.goToDashboard') : t('home.landing.finalCta.action') }}
-            <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
-          </router-link>
+      <section class="sec sec-flush"><div class="section-inner">
+        <div class="final">
+          <p class="eyebrow">{{ t('home.landing.finalCta.eyebrow') }}</p>
+          <h2 class="big">{{ t('home.landing.finalCta.title') }}</h2>
+          <p class="lead">{{ t('home.landing.finalCta.lead') }}</p>
+          <div class="hero-cta">
+            <router-link :to="isAuthenticated ? dashboardPath : '/register'" class="btn btn-p btn-lg">
+              {{ t('home.landing.finalCta.primary') }}
+              <Icon name="arrowRight" size="sm" :stroke-width="2.4" aria-hidden="true" />
+            </router-link>
+            <a :href="supportLinks[0]?.href" target="_blank" rel="noopener noreferrer" class="btn btn-g btn-lg">
+              {{ t('home.landing.finalCta.secondary') }}
+            </a>
+          </div>
         </div>
-      </section>
+      </div></section>
     </main>
 
     <footer class="site-footer">
       <div class="section-inner">
         <div class="footer-top">
           <div class="footer-brand">
-            <router-link to="/home" class="footer-brand-link" :aria-label="siteName">
+            <router-link to="/home" class="brand-link" :aria-label="siteName">
               <span class="brand-mark"><img :src="brandLogo" :alt="siteName + ' logo'" /></span>
-              <strong>OriginCoder</strong>
+              <strong class="brand-name">OriginCoder</strong>
             </router-link>
-            <p>{{ t('home.footer.description') }}</p>
+            <p>{{ t('home.landing.footer.brandDesc') }}</p>
             <div class="footer-channels">
               <a
                 v-for="channel in supportLinks"
@@ -351,7 +300,6 @@
                 :href="channel.href"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="footer-channel"
                 :class="'rail-' + channel.key"
                 :aria-label="channel.label"
                 :title="channel.label"
@@ -361,47 +309,76 @@
             </div>
           </div>
 
-          <div class="footer-cols">
-            <nav class="footer-col" :aria-label="t('home.landing.footer.product')">
-              <strong>{{ t('home.landing.footer.product') }}</strong>
-              <router-link v-if="modelPlazaEnabled" to="/model-plaza">
-                {{ t('modelPlaza.title') }}
-              </router-link>
-              <router-link to="/purchase">{{ t('home.landing.nav.pricing') }}</router-link>
-              <a href="#developers">{{ t('home.landing.nav.developers') }}</a>
-              <router-link :to="isAuthenticated ? dashboardPath : '/login'">
-                {{ t('home.landing.footer.console') }}
-              </router-link>
-            </nav>
+          <nav class="footer-col" :aria-label="t('home.landing.footer.product')">
+            <strong>{{ t('home.landing.footer.product') }}</strong>
+            <router-link v-if="modelPlazaEnabled" to="/model-plaza">
+              {{ t('home.landing.footer.models') }}
+            </router-link>
+            <router-link to="/purchase">{{ t('home.landing.footer.pricing') }}</router-link>
+            <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">
+              {{ t('home.landing.footer.docs') }}
+            </a>
+            <router-link :to="isAuthenticated ? dashboardPath : '/login'">
+              {{ t('home.landing.footer.console') }}
+            </router-link>
+          </nav>
 
-            <nav class="footer-col" :aria-label="t('home.landing.footer.resources')">
-              <strong>{{ t('home.landing.footer.resources') }}</strong>
-              <a v-if="docUrl" :href="docUrl" target="_blank" rel="noopener noreferrer">
-                {{ t('home.landing.nav.docs') }}
-              </a>
-              <router-link to="/key-usage">{{ t('keyUsage.title') }}</router-link>
-              <a :href="supportLinks[0]?.href" target="_blank" rel="noopener noreferrer">
-                {{ t('home.community.support') }}
-              </a>
-            </nav>
+          <nav class="footer-col" :aria-label="t('home.landing.footer.support')">
+            <strong>{{ t('home.landing.footer.support') }}</strong>
+            <a :href="supportLinks[0]?.href" target="_blank" rel="noopener noreferrer">
+              {{ t('home.landing.footer.contact') }}
+            </a>
+            <router-link to="/key-usage">{{ t('keyUsage.title') }}</router-link>
+            <a
+              v-for="channel in supportLinks"
+              :key="channel.key"
+              :href="channel.href"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{{ channel.label }} ↗</a>
+          </nav>
 
-            <nav v-if="legalDocuments.length" class="footer-col" :aria-label="t('home.landing.footer.legal')">
-              <strong>{{ t('home.landing.footer.legal') }}</strong>
-              <router-link v-for="doc in legalDocuments" :key="doc.id" :to="`/legal/${doc.id}`">
-                {{ doc.title }}
-              </router-link>
-            </nav>
-            <div v-else class="footer-col">
-              <strong>{{ t('home.footer.contact') }}</strong>
-              <p class="footer-note">{{ contactInfo || t('home.footer.contactDescription') }}</p>
+          <nav v-if="legalDocuments.length" class="footer-col" :aria-label="t('home.landing.footer.legal')">
+            <strong>{{ t('home.landing.footer.legal') }}</strong>
+            <router-link v-for="doc in legalDocuments" :key="doc.id" :to="`/legal/${doc.id}`">
+              {{ doc.title }}
+            </router-link>
+          </nav>
+          <div v-else class="footer-col">
+            <strong>{{ t('home.footer.contact') }}</strong>
+            <p class="footer-note">{{ contactInfo || t('home.footer.contactDescription') }}</p>
+          </div>
+        </div>
+
+        <!-- 支付方式：Stripe 商户审核会检查官网是否说明收款方式与币种 -->
+        <div class="pay">
+          <div class="pay-col">
+            <strong>{{ t('home.landing.footer.payments') }}</strong>
+            <p>{{ t('home.landing.footer.paymentsLead', { currency: t('home.landing.footer.currency') }) }}</p>
+          </div>
+          <div class="pay-methods">
+            <div class="pm">
+              <span class="pm-badge">Stripe</span>
+              <div>
+                <b>{{ t('home.landing.footer.stripeTitle') }}</b>
+                <p>{{ t('home.landing.footer.stripeDesc') }}</p>
+              </div>
+            </div>
+            <div class="pm">
+              <span class="pm-badge">USDT</span>
+              <div>
+                <b>{{ t('home.landing.footer.usdtTitle') }}</b>
+                <p>{{ t('home.landing.footer.usdtDesc') }}</p>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="footer-bottom">
           <span>&copy; {{ currentYear }} OriginCoder. {{ t('home.footer.allRightsReserved') }}</span>
-          <span class="footer-slogan">{{ t('home.footer.slogan') }}</span>
+          <span class="footer-tags"><i>USD</i><i>Stripe</i><i>USDT</i></span>
         </div>
+        <p class="footer-legal">{{ t('home.landing.footer.disclaimer') }}</p>
       </div>
     </footer>
 
@@ -424,15 +401,8 @@
         <span class="rail-icon">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path :d="channel.path" /></svg>
         </span>
-        <span class="rail-label">
-          <strong>{{ channel.label }}</strong>
-          <small>{{ channel.handle }}</small>
-        </span>
+        <span class="rail-label"><strong>{{ channel.label }}</strong></span>
       </a>
-      <span class="rail-status">
-        <i></i>
-        <span>{{ t('home.community.online') }}</span>
-      </span>
     </nav>
   </div>
 </template>
@@ -475,7 +445,6 @@ const siteLogo = computed(() =>
     allowDataUrl: true,
   })
 )
-const brandLogo = computed(() => (isDark.value ? BRAND_LOGO_URL_DARK : BRAND_LOGO_URL))
 const siteSubtitle = computed(() => {
   const configuredSubtitle = appStore.cachedPublicSettings?.site_subtitle?.trim()
   const defaults = ['AI API Gateway Platform', 'Subscription to API Conversion Platform']
@@ -500,7 +469,7 @@ const isAuthenticated = computed(() => authStore.isAuthenticated)
 const dashboardPath = computed(() => (authStore.isAdmin ? '/admin/dashboard' : '/dashboard'))
 const currentYear = computed(() => new Date().getFullYear())
 
-// 协议文档由管理员在后台配置；没有配置时footer改显示联系方式。
+// 协议文档由管理员在后台配置；没有配置时 footer 改显示联系方式。
 const legalDocuments = computed(() =>
   (appStore.cachedPublicSettings?.login_agreement_documents || []).filter(
     (doc) => doc?.id && doc?.title
@@ -511,23 +480,10 @@ const legalDocuments = computed(() =>
 const modelPlazaEnabled = computed(
   () => appStore.cachedPublicSettings?.model_plaza_enabled !== false
 )
-// 广场关闭时，"看价格"的落点退回注册/控制台。
-const pricingEntry = computed(() =>
-  modelPlazaEnabled.value ? '/model-plaza' : isAuthenticated.value ? dashboardPath.value : '/register'
-)
+// 广场关闭时，"看价格"的落点退回套餐页。
+const pricingEntry = computed(() => (modelPlazaEnabled.value ? '/model-plaza' : '/purchase'))
 
-const navLinks = computed(() =>
-  modelPlazaEnabled.value ? [{ to: '/model-plaza', label: t('modelPlaza.title') }] : []
-)
-
-// 头像色块与下方模型标签共用同一份数据。
-const modelChips = [
-  { name: 'Claude', short: 'C', color: '#4964f4' },
-  { name: 'Claude Code', short: 'CC', color: '#3f57dc' },
-  { name: 'GPT', short: 'G', color: '#6366f1' },
-  { name: 'Codex', short: 'CX', color: '#354bd2' },
-  { name: 'CC-Switch', short: 'CCS', color: '#7b8ef8' },
-]
+const modelChips = ['Claude', 'GPT', 'Gemini', 'DeepSeek', 'Grok', 'Qwen', 'Llama', 'Mistral']
 
 const heroStats = computed(() => [
   {
@@ -536,71 +492,74 @@ const heroStats = computed(() => [
     label: t('home.landing.hero.stats.modelsLabel'),
   },
   {
-    key: 'compatible',
-    value: t('home.landing.hero.stats.compatibleValue'),
-    label: t('home.landing.hero.stats.compatibleLabel'),
+    key: 'uptime',
+    value: t('home.landing.hero.stats.uptimeValue'),
+    label: t('home.landing.hero.stats.uptimeLabel'),
   },
   {
-    key: 'stream',
-    value: t('home.landing.hero.stats.streamValue'),
-    label: t('home.landing.hero.stats.streamLabel'),
+    key: 'one',
+    value: t('home.landing.hero.stats.oneValue'),
+    label: t('home.landing.hero.stats.oneLabel'),
   },
 ])
 
-const pricingPlans = computed(() => [
-  {
-    key: 'payg',
-    featured: false,
-    anchor: false,
-    to: pricingEntry.value,
-    eyebrow: t('home.landing.pricing.payg.eyebrow'),
-    title: t('home.landing.pricing.payg.title'),
-    description: t('home.landing.pricing.payg.description'),
-    action: t('home.landing.pricing.payg.action'),
-    points: [
-      t('home.landing.pricing.payg.points.price'),
-      t('home.landing.pricing.payg.points.lockIn'),
-      t('home.landing.pricing.payg.points.switch'),
-    ],
-  },
-  {
-    key: 'subscription',
-    featured: true,
-    anchor: false,
-    to: '/purchase',
-    eyebrow: t('home.landing.pricing.subscription.eyebrow'),
-    title: t('home.landing.pricing.subscription.title'),
-    description: t('home.landing.pricing.subscription.description'),
-    action: t('home.landing.pricing.subscription.action'),
-    points: [
-      t('home.landing.pricing.subscription.points.tiers'),
-      t('home.landing.pricing.subscription.points.steady'),
-      t('home.landing.pricing.subscription.points.records'),
-    ],
-  },
-  {
-    key: 'support',
-    featured: false,
-    anchor: true,
-    to: CONTACT.telegram,
-    eyebrow: t('home.landing.pricing.support.eyebrow'),
-    title: t('home.landing.pricing.support.title'),
-    description: t('home.landing.pricing.support.description'),
-    action: t('home.landing.pricing.support.action'),
-    points: [
-      t('home.landing.pricing.support.points.troubleshoot'),
-      t('home.landing.pricing.support.points.guide'),
-      t('home.landing.pricing.support.points.scope'),
-    ],
-  },
-])
+const PATH_SLOTS = [
+  { key: 'agents', icon: 'cpu' },
+  { key: 'chat', icon: 'chat' },
+  { key: 'cli', icon: 'terminal' },
+  { key: 'apps', icon: 'cube' },
+] as const
+const pathCards = computed(() =>
+  PATH_SLOTS.map((slot) => ({
+    ...slot,
+    title: t('home.landing.paths.' + slot.key + '.title'),
+    desc: t('home.landing.paths.' + slot.key + '.desc'),
+  }))
+)
 
+const DEV_SLOTS = [
+  { key: 'endpoints', icon: 'bolt' },
+  { key: 'failover', icon: 'arrowsUpDown' },
+  { key: 'protocol', icon: 'sparkles' },
+  { key: 'records', icon: 'document' },
+] as const
+const devItems = computed(() =>
+  DEV_SLOTS.map((slot) => ({
+    ...slot,
+    title: t('home.landing.developer.' + slot.key + '.title'),
+    desc: t('home.landing.developer.' + slot.key + '.desc'),
+  }))
+)
 
-// ---- 接入配置台 ----
-// 片段与控制台 UseKeyModal 生成的配置保持一致，改这里时两边一起改。
-const BASE_URL = 'https://origincoder.com/v1'
-const baseUrl = BASE_URL
-const PLACEHOLDER_KEY = 'sk-xxx'
+const ARCH_SLOTS = ['step1', 'step2', 'step3'] as const
+const archSteps = computed(() =>
+  ARCH_SLOTS.map((key) => ({
+    key,
+    title: t('home.landing.architecture.' + key + '.title'),
+    desc: t('home.landing.architecture.' + key + '.desc'),
+  }))
+)
+
+const REQUEST_FORMATS = [
+  { key: 'openai', endpoint: '/v1/chat/completions' },
+  { key: 'claude', endpoint: '/v1/messages' },
+  { key: 'gemini', endpoint: '/v1beta/models/{model}:generateContent' },
+] as const
+const requestFormats = computed(() =>
+  REQUEST_FORMATS.map((format) => ({
+    ...format,
+    label: t('home.servicePreview.formats.' + format.key),
+  }))
+)
+
+const curlSnippet = `curl -X POST https://origincoder.com/v1/chat/completions \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -d '{
+    "model": "claude-sonnet-4-5",
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "stream": true
+  }'`
 
 const copiedKey = ref('')
 let copyTimer: ReturnType<typeof setTimeout> | undefined
@@ -614,126 +573,16 @@ async function copySnippet(text: string, key: string) {
   copyTimer = setTimeout(() => (copiedKey.value = ''), 2000)
 }
 
-const activeClient = ref('claudeCode')
-const setupClients = computed(() =>
-  (['claudeCode', 'codex', 'ccSwitch', 'sdk'] as const).map((key) => ({
-    key,
-    label: t('home.landing.setup.tabs.' + key),
-  }))
-)
-
-const SETUP_SNIPPETS: Record<string, { file: string; code: string }> = {
-  claudeCode: {
-    file: '~/.claude/settings.json',
-    code: `{
-  "env": {
-    "ANTHROPIC_BASE_URL": "https://origincoder.com",
-    "ANTHROPIC_AUTH_TOKEN": "${PLACEHOLDER_KEY}"
-  }
-}`,
-  },
-  codex: {
-    file: '~/.codex/config.toml',
-    code: `model_provider = "origincoder"
-model = "gpt-5.1-codex"
-
-[model_providers.origincoder]
-name = "OriginCoder"
-base_url = "${BASE_URL}"
-env_key = "ORIGINCODER_API_KEY"
-wire_api = "responses"
-requires_openai_auth = false`,
-  },
-  ccSwitch: {
-    file: 'CC-Switch',
-    code: `Base URL   ${BASE_URL}
-API Key    ${PLACEHOLDER_KEY}`,
-  },
-  sdk: {
-    file: 'python',
-    code: `from openai import OpenAI
-
-client = OpenAI(
-    base_url="${BASE_URL}",
-    api_key="${PLACEHOLDER_KEY}",
-)
-
-resp = client.chat.completions.create(
-    model="your-model",
-    messages=[{"role": "user", "content": "Hello!"}],
-    stream=True,
-)`,
-  },
-}
-
-const activeSetup = computed(() => {
-  const snippet = SETUP_SNIPPETS[activeClient.value] ?? SETUP_SNIPPETS.claudeCode
-  return {
-    ...snippet,
-    note:
-      activeClient.value === 'ccSwitch'
-        ? t('home.landing.setup.ccSwitchNote')
-        : t('home.landing.setup.keyHint'),
-  }
-})
-
-const developerPoints = computed(() => [
-  t('home.landing.developer.points.endpoint'),
-  t('home.landing.developer.points.routing'),
-  t('home.landing.developer.points.streaming'),
-  t('home.landing.developer.points.ccswitch'),
-])
-
-const REQUEST_FORMATS = [
-  { key: 'openai', endpoint: '/v1/chat/completions' },
-  { key: 'claude', endpoint: '/v1/messages' },
-  { key: 'gemini', endpoint: '/v1beta/models/{model}:generateContent' },
-] as const
-const requestFormats = computed(() =>
-  REQUEST_FORMATS.map((format) => ({
-    ...format,
-    label: t('home.servicePreview.formats.' + format.key),
-    client: t('home.landing.endpoints.clients.' + format.key),
-  }))
-)
-
-const TRUST_BAR_SLOTS = [
-  { key: 'monitoring', icon: 'eye' },
-  { key: 'records', icon: 'document' },
-  { key: 'failover', icon: 'arrowsUpDown' },
-  { key: 'support', icon: 'chat' },
-] as const
-const trustBarItems = computed(() =>
-  TRUST_BAR_SLOTS.map((slot) => ({
-    ...slot,
-    title: t('home.trustBar.items.' + slot.key + '.title'),
-    description: t('home.trustBar.items.' + slot.key + '.description'),
-  }))
-)
-
 const supportLinks = computed(() =>
   [
-    {
-      key: 'telegram',
-      href: CONTACT.telegram,
-      label: t('home.landing.contact.telegram.name'),
-      handle: t('home.landing.contact.telegram.handle'),
-      description: t('home.landing.contact.telegram.description'),
-      path: TELEGRAM_PATH,
-    },
-    {
-      key: 'discord',
-      href: CONTACT.discord,
-      label: t('home.landing.contact.discord.name'),
-      handle: t('home.landing.contact.discord.handle'),
-      description: t('home.landing.contact.discord.description'),
-      path: DISCORD_PATH,
-    },
+    { key: 'telegram', href: CONTACT.telegram, label: 'Telegram', path: TELEGRAM_PATH },
+    { key: 'discord', href: CONTACT.discord, label: 'Discord', path: DISCORD_PATH },
   ].filter((item) => item.href)
 )
 
-// Theme (used by the compact home page)
+// Theme
 const isDark = ref(document.documentElement.classList.contains('dark'))
+const brandLogo = computed(() => (isDark.value ? BRAND_LOGO_URL_DARK : BRAND_LOGO_URL))
 function toggleTheme() {
   isDark.value = !isDark.value
   document.documentElement.classList.toggle('dark', isDark.value)
@@ -760,606 +609,404 @@ onMounted(() => {
 
 <style scoped>
 /*
- * 设计令牌：亮色为默认，深色在 html.dark 下整体换一套。
- * 对齐 OpenRouter：zinc 中性灰打底，圆角 8px（控件）/ 12px（卡片），描边 1px。
+ * 令牌取自 openrouter.ai 实测：亮色 cloud/ink，深色近黑。
+ * 全站无彩，层次靠明度；主按钮为中性深灰（浅色）/ 浅灰（深色）。
  */
 .home-shell {
-  /* 对齐 OpenRouter：zinc 中性打底，靛蓝只做小面积点缀，主按钮用反色 */
-  --canvas: #ffffff;
-  --canvas-alt: #fafafa;
+  --bg: #fcfcfe;
   --surface: #ffffff;
-  --surface-alt: #f4f4f5;
-  --border: #e4e4e7;
-  --border-strong: #d4d4d8;
-  --text: #09090b;
-  --text-muted: #71717a;
-  --text-dim: #a1a1aa;
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
-  --accent-soft: #eef2ff;
-  --inverse: #18181b;
-  --inverse-hover: #27272a;
-  --inverse-fg: #fafafa;
-  --code-bg: #fafafa;
-  --shadow-sm: 0 1px 2px rgba(9, 9, 11, .05);
-  --shadow-md: 0 8px 24px rgba(9, 9, 11, .06);
-  --grid-line: rgba(9, 9, 11, .045);
-  --hero-glow: rgba(9, 9, 11, .05);
-  --radius: 8px;
-  --radius-lg: 12px;
+  --surface-2: rgba(3, 8, 10, .031);
+  --border: rgba(3, 8, 10, .078);
+  --border-2: rgba(3, 8, 10, .16);
+  --fg: #03080a;
+  --muted: rgba(3, 8, 10, .69);
+  --dim: rgba(3, 8, 10, .45);
+  --primary: #2a2f33;
+  --primary-hover: #3a4045;
+  --primary-fg: #fcfcfe;
+  --glass: rgba(252, 252, 254, .82);
+  --shadow: 0 1px 2px rgba(3, 8, 10, .04);
+  --r: 14px;
 
   min-height: 100vh;
   overflow-x: hidden;
-  color: var(--text);
-  background: var(--canvas);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
-    "Hiragino Sans GB", system-ui, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+  font-size: 15px;
+  letter-spacing: -.006em;
 }
 html.dark .home-shell {
-  --canvas: #0a0b0d;
-  --canvas-alt: #101113;
-  --surface: #101113;
-  --surface-alt: #18191c;
-  --border: #26282d;
-  --border-strong: #3f3f46;
-  --text: #dee1e3;
-  --text-muted: #a1a1aa;
-  --text-dim: #71717a;
-  --accent: #818cf8;
-  --accent-hover: #a5b4fc;
-  --accent-soft: rgba(99, 102, 241, .14);
-  --inverse: #fafafa;
-  --inverse-hover: #e4e4e7;
-  --inverse-fg: #09090b;
-  --code-bg: #0d0e11;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, .5);
-  --grid-line: rgba(255, 255, 255, .04);
-  --hero-glow: rgba(255, 255, 255, .05);
+  --bg: #070709;
+  --surface: #0d0d10;
+  --surface-2: rgba(252, 252, 254, .04);
+  --border: rgba(252, 252, 254, .09);
+  --border-2: rgba(252, 252, 254, .18);
+  --fg: #f5f5f7;
+  --muted: rgba(252, 252, 254, .63);
+  --dim: rgba(252, 252, 254, .42);
+  --primary: #f5f5f7;
+  --primary-hover: #ffffff;
+  --primary-fg: #070709;
+  --glass: rgba(7, 7, 9, .82);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4);
 }
 
-.section-inner {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-left: 24px;
-  padding-right: 24px;
-}
-.section { padding: 128px 0; scroll-margin-top: 68px; }
+.section-inner { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.big { font-size: clamp(28px, 3.4vw, 44px); font-weight: 800; letter-spacing: -.035em; line-height: 1.1; }
+.lead { margin-top: 14px; color: var(--muted); font-size: 15.5px; line-height: 1.7; max-width: 680px; }
+.sec { padding: 92px 0; border-top: 1px solid var(--border); }
+.sec-flush { border-top: 0; }
+.sec-head { text-align: center; max-width: 680px; margin: 0 auto; }
+.sec-head .lead { margin-left: auto; margin-right: auto; }
 
 /* Header */
 .home-header {
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: 90;
   border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--canvas) 86%, transparent);
-  backdrop-filter: blur(18px);
+  background: var(--glass);
+  backdrop-filter: blur(14px);
 }
-.home-nav {
-  display: flex;
-  height: 68px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-}
-.brand-link { display: flex; min-width: 0; align-items: center; gap: 11px; color: inherit; text-decoration: none; }
+.home-nav { display: flex; align-items: center; height: 62px; gap: 28px; }
+.brand-link { display: flex; align-items: center; gap: 9px; color: inherit; text-decoration: none; }
 .brand-mark {
   display: flex;
-  width: 38px;
-  height: 38px;
+  width: 26px;
+  height: 26px;
   flex: none;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
+  border-radius: 8px;
 }
-.brand-name { display: block; font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
-.brand-caption { display: block; margin-top: 1px; font-size: 10px; font-weight: 500; color: var(--text-muted); }
-.nav-links { display: flex; align-items: center; gap: 2px; }
-.nav-links a {
-  border-radius: 10px;
-  padding: 8px 12px;
-  color: var(--text-muted);
-  font-size: 13.5px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color .18s ease, background .18s ease;
-}
-.nav-links a:hover { color: var(--text); background: var(--surface-alt); }
-.nav-actions { display: flex; flex: none; align-items: center; gap: 6px; }
+.brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+.brand-name { font-size: 15.5px; font-weight: 700; letter-spacing: -.02em; }
+.nav-links { display: flex; gap: 24px; }
+.nav-links a { color: var(--muted); font-size: 14px; text-decoration: none; }
+.nav-links a:hover { color: var(--fg); }
+.nav-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .theme-toggle {
   display: flex;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   align-items: center;
   justify-content: center;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  color: var(--text-muted);
+  border: 0;
+  border-radius: 8px;
+  color: var(--muted);
   background: transparent;
   cursor: pointer;
-  transition: color .18s ease, background .18s ease;
 }
-.theme-toggle:hover { color: var(--text); background: var(--surface-alt); }
-.header-ghost {
+.theme-toggle:hover { color: var(--fg); background: var(--surface-2); }
+.btn {
   display: inline-flex;
-  min-height: 36px;
   align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid transparent;
   border-radius: 10px;
-  padding: 0 12px;
-  color: var(--text);
-  font-size: 13.5px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color .18s ease, background .18s ease;
-}
-.header-ghost:hover { color: var(--text); background: var(--surface-alt); }
-.header-action {
-  display: inline-flex;
-  min-height: 36px;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius);
-  padding: 0 15px;
-  color: var(--inverse-fg);
-  background: var(--inverse);
-  font-size: 13.5px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background .18s ease;
-}
-.header-action:hover { background: var(--inverse-hover); }
-
-/* Hero */
-.hero-section {
-  position: relative;
-  overflow: hidden;
-  padding: 112px 0 56px;
-  background: linear-gradient(180deg, var(--canvas-alt) 0%, var(--canvas) 76%);
-}
-.hero-glow {
-  position: absolute;
-  left: 50%;
-  top: -240px;
-  width: 900px;
-  height: 560px;
-  transform: translateX(-50%);
-  border-radius: 999px;
-  background: radial-gradient(closest-side, var(--hero-glow), transparent 72%);
-  pointer-events: none;
-}
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 46px 46px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 22%, #000, transparent 78%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 22%, #000, transparent 78%);
-}
-.hero-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 6px 13px;
-  color: var(--text-muted);
-  background: var(--surface-alt);
-  font-size: 12.5px;
-  font-weight: 450;
-}
-.hero-badge-dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--accent); }
-.hero-title {
-  max-width: 900px;
-  margin-top: 26px;
-  color: var(--text);
-  font-size: clamp(46px, 6.4vw, 84px);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -.04em;
-}
-.hero-lead {
-  max-width: 640px;
-  margin-top: 22px;
-  color: var(--text-muted);
-  font-size: 19px;
-  line-height: 1.7;
-}
-.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 34px; }
-.primary-action, .secondary-action {
-  display: inline-flex;
-  min-height: 46px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-radius: var(--radius);
-  padding: 0 20px;
+  padding: 0 17px;
+  min-height: 38px;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  transition: background .18s ease, border-color .18s ease, color .18s ease;
+  transition: background .16s ease, border-color .16s ease;
 }
-.primary-action { color: var(--inverse-fg); background: var(--inverse); }
-.primary-action:hover { background: var(--inverse-hover); }
-.secondary-action { border: 1px solid var(--border-strong); color: var(--text); background: var(--surface); }
-.secondary-action:hover { border-color: var(--border-strong); background: var(--surface-alt); }
-.model-chip-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 40px; }
-.model-chip-row li {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 6px 14px 6px 11px;
-  color: var(--text-muted);
-  background: var(--surface);
-  font-size: 12.5px;
-  font-weight: 500;
-}
-.model-chip-row i { width: 7px; height: 7px; flex: none; border-radius: 50%; }
-.hero-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  width: 100%;
-  max-width: none;
-  margin-top: 56px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  overflow: hidden;
-}
-.hero-stats > div { border-right: 1px solid var(--border); padding: 20px 12px; }
-.hero-stats > div:last-child { border-right: 0; }
-.hero-stats dt { color: var(--text); font-size: 32px; font-weight: 700; letter-spacing: -.03em; }
-.hero-stats dd { margin-top: 4px; color: var(--text-muted); font-size: 12.5px; }
+.btn-p { background: var(--primary); color: var(--primary-fg); }
+.btn-p:hover { background: var(--primary-hover); }
+.btn-g { background: var(--surface-2); border-color: var(--border); color: var(--fg); }
+.btn-g:hover { border-color: var(--border-2); }
+.btn-lg { min-height: 46px; padding: 0 24px; font-size: 15px; }
 
-/* Capability grid (2x2) */
-.capability-section { background: var(--canvas); padding-top: 0; padding-bottom: 0; }
-.capability-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.capability-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  column-gap: 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 22px 24px;
-  background: var(--surface);
-  transition: border-color .18s ease;
-}
-.capability-card:hover { border-color: var(--border-strong); }
-.capability-icon {
-  grid-row: span 2;
-  display: flex;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text-muted);
-  background: var(--surface-alt);
-}
-.capability-card strong { align-self: center; color: var(--text); font-size: 16.5px; font-weight: 600; }
-.capability-card p { margin-top: 6px; color: var(--text-muted); font-size: 15px; line-height: 1.7; }
-
-/* Shared section head */
-.section-head { max-width: 660px; margin: 0 auto; text-align: center; }
-.section-eyebrow { color: var(--text-dim); font-size: 11.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
-.section-head h2 { margin-top: 14px; color: var(--text); font-size: clamp(34px, 4.2vw, 52px); font-weight: 700; line-height: 1.2; letter-spacing: -.035em; }
-.section-lead { margin-top: 16px; color: var(--text-muted); font-size: 17.5px; line-height: 1.75; }
-.section-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; color: var(--text); font-size: 13.5px; font-weight: 500; text-decoration: none; }
-.section-link:hover { color: var(--accent); }
-
-/* Pricing */
-.pricing-section { background: var(--canvas); }
-.pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 52px; }
-.pricing-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 28px 26px;
-  background: var(--surface);
-  transition: border-color .18s ease;
-}
-.pricing-card:hover { border-color: var(--border-strong); }
-.pricing-card-featured { border-color: var(--text); }
-.pricing-ribbon {
+/* Hero */
+.hero { position: relative; padding: 96px 0 84px; text-align: center; overflow: hidden; }
+.hero-glow {
   position: absolute;
-  right: 22px;
-  top: -11px;
-  border-radius: 999px;
-  padding: 4px 12px;
-  color: var(--inverse-fg);
-  background: var(--inverse);
-  font-size: 11px;
-  font-weight: 600;
+  left: 50%;
+  top: -260px;
+  width: 1000px;
+  height: 620px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(3, 8, 10, .05), transparent 72%);
+  pointer-events: none;
 }
-.pricing-eyebrow { color: var(--text-dim); font-size: 11px; font-weight: 600; letter-spacing: .12em; }
-.pricing-card h3 { margin-top: 12px; color: var(--text); font-size: 24px; font-weight: 700; letter-spacing: -.03em; }
-.pricing-description { margin-top: 10px; color: var(--text-muted); font-size: 15.5px; line-height: 1.7; }
-.pricing-points { display: grid; gap: 10px; margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--border); }
-.pricing-points li { display: flex; align-items: flex-start; gap: 8px; color: var(--text); font-size: 15px; line-height: 1.55; }
-.pricing-points svg { flex: none; margin-top: 2px; color: var(--text-dim); }
-.pricing-action {
+html.dark .hero-glow { background: radial-gradient(closest-side, rgba(252, 252, 254, .07), transparent 72%); }
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(3, 8, 10, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(3, 8, 10, .035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 62% 55% at 50% 18%, #000, transparent 76%);
+  -webkit-mask-image: radial-gradient(ellipse 62% 55% at 50% 18%, #000, transparent 76%);
+}
+html.dark .hero-grid {
+  background-image:
+    linear-gradient(rgba(252, 252, 254, .022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(252, 252, 254, .022) 1px, transparent 1px);
+}
+.hero-inner { position: relative; }
+.hero-badges {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: auto;
-  padding-top: 26px;
-  color: var(--text);
-  font-size: 13.5px;
-  font-weight: 500;
-  text-decoration: none;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 16px;
+  background: var(--surface-2);
+  font-size: 12.5px;
+  color: var(--muted);
 }
-.pricing-action:hover { color: var(--accent); }
+.hero-badges i { width: 3px; height: 3px; border-radius: 50%; background: var(--dim); }
+.hero-title { margin-top: 28px; font-size: clamp(40px, 6vw, 84px); font-weight: 800; letter-spacing: -.04em; line-height: 1.02; }
+.hero-title span { display: block; color: var(--muted); }
+.hero-lead { margin: 22px auto 0; max-width: 660px; color: var(--muted); font-size: 16.5px; line-height: 1.7; }
+.hero-cta { display: flex; justify-content: center; gap: 12px; margin-top: 34px; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 44px; }
+.chips li {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 16px;
+  background: var(--surface-2);
+  font-size: 13px;
+  color: var(--muted);
+}
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 820px; margin: 56px auto 0; }
+.stats dt { font-size: 38px; font-weight: 800; letter-spacing: -.03em; }
+.stats dd { margin-top: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 
-/* Hero layout: 左文案 / 右配置台 */
-.hero-layout {
-  position: relative;
+/* Popular paths */
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 44px; }
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 24px;
+  background: var(--surface);
+  transition: border-color .18s ease, transform .18s ease;
+}
+.card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+.card-ic {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr);
-  align-items: start;
-  gap: 56px;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--fg);
 }
-.hero-copy { min-width: 0; }
-.hero-copy .hero-title { margin-top: 22px; max-width: none; font-size: clamp(36px, 3.8vw, 52px); }
-.hero-copy .hero-lead { margin-top: 18px; max-width: 520px; }
-.hero-copy .hero-actions { justify-content: flex-start; margin-top: 26px; }
-.hero-copy .model-chip-row { justify-content: flex-start; margin-top: 28px; }
+.card b { display: block; margin-top: 16px; font-size: 15.5px; font-weight: 650; }
+.card p { margin-top: 9px; color: var(--muted); font-size: 13.5px; line-height: 1.7; }
+.card-go {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 
-.base-url {
+/* Developer first */
+.dev { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
+.dev .big { margin-top: 12px; }
+.dev .big span { display: block; color: var(--muted); }
+.dev-list { display: grid; gap: 18px; margin-top: 30px; }
+.dev-item { display: grid; grid-template-columns: 34px 1fr; gap: 14px; }
+.dev-ic {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--fg);
+}
+.dev-item b { display: block; font-size: 14.5px; font-weight: 650; }
+.dev-item p { margin-top: 4px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.code-card { min-width: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--r); background: var(--surface); }
+.code-top {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 26px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 8px 8px 8px 12px;
-  background: var(--surface-alt);
-}
-.base-url-label {
-  flex: none;
-  color: var(--text-dim);
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.base-url code {
-  min-width: 0;
-  flex: 1;
-  overflow: hidden;
-  color: var(--text);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 13px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.icon-copy {
-  display: flex;
-  width: 30px;
-  height: 30px;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  color: var(--text-muted);
-  background: transparent;
-  cursor: pointer;
-  transition: color .16s ease, background .16s ease;
-}
-.icon-copy:hover { color: var(--text); background: var(--surface); }
-
-/* 接入配置台 */
-.setup-console {
-  min-width: 0;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  box-shadow: var(--shadow-md);
-}
-.setup-tabs {
-  display: flex;
-  overflow-x: auto;
   border-bottom: 1px solid var(--border);
-  background: var(--surface-alt);
-}
-.setup-tab {
-  position: relative;
-  flex: none;
-  border: 0;
   padding: 12px 16px;
-  color: var(--text-muted);
-  background: transparent;
+  background: var(--surface-2);
+}
+.code-top .dots { display: flex; gap: 6px; }
+.code-top .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--border-2); }
+.code-label { color: var(--dim); font-size: 11.5px; }
+.code-copy {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 9px;
+  color: var(--muted);
+  background: var(--surface);
   cursor: pointer;
+  font-size: 11.5px;
+}
+.code-copy:hover { color: var(--fg); border-color: var(--border-2); }
+.code-body {
+  overflow-x: auto;
+  padding: 20px;
+  color: var(--muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12.5px;
-  white-space: nowrap;
-  transition: color .16s ease;
+  line-height: 1.9;
 }
-.setup-tab:hover { color: var(--text); }
-.setup-tab-active { color: var(--text); background: var(--surface); }
-.setup-tab-active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 1px;
-  background: var(--surface);
-}
-.setup-body { display: flex; flex-direction: column; }
-.setup-head {
+
+/* Architecture */
+.arch { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+.panel { border: 1px solid var(--border); border-radius: var(--r); background: var(--surface); overflow: hidden; }
+.panel-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   border-bottom: 1px solid var(--border);
-  padding: 10px 14px;
-}
-.setup-file {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--text-dim);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 11.5px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.copy-button {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: 5px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 9px;
-  color: var(--text-muted);
-  background: var(--surface);
-  cursor: pointer;
-  font-size: 11.5px;
-  font-weight: 500;
-  transition: color .16s ease, border-color .16s ease;
-}
-.copy-button:hover { color: var(--text); border-color: var(--border-strong); }
-.setup-code {
-  overflow-x: auto;
-  min-height: 232px;
-  padding: 18px;
-  color: var(--text);
-  background: var(--code-bg);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12.5px;
-  line-height: 1.8;
-}
-.setup-note {
-  border-top: 1px solid var(--border);
-  padding: 11px 14px;
-  color: var(--text-dim);
-  font-size: 12px;
-  line-height: 1.65;
-}
-
-/* 端点表 */
-.endpoints-section { background: var(--canvas); border-top: 1px solid var(--border); padding-bottom: 64px; }
-.endpoint-table {
-  margin-top: 36px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-}
-.endpoint-row {
-  display: grid;
-  grid-template-columns: minmax(0, 200px) minmax(0, 1fr) minmax(0, 260px);
-  align-items: center;
-  gap: 20px;
-  border-bottom: 1px solid var(--border);
   padding: 14px 20px;
-  background: var(--surface);
 }
-.endpoint-row:last-child { border-bottom: 0; }
-.endpoint-row:not(.endpoint-head):hover { background: var(--surface-alt); }
-.endpoint-head {
-  background: var(--surface-alt);
-  color: var(--text-dim);
+.panel-title { font-size: 13.5px; font-weight: 650; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 10px;
+  background: var(--surface-2);
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
 }
-.endpoint-format { display: inline-flex; align-items: center; gap: 9px; color: var(--text); font-size: 13.5px; font-weight: 500; }
+.pill i { width: 6px; height: 6px; border-radius: 50%; background: var(--fg); }
+.panel-body { padding: 22px 20px; }
+.step { position: relative; display: grid; grid-template-columns: 30px 1fr; gap: 14px; padding-bottom: 20px; }
+.step:last-of-type { padding-bottom: 0; }
+.step::before { content: ""; position: absolute; left: 14px; top: 30px; bottom: 0; width: 1px; background: var(--border); }
+.step:last-of-type::before { display: none; }
+.step-n {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-2);
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 1;
+}
+.step b { display: block; font-size: 14.5px; font-weight: 650; }
+.step p { margin-top: 4px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.bignum { display: flex; align-items: baseline; gap: 14px; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border); }
+.bignum b { font-size: 38px; font-weight: 800; letter-spacing: -.03em; }
+.bignum p:first-child { font-size: 14px; font-weight: 650; }
+.bignum p:last-child { margin-top: 3px; color: var(--dim); font-size: 12.5px; }
+.fmt-list { padding: 8px; }
+.endpoint-row { display: flex; align-items: center; gap: 10px; border-radius: 10px; padding: 10px 12px; }
+.endpoint-row:hover { background: var(--surface-2); }
 .endpoint-method {
   flex: none;
   border: 1px solid var(--border);
   border-radius: 5px;
   padding: 2px 6px;
-  color: var(--text-muted);
-  background: var(--surface-alt);
-  font-size: 9.5px;
-  font-style: normal;
-  font-weight: 500;
+  background: var(--surface-2);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
 }
 .endpoint-row code {
   min-width: 0;
+  flex: 1;
   overflow: hidden;
-  color: var(--text-muted);
+  color: var(--fg);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12.5px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.endpoint-client { color: var(--text-dim); font-size: 12.5px; }
-
-/* Developer first */
-.developer-section { background: var(--canvas-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.section-head-left { max-width: 640px; margin: 0; text-align: left; }
-.developer-points { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 32px; margin-top: 32px; }
-.developer-points li { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 14px; }
-.developer-points svg { flex: none; color: var(--text-dim); }
-.developer-action { margin-top: 32px; }
+.endpoint-row small { flex: none; color: var(--dim); font-size: 11.5px; }
+.panel-note { padding: 4px 20px 18px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
 
 /* Final CTA */
-.final-cta { padding: 88px 0; background: var(--canvas); }
-.final-cta-inner { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.final-cta-eyebrow { color: var(--text-dim); font-size: 11.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
-.final-cta-inner h2 { margin-top: 14px; color: var(--text); font-size: clamp(34px, 4.4vw, 54px); font-weight: 700; letter-spacing: -.035em; }
-.final-cta-inner > p { max-width: 600px; margin-top: 16px; color: var(--text-muted); font-size: 17.5px; line-height: 1.75; }
-.final-cta-inner .primary-action { margin-top: 30px; }
+.final {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 64px 32px;
+  text-align: center;
+  background: var(--surface);
+}
+.final .big { margin-top: 14px; }
+.final .lead { margin: 14px auto 0; }
 
 /* Footer */
-.site-footer { border-top: 1px solid var(--border); padding: 64px 0 28px; background: var(--canvas-alt); }
-.footer-top { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr); gap: 56px; }
-.footer-brand-link { display: inline-flex; align-items: center; gap: 11px; color: var(--text); text-decoration: none; }
-.footer-brand-link strong { font-size: 16px; font-weight: 700; letter-spacing: -.02em; }
-.footer-brand img { width: 100%; height: 100%; object-fit: contain; }
-.footer-brand > p { max-width: 300px; margin-top: 14px; color: var(--text-muted); font-size: 13px; line-height: 1.75; }
-.footer-channels { display: flex; gap: 8px; margin-top: 20px; }
-.footer-channel {
-  display: flex;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
+.site-footer { border-top: 1px solid var(--border); padding: 56px 0 30px; margin-top: 92px; }
+.footer-top { display: grid; grid-template-columns: 1.7fr repeat(3, 1fr); gap: 36px; }
+.footer-brand > p { margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.7; max-width: 300px; }
+.footer-channels { display: flex; gap: 8px; margin-top: 18px; }
+.footer-channels a {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: var(--text-muted);
+  border-radius: 9px;
+  color: var(--muted);
   background: var(--surface);
-  transition: color .18s ease, border-color .18s ease, transform .18s ease;
+  transition: color .16s ease, border-color .16s ease;
 }
-.footer-channel svg { width: 17px; height: 17px; }
-.footer-channel:hover { transform: translateY(-2px); }
-.footer-channel.rail-telegram:hover { color: #229ed9; border-color: #229ed9; }
-.footer-channel.rail-discord:hover { color: #5865f2; border-color: #5865f2; }
-.footer-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
-.footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
-.footer-col > strong { color: var(--text); font-size: 13px; font-weight: 600; }
-.footer-col a { color: var(--text-muted); font-size: 13px; text-decoration: none; transition: color .18s ease; }
-.footer-col a:hover { color: var(--text); }
-.footer-note { max-width: 260px; color: var(--text-muted); font-size: 12.5px; line-height: 1.75; }
+.footer-channels svg { width: 16px; height: 16px; }
+.footer-channels a:hover { color: var(--fg); border-color: var(--border-2); }
+.footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.footer-col > strong { font-size: 12.5px; font-weight: 650; margin-bottom: 3px; }
+.footer-col a { color: var(--muted); font-size: 13px; text-decoration: none; }
+.footer-col a:hover { color: var(--fg); }
+.footer-note { max-width: 260px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+
+.pay { display: grid; grid-template-columns: 220px 1fr; gap: 32px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); }
+.pay-col strong { display: block; font-size: 12.5px; font-weight: 650; margin-bottom: 10px; }
+.pay-col p { color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+.pay-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pm { display: grid; grid-template-columns: auto 1fr; gap: 14px; border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; background: var(--surface); }
+.pm-badge {
+  align-self: start;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 5px 10px;
+  background: var(--surface-2);
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.pm b { display: block; font-size: 13px; font-weight: 650; }
+.pm p { margin-top: 6px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+
 .footer-bottom {
+  margin-top: 44px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  margin-top: 52px;
-  border-top: 1px solid var(--border);
-  padding-top: 24px;
-  color: var(--text-dim);
+  flex-wrap: wrap;
+  color: var(--dim);
   font-size: 12px;
 }
+.footer-tags { display: flex; gap: 8px; }
+.footer-tags i { font-style: normal; border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; font-size: 11px; color: var(--muted); }
+.footer-legal { margin-top: 14px; color: var(--dim); font-size: 11.5px; line-height: 1.7; max-width: 900px; }
 
-/* Floating support rail — 渠道常驻可见，hover 才展开名称 */
+/* Floating support rail */
 .support-rail {
   position: fixed;
   right: 18px;
@@ -1371,118 +1018,49 @@ html.dark .home-shell {
   gap: 8px;
   transform: translateY(-50%);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 10px;
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  box-shadow: var(--shadow-md);
+  background: var(--glass);
+  box-shadow: var(--shadow);
   backdrop-filter: blur(14px);
 }
-.rail-caption { display: flex; align-items: center; gap: 5px; align-self: center; color: var(--text-muted); font-size: 10.5px; font-weight: 600; }
-.rail-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  border-radius: 13px;
-  padding: 5px;
-  text-decoration: none;
-  transition: background .18s ease;
-}
-.rail-item:hover { background: var(--surface-alt); }
-.rail-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail-icon {
-  display: flex;
-  width: 42px;
-  height: 42px;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  border-radius: 13px;
-  color: #fff;
-  transition: transform .18s ease;
-}
-.rail-icon svg { width: 21px; height: 21px; }
-.rail-item:hover .rail-icon { transform: translateY(-1px); }
-.rail-telegram .rail-icon { background: #229ed9; }
-.rail-discord .rail-icon { background: #5865f2; }
-.rail-label {
-  display: grid;
-  overflow: hidden;
-  max-width: 0;
-  opacity: 0;
-  text-align: right;
-  white-space: nowrap;
-  transition: max-width .22s ease, opacity .18s ease;
-}
-.rail-item:hover .rail-label,
-.rail-item:focus-visible .rail-label { max-width: 150px; opacity: 1; }
-.rail-label strong { color: var(--text); font-size: 12px; font-weight: 600; }
-.rail-label small { margin-top: 1px; color: var(--text-dim); font-size: 10px; }
-.rail-status {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  align-self: center;
-  border-top: 1px solid var(--border);
-  padding-top: 8px;
-  color: #10b981;
-  font-size: 10px;
-  font-weight: 600;
-}
-.rail-status i { width: 5px; height: 5px; border-radius: 50%; background: #10b981; }
+.rail-caption { display: flex; align-items: center; gap: 5px; align-self: center; color: var(--muted); font-size: 10.5px; font-weight: 600; }
+.rail-item { display: flex; align-items: center; justify-content: flex-end; gap: 10px; border-radius: 12px; padding: 4px; text-decoration: none; }
+.rail-item:hover { background: var(--surface-2); }
+.rail-item:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.rail-icon { display: grid; width: 38px; height: 38px; flex: none; place-items: center; border: 1px solid var(--border); border-radius: 11px; color: var(--fg); background: var(--surface); }
+.rail-icon svg { width: 18px; height: 18px; }
+.rail-label { display: grid; overflow: hidden; max-width: 0; opacity: 0; white-space: nowrap; transition: max-width .22s ease, opacity .18s ease; }
+.rail-item:hover .rail-label, .rail-item:focus-visible .rail-label { max-width: 120px; opacity: 1; }
+.rail-label strong { color: var(--fg); font-size: 12px; font-weight: 600; }
 
-.home-shell :deep(.home-locale button) { color: var(--text-muted); }
+.home-shell :deep(.home-locale button) { color: var(--muted); }
 .home-shell :deep(.home-locale > div) { border-color: var(--border); background: var(--surface); }
 
-@media (max-width: 1023px) {
+@media (max-width: 1080px) {
+  .grid4 { grid-template-columns: repeat(2, 1fr); }
+  .dev, .arch, .pay { grid-template-columns: 1fr; gap: 36px; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
   .nav-links { display: none; }
-  .pricing-grid { grid-template-columns: 1fr; max-width: 560px; margin-left: auto; margin-right: auto; }
-  .hero-layout { grid-template-columns: 1fr; gap: 44px; }
-  .endpoint-row { grid-template-columns: minmax(0, 170px) minmax(0, 1fr); }
-  .endpoint-client { display: none; }
-  .footer-top { grid-template-columns: 1fr; gap: 40px; }
 }
 @media (max-width: 640px) {
-  .section-inner { padding-left: 16px; padding-right: 16px; }
-  .home-nav { height: 60px; gap: 8px; }
-  .brand-caption { display: none; }
-  .brand-name { font-size: 14px; }
-  .nav-actions { gap: 2px; }
-  .header-ghost { display: none; }
-  .header-action { min-height: 36px; padding: 0 13px; }
-  .hero-section { padding: 72px 0 48px; }
-  .hero-title { font-size: 42px; }
-  .hero-lead { font-size: 16.5px; }
-  .hero-stats { grid-template-columns: 1fr; max-width: 340px; }
-  .setup-code { min-height: 0; font-size: 11.5px; padding: 14px; }
-  .base-url code { font-size: 12px; }
-  .developer-points { grid-template-columns: 1fr; }
-  .endpoint-row { grid-template-columns: 1fr; gap: 6px; align-items: start; }
-  .endpoint-head { display: none; }
-  .hero-stats > div { border-right: 0; border-bottom: 1px solid var(--border); }
-  .hero-stats > div:last-child { border-bottom: 0; }
-  .section { padding: 72px 0; }
-  .capability-section { padding-top: 72px; }
-  .capability-grid { grid-template-columns: 1fr; }
-  .final-cta { padding: 72px 0; }
-  .pricing-card { padding: 24px 20px; }
-  .code-body { font-size: 11.5px; }
-  .footer-cols { grid-template-columns: 1fr; gap: 26px; }
-  .footer-bottom { flex-direction: column; gap: 8px; }
-  .support-rail { right: 12px; top: auto; bottom: 12px; flex-direction: row; align-items: center; gap: 6px; padding: 7px; border-radius: 999px; transform: none; }
-  .rail-caption, .rail-status span { display: none; }
-  .rail-status { width: auto; border-top: 0; border-left: 1px solid var(--border); padding: 0 0 0 8px; margin-left: 2px; }
-  .rail-icon { width: 38px; height: 38px; border-radius: 50%; }
-  .rail-label { display: none; }
+  .section-inner { padding: 0 18px; }
+  .grid4, .stats, .pay-methods { grid-template-columns: 1fr; }
+  .hero { padding: 64px 0 60px; }
+  .hero-title { font-size: 40px; }
+  .hero-cta { flex-direction: column; }
+  .sec { padding: 64px 0; }
+  .final { padding: 44px 22px; }
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; }
+  .site-footer { margin-top: 64px; }
+  .support-rail { right: 12px; top: auto; bottom: 12px; flex-direction: row; gap: 6px; padding: 7px; border-radius: 999px; transform: none; }
+  .rail-caption, .rail-label { display: none; }
+  .rail-icon { width: 36px; height: 36px; border-radius: 50%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home-shell { scroll-behavior: auto; }
   .home-shell *, .home-shell *::before, .home-shell *::after {
     animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
 }

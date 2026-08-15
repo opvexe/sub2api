@@ -40,146 +40,117 @@ export default {
     // 首页（OriginCoder 官网版式）
     landing: {
       nav: {
-        models: '模型价格',
-        pricing: '套餐价格',
-        developers: '开发者接入',
-        billingRules: '计费规则',
-        docs: '使用文档'
+        models: '模型',
+        pricing: '定价',
+        docs: 'API 文档',
+        architecture: '架构',
+        contact: '联系我们'
       },
       hero: {
-        badge: 'OpenAI 与 Anthropic 双协议兼容 · CC-Switch 一键导入',
-        headline: 'One key. Every coding agent.',
-        lead: '一个 Base URL、一把 Key，Claude Code、Codex 和你现有的 OpenAI 代码不改一行就能跑。按调用扣美金余额，也可以走订阅套餐。',
-        primaryCta: '免费创建 API Key',
-        secondaryCta: '看接入配置',
+        badgeCompatible: 'OpenAI 兼容',
+        badgeUsd: '美元计价',
+        badgeCancel: '随时取消',
+        headline: 'One API.',
+        headlineAccent: 'Every AI Model.',
+        lead: '统一网关，接入 Claude、GPT、Gemini、DeepSeek 等数十种模型。改一行代码即可切换服务商，账单合并到一处结算。',
+        ctaPrimary: '查看定价',
+        ctaSecondary: '阅读快速上手',
         stats: {
-          modelsValue: '3',
-          modelsLabel: '种请求格式互通',
-          compatibleValue: '4',
-          compatibleLabel: '个客户端开箱即用',
-          streamValue: 'USD',
-          streamLabel: '余额按调用扣费'
+          modelsValue: '60+',
+          modelsLabel: '可用模型',
+          uptimeValue: '99.9%',
+          uptimeLabel: '可用性目标',
+          oneValue: '1',
+          oneLabel: '密钥 · 端点 · 账单'
         }
       },
-      pricing: {
-        eyebrow: 'Pricing',
-        title: '按调用付费，或者包月。',
-        description: '余额以美金结算，每笔调用的输入输出 token 与费用都能查到。',
-        link: '查看完整计费规则',
-        recommended: '推荐',
-        payg: {
-          eyebrow: 'PAY AS YOU GO',
-          title: '美金余额，按量扣费',
-          description: '充值美金余额，按实际调用量扣费，适合需求波动明显的项目和多模型评测。',
-          points: {
-            price: '余额以美金计价，按模型查看输入与输出单价',
-            lockIn: '无需绑定单一模型，随时切换',
-            switch: '每笔调用都有明细，用多少扣多少'
-          },
-          action: '查看模型价格'
+      paths: {
+        eyebrow: '常见用法',
+        title: '按你实际在用的客户端接入。',
+        lead: 'OriginCoder 是一个自定义的 OpenAI 兼容 API，编程 Agent、聊天客户端、命令行工具和你自己的应用都能直接用。',
+        action: '查看配置',
+        agents: {
+          title: '编程 Agent',
+          desc: 'Cursor、Cline、Roo Code、Kilo Code、Continue、Zed，以及任何支持自定义 OpenAI 兼容地址的编辑器。'
         },
-        subscription: {
-          eyebrow: 'SUBSCRIPTION',
-          title: '订阅套餐',
-          description: '为高频开发工作流准备的固定套餐，额度和周期清晰可见。',
-          points: {
-            tiers: '多档套餐可选',
-            steady: '适合稳定、持续的开发任务',
-            records: '统一查看使用记录'
-          },
-          action: '选择套餐'
+        chat: {
+          title: '聊天客户端',
+          desc: 'LibreChat、LobeChat、Open WebUI、Chatbox 等通用 OpenAI 兼容前端，无需适配层。'
         },
-        support: {
-          eyebrow: 'SUPPORT',
-          title: '接入支持',
-          description: 'Telegram 与 Discord 能直接找到人，不是工单系统。',
-          points: {
-            troubleshoot: '贴出报错和配置，帮你定位到哪一步',
-            guide: 'Claude Code / Codex / CC-Switch 配置指引',
-            scope: '账单对不上可以要求逐笔复核'
-          },
-          action: '联系我们'
-        }
-      },
-      setup: {
-        eyebrow: 'Quick start',
-        title: '选一个客户端，粘贴配置，开始用。',
-        description: '所有客户端共用同一个 Base URL 与 API Key，换模型不用改代码。',
-        baseUrlLabel: 'Base URL',
-        keyHint: '把 sk-xxx 换成你在控制台创建的 API Key。',
-        copy: '复制',
-        copied: '已复制',
-        tabs: {
-          claudeCode: 'Claude Code',
-          codex: 'Codex',
-          ccSwitch: 'CC-Switch',
-          sdk: 'OpenAI SDK'
+        cli: {
+          title: '命令行工具',
+          desc: 'Claude Code、Codex CLI、Gemini CLI、Aider 等终端 Agent，直接读取环境变量里的同一把密钥。'
         },
-        ccSwitchNote: '在控制台的 API Key 列表点「导入到 CCS」，CC-Switch 会自动写入下面这组配置，不用手动填。'
-      },
-      endpoints: {
-        eyebrow: 'Endpoints',
-        title: '你现在的代码，换个地址就能跑。',
-        description: '三种请求格式都落在同一个网关上，你的代码说哪种就继续说哪种。',
-        headers: {
-          format: '格式',
-          endpoint: '端点',
-          client: '典型客户端'
-        },
-        clients: {
-          openai: 'OpenAI SDK、Codex、OpenCode',
-          claude: 'Claude Code、Anthropic SDK',
-          gemini: 'Gemini CLI'
+        apps: {
+          title: '你自己的应用',
+          desc: '保留现有的 OpenAI SDK 调用，Python、Node、Go 都一样。只换 Base URL 和模型名，其余代码照旧。'
         }
       },
       developer: {
-        eyebrow: 'Compatibility',
-        titleLead: '换模型，',
-        titleAccent: '不用重写请求。',
-        description: '同一把密钥路由到不同上游，上游异常时自动切换；流式响应与工具调用原样透传。',
-        points: {
-          endpoint: 'OpenAI 兼容端点，同时支持 Anthropic Messages',
-          routing: '统一密钥与模型路由',
-          streaming: '流式响应与多工具支持',
-          ccswitch: '支持 CC-Switch 一键导入，客户端秒切分组'
+        eyebrow: '开发者优先',
+        title: '几秒完成接入。',
+        titleAccent: '然后专注于构建。',
+        lead: '完全兼容 OpenAI 端点。切换服务商无需改动代码，一把密钥通用所有模型。',
+        codeLabel: 'Bash · curl',
+        copy: '复制',
+        copied: '已复制',
+        endpoints: {
+          title: 'OpenAI 兼容端点',
+          desc: '可直接配合 Python、Node、Go 等官方 OpenAI SDK 使用。'
         },
-        action: '阅读完整文档',
-        codeLabel: 'bash'
-      },
-      contact: {
-        eyebrow: 'Support',
-        title: '需要人工协助？直接找我们。',
-        description: 'Telegram 与 Discord 两个渠道都有人值守，接入问题、账单疑问、故障反馈都可以直接问。',
-        note: '工作时间通常几分钟内回复；非工作时间会在上线后依次处理。',
-        online: '在线',
-        open: '打开',
-        telegram: {
-          name: 'Telegram',
-          handle: 't.me/origincoder998',
-          description: '一对一咨询：接入配置、账号与账单问题'
+        failover: {
+          title: '自动故障转移',
+          desc: '上游异常时自动绕行，而不是把错误抛给你。'
         },
-        discord: {
-          name: 'Discord',
-          handle: 'OriginCoder Community',
-          description: '社区交流：版本公告、故障通报与经验分享'
+        protocol: {
+          title: '多协议支持',
+          desc: '流式响应、函数调用与向量化全链路支持。'
+        },
+        records: {
+          title: '逐请求用量记录',
+          desc: '每次调用的 token 数与费用都有记录，可导出对账。'
         }
       },
+      architecture: {
+        eyebrow: '架构',
+        lifecycle: '请求生命周期',
+        active: '运行中',
+        step1: { title: '统一端点', desc: '一个接口同时承接 OpenAI、Anthropic 与 Gemini 三种请求格式。' },
+        step2: { title: '智能路由', desc: '按实时延迟与可用性挑选当前最快的健康上游。' },
+        step3: { title: '自动故障转移', desc: '失败的请求立刻改走其他可用渠道。' },
+        delivered: { value: '99.9%', title: '稳定送达。', desc: '全部模型的可用性目标。' },
+        formats: '支持的请求格式',
+        autoDetected: '自动识别',
+        formatsNote: '三种请求格式自动识别并路由到对应上游，你可以继续用项目里已有的 SDK，不必重写客户端。',
+        formatsCount: { value: '3', title: '种请求格式。', desc: '每次调用自动判别。' }
+      },
       finalCta: {
-        eyebrow: 'Get started',
-        title: '拿一把 Key 试试。',
-        description: '注册后即可创建 API Key，配置照抄上面那份就能跑起来。',
-        action: '创建 API Key'
+        eyebrow: '准备开始',
+        title: '准备好开始构建了吗？',
+        lead: '一把密钥、一个端点、一份账单。选好套餐，五分钟内发出第一次调用。',
+        primary: '选择套餐',
+        secondary: '联系我们'
       },
       footer: {
+        brandDesc: '一个端点、一把密钥、一份账单，覆盖主流 AI 模型。由在美国注册的 Fvawi Drein INC 运营。',
         product: '产品',
-        resources: '资源',
+        support: '支持',
         legal: '协议',
+        models: '模型',
+        pricing: '定价',
         console: '控制台',
-        quickStart: '快速开始',
-        guide: '操作指南',
+        docs: '文档',
+        status: '服务状态',
+        contact: '联系我们',
         faq: '常见问题',
-        terms: '用户协议',
-        privacy: '隐私政策'
+        payments: '支付方式',
+        paymentsLead: '所有价格以 { currency } 标价并结算，不含税费。',
+        currency: '美元（USD）',
+        stripeTitle: '银行卡 —— Visa、Mastercard、American Express',
+        stripeDesc: '由 Stripe, Inc. 安全处理。我们不接触也不存储完整卡号。订阅按月自动续费，可随时在控制台取消。',
+        usdtTitle: 'USDT —— TRC20 与 ERC20',
+        usdtDesc: '手动预充值，链上确认后到账。一次性支付、不自动续费，确认后不可退款。请仅通过列出的网络转入 USDT。',
+        disclaimer: 'OriginCoder 是一个独立平台，与 Anthropic、OpenAI、Google、Meta 或任何其他模型提供商均无关联，也未获得其认可或赞助；所有商标归各自所有者。模型输出由第三方提供商生成，可能不准确，请在依赖前自行核实。'
       }
     },
     tags: {

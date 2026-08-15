@@ -118,10 +118,6 @@ onBeforeUnmount(() => {
   --fg: #000000;
   --muted: rgba(0, 0, 0, .58);
   --dim: rgba(0, 0, 0, .40);
-  --accent: #d97757;
-  --accent-text: #b5502f;
-  --accent-soft: rgba(217, 119, 87, .10);
-  --accent-line: rgba(217, 119, 87, .26);
   --primary: theme('colors.primary.700');
   --primary-hover: theme('colors.primary.800');
   --primary-fg: #ffffff;
@@ -146,10 +142,6 @@ html.dark .auth-shell {
   --fg: #ffffff;
   --muted: theme('colors.dark.300');
   --dim: theme('colors.dark.400');
-  --accent: #d97757;
-  --accent-text: #e08a6d;
-  --accent-soft: rgba(217, 119, 87, .14);
-  --accent-line: rgba(217, 119, 87, .30);
   --primary: theme('colors.primary.50');
   --primary-hover: #ffffff;
   --primary-fg: theme('colors.primary.950');
@@ -157,7 +149,7 @@ html.dark .auth-shell {
 }
 
 .auth-inner { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 28px; }
-.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
 
 /* Header：不加底边框，靠留白分区 */
 .auth-header-inner { display: flex; align-items: center; gap: 20px; height: 62px; }
@@ -218,9 +210,9 @@ html.dark .auth-shell {
   place-items: center;
   border: 1px solid var(--border);
   border-radius: 7px;
-  background: var(--accent-soft);
-  border-color: var(--accent-line);
-  color: var(--accent-text);
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--fg);
   font-size: 11.5px;
   font-weight: 650;
 }

@@ -53,7 +53,18 @@ npm install -g pnpm
 
 ### CI 要求
 
-- Go 版本必须是 **1.26.5**：三个 workflow 都用 `go-version-file: backend/go.mod` 取版本，随后硬断言 `go version | grep -q 'go1.26.5'`。升级 Go 时要同时改 `backend/go.mod` 和 `backend-ci.yml`（两处）、`release.yml`、`security-scan.yml` 里的这句断言，否则 CI 会在版本校验步骤直接失败。
+- Go 版本必须是 **1.26.6**。升级 Go 时要**一次改全下面六处**，漏掉任何一处都会在 CI 里炸：
+
+  | 位置 | 形式 | 漏掉的后果 |
+  |---|---|---|
+  | `backend/go.mod` | `go 1.26.6` | 版本来源，其余都跟它对齐 |
+  | `.github/workflows/backend-ci.yml` | `go version \| grep -q 'go1.26.6'`（两处） | 版本校验步骤直接失败 |
+  | `.github/workflows/release.yml` | 同上断言 | 同上 |
+  | `.github/workflows/security-scan.yml` | 同上断言 | 同上 |
+  | `Dockerfile` | `ARG GOLANG_IMAGE=golang:1.26.6-alpine` | **镜像构建失败**：golang 官方镜像默认 `GOTOOLCHAIN=local`，不会自动下载新工具链，报 `go.mod requires go >= X (running go Y)` |
+  | `deploy/Dockerfile`、`backend/Dockerfile` | 同上 | 同上 |
+
+  注意本地 `go build` **不能验证这件事**——本地 `GOTOOLCHAIN` 默认是 `auto`，会自动下载 go.mod 要求的版本，所以本地全绿、镜像构建照样挂。三个 workflow 都用 `go-version-file: backend/go.mod` 取版本，只有 Dockerfile 是写死的。
 - 前端使用 `pnpm install --frozen-lockfile`，必须提交 `pnpm-lock.yaml`
 
 ### 本地测试命令

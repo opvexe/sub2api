@@ -28,6 +28,9 @@ jobs:
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          # 可选：Docker Hub 命名空间与登录账号不同名时（例如推到组织下）才需要设。
+          # 不设就沿用 DOCKERHUB_USERNAME，与历史行为一致。
+          DOCKERHUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
         run: |
           SHORT_SHA="${GITHUB_SHA::7}"
           # 与官方 release 对齐：版本号就是 VERSION 文件的裸版本，不再拼 -main.<sha>。
@@ -36,10 +39,13 @@ jobs:
           VERSION="$(tr -d '\r\n' < backend/cmd/server/VERSION)"
           OWNER_LOWER="$(printf '%s' "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
           GHCR_REPOSITORY="ghcr.io/${OWNER_LOWER}/sub2api"
-          # Docker Hub 仓库名跟 GHCR 对齐，都用 <owner>/sub2api，不跟随登录用的
-          # DOCKERHUB_USERNAME 变化（登录账号可能与命名空间不同名）。
-          # 前提：DOCKERHUB_TOKEN 对应的账号要有 ${OWNER_LOWER} 命名空间的写权限。
-          DOCKERHUB_REPOSITORY="${OWNER_LOWER}/sub2api"
+          # Docker Hub 的命名空间必须是真实存在、且 DOCKERHUB_TOKEN 有写权限的账号或组织，
+          # 它和 GitHub 的 owner 名没有必然关系。优先用 DOCKERHUB_NAMESPACE 变量，
+          # 没设就回退到登录账号 DOCKERHUB_USERNAME。
+          # 不要在这里硬拼 GITHUB_REPOSITORY_OWNER：命名空间不存在时推送会失败并报
+          # insufficient_scope，而且是在镜像构建完、导出阶段才炸，很浪费时间。
+          DOCKERHUB_NS="$(printf '%s' "${DOCKERHUB_NAMESPACE:-$DOCKERHUB_USERNAME}" | tr '[:upper:]' '[:lower:]')"
+          DOCKERHUB_REPOSITORY="${DOCKERHUB_NS}/sub2api"
 
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "${GITHUB_OUTPUT}"

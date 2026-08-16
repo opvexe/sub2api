@@ -111,6 +111,17 @@ func TestNowPaymentsCreatePayment(t *testing.T) {
 	if resp.ResultType != payment.CreatePaymentResultOrderCreated {
 		t.Errorf("ResultType = %q", resp.ResultType)
 	}
+	// 精确数量必须原样透传：字符串保精度，少付 0.000001 都不会自动入账。
+	if resp.CryptoAmount != "10.372145" {
+		t.Errorf("CryptoAmount = %q, want the exact pay_amount 10.372145", resp.CryptoAmount)
+	}
+	if resp.CryptoCurrency != "USDTTRC20" {
+		t.Errorf("CryptoCurrency = %q", resp.CryptoCurrency)
+	}
+	// Currency 是法币计价币种，不能被链上币种占用。
+	if resp.Currency != "USD" {
+		t.Errorf("Currency = %q, want the fiat price currency USD", resp.Currency)
+	}
 }
 
 func TestNowPaymentsCreatePaymentRejectsEmptyAddress(t *testing.T) {

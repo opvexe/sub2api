@@ -16,9 +16,10 @@ const VISIBLE_METHOD_ALIASES = {
   wxpay_direct: 'wxpay',
   stripe: 'stripe',
   airwallex: 'airwallex',
+  nowpayments: 'nowpayments',
 } as const
 
-export type VisiblePaymentMethod = 'alipay' | 'wxpay' | 'stripe' | 'airwallex'
+export type VisiblePaymentMethod = 'alipay' | 'wxpay' | 'stripe' | 'airwallex' | 'nowpayments'
 export type StripeVisibleMethod = 'alipay' | 'wechat_pay'
 export type PaymentLaunchKind =
   | 'qr_waiting'
@@ -42,6 +43,8 @@ export interface PaymentRecoverySnapshot {
   clientSecret: string
   intentId: string
   currency: string
+  cryptoAmount: string
+  cryptoCurrency: string
   countryCode: string
   paymentEnv: string
   payAmount: number
@@ -162,6 +165,8 @@ export function decidePaymentLaunch(
     clientSecret: result.client_secret || '',
     intentId: result.intent_id || '',
     currency: result.currency || '',
+    cryptoAmount: result.crypto_amount || '',
+    cryptoCurrency: result.crypto_currency || '',
     countryCode: result.country_code || '',
     paymentEnv: result.payment_env || '',
     payAmount: result.pay_amount,
@@ -321,6 +326,8 @@ export function readPaymentRecoverySnapshot(
       clientSecret: parsed.clientSecret,
       intentId: parsed.intentId || '',
       currency: parsed.currency || '',
+      cryptoAmount: parsed.cryptoAmount || '',
+      cryptoCurrency: parsed.cryptoCurrency || '',
       countryCode: parsed.countryCode || '',
       paymentEnv: parsed.paymentEnv || '',
       payAmount: parsed.payAmount,

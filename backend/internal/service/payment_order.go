@@ -299,6 +299,13 @@ func buildPaymentOrderProviderSnapshot(sel *payment.InstanceSelection, req Creat
 	if providerKey == payment.TypeStripe {
 		snapshot["currency"] = paymentProviderConfigCurrency(providerKey, sel.Config)
 	}
+	if providerKey == payment.TypeNowPayments {
+		// 收款币种/网络决定了已下发的地址，改动会让在途订单对不上账，一并快照。
+		if payCurrency := strings.TrimSpace(sel.Config["payCurrency"]); payCurrency != "" {
+			snapshot["merchant_id"] = payCurrency
+		}
+		snapshot["currency"] = paymentProviderConfigCurrency(providerKey, sel.Config)
+	}
 	if providerKey == payment.TypeAirwallex {
 		if accountID := strings.TrimSpace(sel.Config["accountId"]); accountID != "" {
 			snapshot["merchant_id"] = accountID
@@ -731,26 +738,28 @@ func classifyCreatePaymentError(req CreateOrderRequest, providerKey string, err 
 
 func buildCreateOrderResponse(order *dbent.PaymentOrder, req CreateOrderRequest, payAmount float64, sel *payment.InstanceSelection, pr *payment.CreatePaymentResponse, resultType payment.CreatePaymentResultType) *CreateOrderResponse {
 	return &CreateOrderResponse{
-		OrderID:      order.ID,
-		Amount:       order.Amount,
-		PayAmount:    payAmount,
-		FeeRate:      order.FeeRate,
-		Status:       OrderStatusPending,
-		ResultType:   resultType,
-		PaymentType:  req.PaymentType,
-		OutTradeNo:   order.OutTradeNo,
-		PayURL:       pr.PayURL,
-		QRCode:       pr.QRCode,
-		ClientSecret: pr.ClientSecret,
-		IntentID:     pr.IntentID,
-		Currency:     pr.Currency,
-		CountryCode:  pr.CountryCode,
-		PaymentEnv:   pr.PaymentEnv,
-		OAuth:        pr.OAuth,
-		JSAPI:        pr.JSAPI,
-		JSAPIPayload: pr.JSAPI,
-		ExpiresAt:    order.ExpiresAt,
-		PaymentMode:  sel.PaymentMode,
+		OrderID:        order.ID,
+		Amount:         order.Amount,
+		PayAmount:      payAmount,
+		FeeRate:        order.FeeRate,
+		Status:         OrderStatusPending,
+		ResultType:     resultType,
+		PaymentType:    req.PaymentType,
+		OutTradeNo:     order.OutTradeNo,
+		PayURL:         pr.PayURL,
+		QRCode:         pr.QRCode,
+		ClientSecret:   pr.ClientSecret,
+		IntentID:       pr.IntentID,
+		Currency:       pr.Currency,
+		CryptoAmount:   pr.CryptoAmount,
+		CryptoCurrency: pr.CryptoCurrency,
+		CountryCode:    pr.CountryCode,
+		PaymentEnv:     pr.PaymentEnv,
+		OAuth:          pr.OAuth,
+		JSAPI:          pr.JSAPI,
+		JSAPIPayload:   pr.JSAPI,
+		ExpiresAt:      order.ExpiresAt,
+		PaymentMode:    sel.PaymentMode,
 	}
 }
 

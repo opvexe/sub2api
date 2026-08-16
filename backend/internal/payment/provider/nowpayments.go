@@ -178,9 +178,12 @@ func (n *NowPayments) CreatePayment(ctx context.Context, req payment.CreatePayme
 		// 收款地址即二维码内容：钱包扫码得到地址，转账金额由页面单独展示。
 		// 不拼 tron:...?amount= 这类 URI —— 各钱包解析规则不一致，扫出错误金额
 		// 会造成少付，而少付在这条链路上无法自动退回。
-		QRCode:     out.PayAddress,
-		Currency:   strings.ToUpper(out.PayCurrency),
-		ResultType: payment.CreatePaymentResultOrderCreated,
+		QRCode: out.PayAddress,
+		// 精确到账数量必须回传给前端展示：用户只看到地址是付不对钱的。
+		CryptoAmount:   out.PayAmount.String(),
+		CryptoCurrency: strings.ToUpper(out.PayCurrency),
+		Currency:       strings.ToUpper(out.PriceCurrency),
+		ResultType:     payment.CreatePaymentResultOrderCreated,
 	}, nil
 }
 

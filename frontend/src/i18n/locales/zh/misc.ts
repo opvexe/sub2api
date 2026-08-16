@@ -346,6 +346,11 @@ export default {
       partially_refunded: '部分退款',
       refund_failed: '退款失败',
     },
+    crypto: {
+      sendExactly: "请转账以下精确数量",
+      toAddress: "收款地址",
+      networkWarning: "只能通过 {currency} 所属网络转账到上述地址。走错网络、或发到过期订单的地址，资金将永久损失且无法找回。金额必须完全一致，少付不会自动到账。",
+    },
     qr: {
       scanToPay: '请扫码支付',
       scanAlipay: '支付宝扫码支付',

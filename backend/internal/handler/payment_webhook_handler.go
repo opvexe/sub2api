@@ -159,6 +159,14 @@ func extractOutTradeNo(rawBody, providerKey string) string {
 		if err == nil {
 			return values.Get("out_trade_no")
 		}
+	case payment.TypeNowPayments:
+		// NOWPayments 的 IPN 用 order_id 承载我们的订单号。
+		var payload struct {
+			OrderID string `json:"order_id"`
+		}
+		if err := json.Unmarshal([]byte(rawBody), &payload); err == nil {
+			return payload.OrderID
+		}
 	case payment.TypeAirwallex:
 		var payload struct {
 			Data struct {
@@ -214,7 +222,7 @@ func writeSuccessResponse(c *gin.Context, providerKey string) {
 	switch providerKey {
 	case payment.TypeWxpay:
 		c.JSON(http.StatusOK, wxpaySuccessResponse{Code: wxpaySuccessCode, Message: wxpaySuccessMessage})
-	case payment.TypeStripe, payment.TypeAirwallex:
+	case payment.TypeStripe, payment.TypeAirwallex, payment.TypeNowPayments:
 		c.String(http.StatusOK, "")
 	default:
 		c.String(http.StatusOK, "success")

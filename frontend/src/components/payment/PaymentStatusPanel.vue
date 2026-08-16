@@ -180,6 +180,48 @@
             </div>
           </div>
           <p v-if="scanHint" class="text-center text-sm text-gray-500 dark:text-gray-400">{{ scanHint }}</p>
+
+          <!-- 加密支付：地址之外必须显示精确数量，少付不会自动入账 -->
+          <div v-if="isCryptoPayment" data-test="crypto-payment-details" class="w-full space-y-3">
+            <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-dark-700 dark:bg-dark-800">
+              <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                {{ t('payment.crypto.sendExactly') }}
+              </p>
+              <div class="mt-1.5 flex items-center justify-between gap-3">
+                <p data-test="crypto-amount" class="break-all font-mono text-xl font-bold text-gray-900 dark:text-white">
+                  {{ cryptoAmount }} <span class="text-sm font-semibold text-gray-500 dark:text-gray-400">{{ cryptoCurrency }}</span>
+                </p>
+                <button
+                  type="button"
+                  class="btn btn-secondary shrink-0 px-3 py-1.5 text-xs"
+                  @click="copyCryptoValue(cryptoAmount || '')"
+                >
+                  {{ t('common.copy') }}
+                </button>
+              </div>
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-dark-700 dark:bg-dark-800">
+              <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                {{ t('payment.crypto.toAddress') }}
+              </p>
+              <div class="mt-1.5 flex items-center justify-between gap-3">
+                <p data-test="crypto-address" class="break-all font-mono text-sm text-gray-900 dark:text-white">{{ qrCode }}</p>
+                <button
+                  type="button"
+                  class="btn btn-secondary shrink-0 px-3 py-1.5 text-xs"
+                  @click="copyCryptoValue(qrCode)"
+                >
+                  {{ t('common.copy') }}
+                </button>
+              </div>
+            </div>
+
+            <p class="rounded-xl bg-amber-50 p-3 text-xs leading-relaxed text-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
+              {{ t('payment.crypto.networkWarning', { currency: cryptoCurrency }) }}
+            </p>
+          </div>
+
           <button v-if="payUrl" class="btn btn-secondary text-sm" @click="reopenPopup">
             {{ t('payment.qr.openPayWindow') }}
           </button>
@@ -248,6 +290,9 @@ const props = defineProps<{
   payUrl?: string
   orderType?: string
   currency?: string
+  /** 加密支付：链上需转账的精确数量与币种/网络。 */
+  cryptoAmount?: string
+  cryptoCurrency?: string
   outTradeNo?: string
   mobileAlipayDeepLink?: boolean
 }>()
@@ -319,6 +364,16 @@ const scanTitle = computed(() => {
   if (isWxpay.value) return t('payment.qr.scanWxpay')
   return t('payment.qr.scanToPay')
 })
+
+// 加密支付：有精确数量就说明是链上转账，需要额外展示金额与地址
+const isCryptoPayment = computed(() => !!props.cryptoAmount)
+
+async function copyCryptoValue(value: string) {
+  if (!value) return
+  // 懒加载：与首页同理，避免组件在无 Pinia 的测试环境里初始化失败
+  const { useClipboard } = await import('@/composables/useClipboard')
+  await useClipboard().copyToClipboard(value)
+}
 
 const scanHint = computed(() => {
   if (isAlipay.value) return t('payment.qr.scanAlipayHint')

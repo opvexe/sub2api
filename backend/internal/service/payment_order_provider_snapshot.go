@@ -198,6 +198,18 @@ func validateProviderSnapshotMetadata(order *dbent.PaymentOrder, providerKey str
 				return fmt.Errorf("stripe currency mismatch: expected %s, got %s", expected, actual)
 			}
 		}
+	case payment.TypeNowPayments:
+		// 下单时用户拿到的是某条链上的地址；若管理员中途改了收款币种/网络，
+		// 回调对应的就不是同一条链，此时必须拒绝而不是照单入账。
+		if expected := strings.TrimSpace(snapshot.MerchantID); expected != "" {
+			actual := strings.TrimSpace(metadata["pay_currency"])
+			if actual == "" {
+				return fmt.Errorf("nowpayments pay_currency missing")
+			}
+			if !strings.EqualFold(expected, actual) {
+				return fmt.Errorf("nowpayments pay_currency mismatch: expected %s, got %s", expected, actual)
+			}
+		}
 	case payment.TypeAirwallex:
 		if expected := strings.TrimSpace(snapshot.MerchantID); expected != "" {
 			actual := strings.TrimSpace(metadata["account_id"])

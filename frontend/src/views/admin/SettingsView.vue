@@ -12117,6 +12117,7 @@ const providerKeyOptions = computed(() => [
   { value: "wxpay", label: t("admin.settings.payment.providerWxpay") },
   { value: "stripe", label: t("admin.settings.payment.providerStripe") },
   { value: "airwallex", label: t("admin.settings.payment.providerAirwallex") },
+  { value: "nowpayments", label: t("admin.settings.payment.providerNowpayments") },
 ]);
 
 const enabledProviderKeyOptions = computed(() => {

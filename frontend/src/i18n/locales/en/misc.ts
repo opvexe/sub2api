@@ -322,6 +322,11 @@ export default {
       partially_refunded: 'Partially Refunded',
       refund_failed: 'Refund Failed',
     },
+    crypto: {
+      sendExactly: "Send exactly this amount",
+      toAddress: "To this address",
+      networkWarning: "Send only on the {currency} network to the address above. Funds sent on a different network, or to an address from an expired order, are permanently lost and cannot be recovered. The amount must match exactly — underpayments are not credited automatically.",
+    },
     qr: {
       scanToPay: 'Scan to Pay',
       scanAlipay: 'Alipay QR Payment',

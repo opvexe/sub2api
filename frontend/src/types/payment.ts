@@ -19,7 +19,7 @@ export type OrderStatus =
   | 'REFUNDED'
   | 'REFUND_FAILED'
 
-export type PaymentType = 'alipay' | 'wxpay' | 'alipay_direct' | 'wxpay_direct' | 'stripe' | 'easypay' | 'airwallex'
+export type PaymentType = 'alipay' | 'wxpay' | 'alipay_direct' | 'wxpay_direct' | 'stripe' | 'easypay' | 'airwallex' | 'nowpayments'
 
 export type OrderType = 'balance' | 'subscription'
 
@@ -206,6 +206,9 @@ export interface CreateOrderResult {
   client_secret?: string
   intent_id?: string
   currency?: string
+  /** 加密支付：链上需转账的精确数量（字符串保精度）与币种/网络。 */
+  crypto_amount?: string
+  crypto_currency?: string
   country_code?: string
   payment_env?: string
   pay_amount: number

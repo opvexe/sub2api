@@ -24,6 +24,8 @@
             :pay-url="paymentState.payUrl"
             :order-type="paymentState.orderType"
             :currency="paymentState.currency || selectedCurrency"
+            :crypto-amount="paymentState.cryptoAmount"
+            :crypto-currency="paymentState.cryptoCurrency"
             :out-trade-no="paymentState.outTradeNo"
             :mobile-alipay-deep-link="paymentState.alipayMobilePrecreateDeepLink"
             @done="onPaymentDone"
@@ -358,6 +360,8 @@ function emptyPaymentState(): PaymentRecoverySnapshot {
     clientSecret: '',
     intentId: '',
     currency: '',
+    cryptoAmount: '',
+    cryptoCurrency: '',
     countryCode: '',
     paymentEnv: '',
     payAmount: 0,

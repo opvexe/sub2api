@@ -101,6 +101,8 @@ type CreateOrderResponse struct {
 	ClientSecret                  string                          `json:"client_secret,omitempty"`
 	IntentID                      string                          `json:"intent_id,omitempty"`
 	Currency                      string                          `json:"currency,omitempty"`
+	CryptoAmount                  string                          `json:"crypto_amount,omitempty"`
+	CryptoCurrency                string                          `json:"crypto_currency,omitempty"`
 	CountryCode                   string                          `json:"country_code,omitempty"`
 	PaymentEnv                    string                          `json:"payment_env,omitempty"`
 	OAuth                         *payment.WechatOAuthInfo        `json:"oauth,omitempty"`

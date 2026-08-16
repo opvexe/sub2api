@@ -67,6 +67,12 @@ func (h *PaymentWebhookHandler) AirwallexWebhook(c *gin.Context) {
 	h.handleNotify(c, payment.TypeAirwallex)
 }
 
+// NowPaymentsWebhook 处理 NOWPayments 的 IPN 回调。
+// POST /api/v1/payment/webhook/nowpayments
+func (h *PaymentWebhookHandler) NowPaymentsWebhook(c *gin.Context) {
+	h.handleNotify(c, payment.TypeNowPayments)
+}
+
 // handleNotify is the shared logic for all provider webhook handlers.
 func (h *PaymentWebhookHandler) handleNotify(c *gin.Context, providerKey string) {
 	var rawBody string

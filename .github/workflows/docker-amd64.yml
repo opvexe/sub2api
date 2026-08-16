@@ -30,20 +30,30 @@ jobs:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
           SHORT_SHA="${GITHUB_SHA::7}"
-          BASE_VERSION="$(tr -d '\r\n' < backend/cmd/server/VERSION)"
-          VERSION="${BASE_VERSION}-main.${SHORT_SHA}"
-          GHCR_REPOSITORY="ghcr.io/$(printf '%s' "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          # 与官方 release 对齐：版本号就是 VERSION 文件的裸版本，不再拼 -main.<sha>。
+          # 镜像仓库名固定为 <owner>/sub2api，与 .goreleaser.yaml 的 image_templates 一致，
+          # 避免 fork 改名后镜像名跟着变。
+          VERSION="$(tr -d '\r\n' < backend/cmd/server/VERSION)"
+          OWNER_LOWER="$(printf '%s' "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          GHCR_REPOSITORY="ghcr.io/${OWNER_LOWER}/sub2api"
           DOCKERHUB_REPOSITORY="$(printf '%s' "${DOCKERHUB_USERNAME}" | tr '[:upper:]' '[:lower:]')/sub2api"
 
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "${GITHUB_OUTPUT}"
           echo "ghcr_repository=${GHCR_REPOSITORY}" >> "${GITHUB_OUTPUT}"
 
+          # 官方 release 的 amd64 产物是 <repo>:<version>-amd64，另外还有一个合成的
+          # <repo>:<version> manifest。这里只构建 amd64，所以两个 tag 都指向同一个镜像。
+          # main-<sha> 保留：<version> 每次推 main 都会被覆盖，出问题时靠它回滚到具体提交。
           {
             echo "tags<<EOF"
+            echo "${GHCR_REPOSITORY}:${VERSION}-amd64"
+            echo "${GHCR_REPOSITORY}:${VERSION}"
             echo "${GHCR_REPOSITORY}:latest"
             echo "${GHCR_REPOSITORY}:main-${SHORT_SHA}"
             if [ -n "${DOCKERHUB_USERNAME}" ] && [ -n "${DOCKERHUB_TOKEN}" ]; then
+              echo "${DOCKERHUB_REPOSITORY}:${VERSION}-amd64"
+              echo "${DOCKERHUB_REPOSITORY}:${VERSION}"
               echo "${DOCKERHUB_REPOSITORY}:latest"
               echo "${DOCKERHUB_REPOSITORY}:main-${SHORT_SHA}"
             fi

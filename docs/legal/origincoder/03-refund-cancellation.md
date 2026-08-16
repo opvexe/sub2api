@@ -29,17 +29,17 @@ You can cancel at any time from **Dashboard → Billing → Cancel subscription*
 
 "Extended outage" means the Service was materially unavailable for a continuous period long enough to prevent normal use, as shown by our own request logs. Failures of an individual upstream model provider that our failover routes around are not outages of the Service.
 
-## 3. USDT top-ups are not refundable
+## 3. Crypto top-ups are not refundable
 
-USDT payments on the TRC20 network are **final once confirmed on-chain**. Blockchain transfers cannot be reversed by us or by anyone else, so we cannot return them. This is a property of the payment method, not a commercial choice.
+Cryptocurrency payments are **final once confirmed on-chain**. Blockchain transfers cannot be reversed by us, by our payment processor, or by anyone else, so we cannot return them. This is a property of the payment method, not a commercial choice.
 
 Please note in particular:
 
-- We accept USDT on the **TRC20 (Tron) network only**. Funds sent on ERC20, BEP20, Polygon or any other network are **permanently lost** and cannot be recovered by us.
-- Always send to the exact address shown in your dashboard for that specific top-up.
+- **Send only the coin and network shown on the payment page**, to the address shown on that page, for that specific top-up. Funds sent on a different network, or to an address from an earlier order, are **permanently lost** and cannot be recovered.
+- **Send the exact amount shown.** An underpaid order is not credited automatically — it stays open and needs manual handling by our support team, so contact us if it happens.
 - If you are not comfortable with an irreversible payment method, use a card instead — card payments carry the refund rights described in section 2.
 
-Unused balance from a USDT top-up remains in your account indefinitely and can be spent at any time. It is not forfeited.
+Unused balance from a crypto top-up remains in your account indefinitely and can be spent at any time. It is not forfeited.
 
 ## 4. How to request a refund
 

@@ -11,7 +11,7 @@ OriginCoder is operated from the United States by Fvawi Drein INC, and our serve
 
 OriginCoder is available worldwide, **except** in the countries and territories listed in section 2.
 
-You do not need to be in a particular country to open an account. Prices are in US dollars and card payments are processed by Stripe, which supports cards issued in most countries. If Stripe does not support cards issued where you live, you can fund your account with USDT on the TRC20 network instead.
+You do not need to be in a particular country to open an account. Prices are in US dollars and card payments are processed by Stripe, which supports cards issued in most countries. If Stripe does not support cards issued where you live, you can fund your account with cryptocurrency instead; the accepted coins and networks are shown on the payment page.
 
 ## 2. Where it is not available
 

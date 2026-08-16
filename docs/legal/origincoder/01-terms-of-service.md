@@ -47,7 +47,7 @@ All prices are published and charged in **US dollars (USD)** and are exclusive o
 | Method | How it works |
 |---|---|
 | **Card, via Stripe** | Visa, Mastercard, American Express and other card networks supported by Stripe. Payments are processed by Stripe, Inc.; we never receive or store your full card number. Subscriptions renew automatically on the same day each month until cancelled. Your card statement will show a descriptor identifying OriginCoder. |
-| **USDT on TRC20** | We accept USDT on the **TRC20 (Tron) network only**. Sending USDT on any other network — ERC20, BEP20, Polygon or otherwise — will result in permanent loss of funds that we cannot recover. Crypto payments are **one-time and non-recurring**: you send an amount, we credit your balance after on-chain confirmation. Because blockchain transfers are irreversible, confirmed USDT payments are **final and non-refundable**. Network fees are borne by the sender. |
+| **Cryptocurrency, via NOWPayments** | We accept stablecoin payments through NOWPayments, a third-party crypto payment processor. **The exact coin and network are shown on the payment page before you send, together with a deposit address and the precise amount.** You must send that coin on that network. Funds sent on any other network, or to any other address, are **permanently lost and cannot be recovered by us or by NOWPayments.** Crypto payments are **one-time and non-recurring**: you send an amount, we credit your balance once the transfer is confirmed on-chain and settled by the processor. Because blockchain transfers are irreversible, confirmed crypto payments are **final and non-refundable**. Network fees are borne by the sender. |
 
 An invoice or receipt is issued for every successful payment and is available in your dashboard.
 
@@ -59,7 +59,7 @@ You may cancel a subscription at any time from your dashboard. Cancellation stop
 
 - **First purchase.** If the Service does not work for you, you may request a full refund within **7 days** of your first card payment, provided you have consumed **less than 10%** of that period's credit allowance.
 - **Renewals** are generally non-refundable. If you were charged in error, or the Service was materially unavailable for an extended period, contact us and we will review the case.
-- **USDT top-ups are non-refundable** once confirmed on-chain, for the reasons described above.
+- **Crypto top-ups are non-refundable** once confirmed on-chain, for the reasons described above.
 - Approved card refunds are returned to the original payment method through Stripe, normally within 5–10 business days depending on your bank.
 
 Full details are in [Refund and Cancellation Policy](/legal/service-specific-terms). To request a refund, email support@origincoder.com from the address registered to your account, stating the invoice number and the reason.

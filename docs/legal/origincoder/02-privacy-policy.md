@@ -17,7 +17,7 @@ OriginCoder is an API gateway operated by Fvawi Drein INC ("we", "us"). This pol
 | Category | Details |
 |---|---|
 | **Account data** | Email address, hashed password, third-party sign-in identifier if you use one, optional display name. |
-| **Billing data** | Plan, invoices, payment status, and the last four digits and brand of your card as reported by Stripe. **We never receive or store your full card number.** For USDT top-ups we store the on-chain transaction hash and the amount credited. |
+| **Billing data** | Plan, invoices, payment status, and the last four digits and brand of your card as reported by Stripe. **We never receive or store your full card number.** For crypto top-ups we store the processor's payment identifier, the coin and network used, and the amount credited. |
 | **Usage metadata** | Per API call: timestamp, model requested, upstream provider used, input and output token counts, computed cost, HTTP status code, and latency. **This record does not include the text of your request or the model's response.** |
 | **Technical data** | IP address, user agent and request headers, used for security, abuse prevention and rate limiting. |
 | **Support data** | Messages you send us by email, Telegram or Discord, and anything you choose to include in them. |
@@ -36,7 +36,7 @@ This is the part most users care about, so we state it precisely.
 ## 4. Why we process it
 
 - **To provide the Service** — routing requests, enforcing rate limits, metering usage (performance of a contract).
-- **To bill you** — issuing invoices, processing card and USDT payments, preventing payment fraud (contract and legal obligation).
+- **To bill you** — issuing invoices, processing card and cryptocurrency payments, preventing payment fraud (contract and legal obligation).
 - **To keep the platform secure** — detecting abuse, credential stuffing and denial-of-service attempts (legitimate interest).
 - **To support you** — answering your messages and investigating incidents (contract and legitimate interest).
 - **To comply with law** — tax records, sanctions screening and lawful requests from authorities (legal obligation).
@@ -47,6 +47,7 @@ This is the part most users care about, so we state it precisely.
 |---|---|
 | **Model providers** | Anthropic, OpenAI, Google and other upstreams. They receive the content of requests routed to them, in order to answer them. |
 | **Stripe, Inc.** | Card payment processing. Stripe receives your email and payment details directly; we receive only the result and card metadata. |
+| **NOWPayments** | Cryptocurrency payment processing. Receives the payment amount and issues the deposit address; it does not receive your account credentials or any prompt data. Note that blockchain transactions are public by nature — the address you send from is visible on-chain to anyone. |
 | **Vultr (The Constant Company, LLC)** | Hosting. Our servers and databases run in Vultr's Silicon Valley region (Santa Clara, California, United States). Vultr provides the infrastructure and does not process your data for its own purposes. |
 | **Authorities** | Where required by valid legal process, or to protect rights, safety and property. |
 

@@ -36,7 +36,10 @@ jobs:
           VERSION="$(tr -d '\r\n' < backend/cmd/server/VERSION)"
           OWNER_LOWER="$(printf '%s' "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
           GHCR_REPOSITORY="ghcr.io/${OWNER_LOWER}/sub2api"
-          DOCKERHUB_REPOSITORY="$(printf '%s' "${DOCKERHUB_USERNAME}" | tr '[:upper:]' '[:lower:]')/sub2api"
+          # Docker Hub 仓库名跟 GHCR 对齐，都用 <owner>/sub2api，不跟随登录用的
+          # DOCKERHUB_USERNAME 变化（登录账号可能与命名空间不同名）。
+          # 前提：DOCKERHUB_TOKEN 对应的账号要有 ${OWNER_LOWER} 命名空间的写权限。
+          DOCKERHUB_REPOSITORY="${OWNER_LOWER}/sub2api"
 
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "${GITHUB_OUTPUT}"

@@ -18,6 +18,9 @@ const (
 	TypeLink         PaymentType = "link"
 	TypeEasyPay      PaymentType = "easypay"
 	TypeAirwallex    PaymentType = "airwallex"
+	// TypeNowPayments 是 USDT 等加密货币收款，走 NOWPayments 直连支付：
+	// 下单后返回链上收款地址与精确到账金额，用户转账后由 IPN 回调确认。
+	TypeNowPayments PaymentType = "nowpayments"
 )
 
 // Order status constants shared across payment and service layers.
@@ -86,6 +89,8 @@ func GetBasePaymentType(t string) string {
 		return TypeEasyPay
 	case t == TypeAirwallex:
 		return TypeAirwallex
+	case t == TypeNowPayments:
+		return TypeNowPayments
 	case t == TypeStripe || t == TypeCard || t == TypeLink:
 		return TypeStripe
 	case len(t) >= len(TypeAlipay) && t[:len(TypeAlipay)] == TypeAlipay:

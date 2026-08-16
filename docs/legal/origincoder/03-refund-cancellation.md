@@ -1,105 +1,71 @@
-> **Draft — needs legal review before publishing.**
-> Paste into 后台 → 设置 → 登录协议文档 → `refund`（标题：退款与取消政策）。
-> Blocks marked ⚠️ **待确认** contain facts only you can supply — do not publish them as-is.
+> Paste into 后台 → 设置 → 登录协议文档 → `service-specific-terms`（标题：Refund and Cancellation Policy）.
+> Keep the numbers here identical to section 6 of 01-terms-of-service.md — Stripe reviewers compare the two.
 
+# Refund and Cancellation Policy
 
-# Refund & Cancellation Policy
+**Last updated:** 16 August 2026 · **Operator:** Fvawi Drein INC · **Contact:** support@origincoder.com
 
-**Last updated:** 15 August 2026 · **Currency:** USD · **Processor:** Stripe, Inc.
+This policy explains when you can cancel, when you get money back, and how long it takes. It forms part of our [Terms of Service](/legal/terms).
 
 ## 1. Cancelling a subscription
 
-Cancel any time from **Dashboard → Billing → Cancel plan**. No email or phone call required.
+You can cancel at any time from **Dashboard → Billing → Cancel subscription**. No email, no phone call, no retention interview.
 
-- Cancellation takes effect at the **end of the period already paid for**. Full access continues until then.
-- No cancellation fee, no minimum term.
-- Partial months are not pro-rated.
-- You receive an email confirming the cancellation and the date access ends.
+- Cancellation stops the **next** renewal. Your plan stays active until the end of the period you have already paid for, and you keep full access until then.
+- We do not pro-rate partial months. Cancelling on day 3 of a 30-day period does not produce a refund for the remaining 27 days.
+- Your account and usage history remain available after cancellation. You can resubscribe at any time.
 
 ## 2. Refunds on card payments
 
 | Situation | Outcome |
 |---|---|
-| **First purchase, within 7 days** | Full refund, provided consumption is below the threshold noted below. |
-| **Renewal charges** | Generally non-refundable. Cancel before the renewal date to avoid the next charge. |
-| **Charged in error / duplicate** | Refunded in full once verified. |
-| **Extended outage** | Where the Service was materially unavailable for a prolonged period, we offer a credit or pro-rata refund. |
-| **Account terminated for breach** | No refund of the current period. |
+| **First purchase, within 7 days, under 10% of credits used** | Full refund on request. |
+| **First purchase, within 7 days, 10% or more of credits used** | No automatic refund. Contact us and we will look at the specifics. |
+| **Renewal charges** | Generally non-refundable. |
+| **Charged in error** (duplicate charge, charged after cancellation, wrong amount) | Full refund. |
+| **Extended outage** attributable to us | Pro-rata credit or refund, at your choice. |
+| **Account terminated by us for breach** | No refund of the current period. |
+| **Account terminated by us for any other reason** | Pro-rata refund of unused paid credits. |
 
-> ⚠️ **待确认** —— 首购退款的额度消耗上限（例如"已消耗低于当期额度的 10%"）。
+"Extended outage" means the Service was materially unavailable for a continuous period long enough to prevent normal use, as shown by our own request logs. Failures of an individual upstream model provider that our failover routes around are not outages of the Service.
 
-Approved refunds return to the original card through Stripe; banks normally post them within 5–10 business days.
+## 3. USDT top-ups are not refundable
 
-## 3. USDT top-ups
+USDT payments on the TRC20 network are **final once confirmed on-chain**. Blockchain transfers cannot be reversed by us or by anyone else, so we cannot return them. This is a property of the payment method, not a commercial choice.
 
-**Crypto payments are final.** Blockchain transfers cannot be reversed by us, so confirmed USDT top-ups are **non-refundable** and non-exchangeable. Start with a small amount if you are testing.
+Please note in particular:
 
-- Send only **USDT** on a listed network. Sending another asset, or using an unlisted network, causes permanent loss we cannot recover.
-- Credit is applied after the required on-chain confirmations. Network fees are paid by the sender and are not credited.
-- If you sent to a correct address but the balance was not credited, contact us with the transaction hash.
+- We accept USDT on the **TRC20 (Tron) network only**. Funds sent on ERC20, BEP20, Polygon or any other network are **permanently lost** and cannot be recovered by us.
+- Always send to the exact address shown in your dashboard for that specific top-up.
+- If you are not comfortable with an irreversible payment method, use a card instead — card payments carry the refund rights described in section 2.
+
+Unused balance from a USDT top-up remains in your account indefinitely and can be spent at any time. It is not forfeited.
 
 ## 4. How to request a refund
 
-Email support@origincoder.com from your registered address with:
+Email **support@origincoder.com** from the address registered to your account, and include:
 
-- Your account email
-- The invoice number, or the date and amount of the charge
-- The reason for the request
+1. The invoice or receipt number.
+2. The reason for the request.
 
-We acknowledge every request within **2 business days** and aim to decide within **5 business days**. If we decline, we explain why.
+We will acknowledge within **1 business day** and give a decision within **5 business days**. If you disagree with the decision, reply to the same thread and a second person will review it.
 
-## 5. Chargebacks
+## 5. How long the money takes
 
-If something looks wrong on your statement, contact us first — we can usually resolve it faster than a bank dispute. Filing a chargeback without contacting us may lead to suspension pending resolution.
+Approved card refunds are issued through Stripe to the original payment method. Stripe typically completes the transfer within **5–10 business days**, though the exact timing depends on your bank or card issuer. We cannot speed this up once the refund is issued; you will receive a confirmation email from Stripe when it is on its way.
 
----
+We do not issue refunds by bank transfer, cheque, or to a different card from the one charged. This is a fraud-prevention requirement, not a preference.
 
-# 退款与取消政策
+## 6. Chargebacks
 
-**最后更新：** 2026 年 8 月 15 日 · **结算币种：** 美元 · **支付处理方：** Stripe, Inc.
+If something has gone wrong, please contact us first. We would rather refund you directly than dispute a chargeback — it is faster for you and cheaper for us.
 
-## 1. 取消订阅
+If you file a chargeback without contacting us, we will suspend the account while the dispute is open, because we are required to freeze the disputed balance. The account is restored as soon as the dispute is resolved.
 
-随时在**控制台 → 账单 → 取消套餐**操作，无需邮件或电话。
+## 7. Changes to this policy
 
-- 取消在**已付费周期结束时**生效，在此之前功能不受影响。
-- 无取消费用，无最短合约期。
-- 不足月不按比例退款。
-- 取消后您会收到确认邮件，注明服务到期日。
+If we change this policy in a way that reduces your rights, we will give notice by email or in the dashboard at least **14 days** before it takes effect. The version in force at the time of your purchase governs that purchase.
 
-## 2. 卡支付退款
+## 8. Contact
 
-| 情形 | 处理方式 |
-|---|---|
-| **首次购买且在 7 天内** | 全额退款，前提是额度消耗低于下述阈值。 |
-| **续费扣款** | 原则上不退。请在续费日前取消以避免下一期扣款。 |
-| **误扣 / 重复扣款** | 核实后全额退还。 |
-| **长时间故障** | 服务出现长时间实质不可用时，提供额度补偿或按比例退款。 |
-| **因违规被终止** | 当期不予退款。 |
-
-> ⚠️ **待确认** —— 首购退款的额度消耗上限（例如"已消耗低于当期额度的 10%"）。
-
-已批准的退款通过 Stripe 原路退回，银行通常在 5–10 个工作日内入账。
-
-## 3. USDT 充值
-
-**加密货币支付不可逆。** 链上转账我们无法撤销，因此已确认的 USDT 充值**不可退款、不可兑换**。若仅为试用，建议先小额充值。
-
-- 请仅通过列出的网络转入 **USDT**。转入其他币种或使用未列出的网络将造成永久损失，我们无法找回。
-- 达到所需链上确认数后到账。网络手续费由汇出方承担，不计入到账金额。
-- 若已转至正确地址但余额未到账，请携交易哈希联系我们。
-
-## 4. 如何申请退款
-
-请从注册邮箱发送邮件至 support@origincoder.com，并提供：
-
-- 账号邮箱
-- 发票号，或扣款日期与金额
-- 申请原因
-
-我们在 **2 个工作日**内确认收到，并力争在 **5 个工作日**内给出结论。若不予退款，我们会说明理由。
-
-## 5. 拒付（Chargeback）
-
-如对账单有疑问，请先联系我们 —— 通常比银行争议流程更快解决。未先行联系即发起拒付，可能导致账号在争议解决前被暂停。
-
+Fvawi Drein INC, 1942 Broadway Ste 314C, Boulder, CO 80302, United States — **support@origincoder.com**

@@ -1,71 +1,93 @@
-> **Draft — needs legal review before publishing.**
-> Paste into 后台 → 设置 → 登录协议文档 → `usage-policy`（标题：可接受使用政策）。
-> Blocks marked ⚠️ **待确认** contain facts only you can supply — do not publish them as-is.
-
+> Paste into 后台 → 设置 → 登录协议文档 → `usage-policy`（标题：Acceptable Use Policy）.
 
 # Acceptable Use Policy
 
-**Last updated:** 15 August 2026 · Applies to all plans.
+**Last updated:** 16 August 2026 · **Operator:** Fvawi Drein INC · **Contact:** support@origincoder.com
 
-## 1. Scope
+This policy sets out what you may not do with OriginCoder. It forms part of our [Terms of Service](/legal/terms). It applies to everything you send through the API and everything you do with what comes back.
 
-This policy applies to everyone using the OriginCoder API and dashboard, alongside the Terms of Service. Because we forward your requests to third-party model providers, **their usage policies also apply** to the requests they serve.
+Two rules sit above everything else in this document:
 
-## 2. You may not use the Service to
+1. **You must also comply with the policies of the upstream model provider serving your request.** When you call a Claude model you are bound by Anthropic's usage policies; a GPT model, OpenAI's; a Gemini model, Google's. Where their rules are stricter than ours, theirs apply.
+2. **You are responsible for what your end users do through your integration.** If you build a product on top of OriginCoder, the traffic your users generate is your traffic.
 
-- Generate or distribute content that is unlawful where you or your users are located, including child sexual abuse material, which we report to the authorities without exception.
-- Produce targeted harassment, threats, or content intended to defame or intimidate a specific person.
-- Create malware, exploit code, phishing pages, or material designed to gain unauthorised access to systems or data.
-- Impersonate a person or organisation, or generate content presented as coming from a real person without their consent.
-- Generate deceptive content for fraud, spam, fake reviews, or coordinated inauthentic behaviour.
-- Provide medical, legal or financial advice presented as coming from a qualified professional, without appropriate disclosure and human review.
-- Circumvent rate limits, filters or geographic restrictions, including by rotating accounts or keys.
-- Resell raw model access in a way that hides from the end user which provider is serving them, or that breaches the upstream provider's terms.
-- Attempt to extract model weights, training data, or system prompts belonging to an upstream provider.
+## 1. Illegal activity
 
-## 3. Security expectations
+Do not use the Service to plan, carry out, promote or facilitate anything unlawful in the United States, in your own jurisdiction, or in the jurisdiction of the people you are dealing with. This includes fraud, money laundering, sanctions evasion, trafficking in people or controlled substances, and the sale of stolen data or credentials.
 
-- Keep API keys secret; do not commit them to public repositories or ship them in client-side code.
-- Do not probe, scan or load-test our infrastructure without written permission.
-- Report vulnerabilities to support@origincoder.com before disclosing them publicly. We will not pursue good-faith researchers who follow this.
+## 2. Harm to people
 
-## 4. Enforcement
+Do not use the Service to:
 
-We may rate-limit, suspend or terminate an account that breaches this policy, and may report unlawful activity to the authorities. For a first, non-severe issue we normally contact you first. Severe breaches — in particular anything involving minors, or attacks on infrastructure — result in immediate termination without refund.
+- Generate or distribute **child sexual abuse material**. This is the one violation for which we terminate immediately, without warning, and report to the relevant authorities.
+- Produce non-consensual intimate imagery, or sexual content depicting real identifiable people without their consent.
+- Harass, bully, threaten, stalk or intimidate any person, or generate content designed to do so at scale.
+- Incite or glorify violence, or promote self-harm, suicide or eating disorders.
+- Generate content that demeans or dehumanises people on the basis of a protected characteristic.
 
-To report abuse by another user, email support@origincoder.com with evidence.
+## 3. Deception and manipulation
 
----
+Do not use the Service to:
 
-# 可接受使用政策
+- Impersonate a real person or organisation without clear authorisation, including generating text, voice or images presented as genuine statements by them.
+- Run coordinated inauthentic behaviour: bot networks, astroturfing, fake reviews, vote manipulation, or synthetic engagement.
+- Create phishing pages, scam scripts, fake invoices, or any material designed to trick someone into giving up credentials, money or personal data.
+- Generate disinformation about elections, public health or emergencies.
+- Present model output as human-authored in contexts where that misrepresentation causes harm — for example academic submissions, legal filings, or medical advice.
 
-**最后更新：** 2026 年 8 月 15 日 · 适用于全部套餐。
+## 4. Security and system abuse
 
-## 1. 适用范围
+Do not use the Service to:
 
-本政策适用于所有使用 OriginCoder API 与控制台的用户，与《服务条款》并行适用。由于我们会将请求转发给第三方模型服务商，**其使用政策同样适用于**由其处理的请求。
+- Develop or distribute malware, ransomware, spyware, or tooling whose primary purpose is unauthorised access to systems.
+- Probe, scan or test the security of any system you are not authorised to test — including ours.
+- Circumvent our rate limits, quotas, authentication, billing or geographic restrictions, whether by multiple accounts, proxy rotation, or any other means.
+- Resell or redistribute raw model access in a way that conceals the upstream provider's identity or terms from your users.
+- Extract or reconstruct model weights, or use outputs to train a competing model where the upstream provider's terms prohibit it.
 
-## 2. 禁止使用本服务从事
+## 5. High-risk uses
 
-- 生成或传播在您或您的用户所在地违法的内容，包括儿童性虐待材料 —— 此类情况我们一律向主管机关举报。
-- 针对特定个人的骚扰、威胁，或意图诽谤、恐吓的内容。
-- 制作恶意软件、漏洞利用代码、钓鱼页面，或用于未授权访问系统与数据的材料。
-- 冒充他人或组织，或在未经本人同意的情况下生成以其名义发布的内容。
-- 生成用于欺诈、垃圾信息、虚假评价或有组织的虚假行为的欺骗性内容。
-- 在缺乏适当披露与人工复核的情况下，提供以专业人士名义呈现的医疗、法律或金融建议。
-- 规避速率限制、内容过滤或地域限制，包括轮换账号或密钥。
-- 以隐瞒实际服务商、或违反上游服务商条款的方式转售原始模型访问权限。
-- 试图提取上游服务商的模型权重、训练数据或系统提示词。
+The Service is not designed, tested or approved for use as the sole basis of decisions in the following areas. If you operate in these domains, a qualified human must review every output before it affects anyone:
 
-## 3. 安全要求
+- Medical diagnosis, treatment or triage.
+- Legal advice, or the drafting of documents filed with a court.
+- Financial, tax or investment advice.
+- Employment, housing, credit, insurance or education eligibility decisions.
+- Safety-critical control systems, including vehicles, industrial equipment and medical devices.
+- Law enforcement, immigration, or any use involving biometric identification or predictive policing.
 
-- 妥善保管 API 密钥；不要提交到公开仓库或打包进客户端代码。
-- 未经书面许可，不得对我们的基础设施进行探测、扫描或压力测试。
-- 发现漏洞请先邮件至 support@origincoder.com，勿先行公开。对遵循此流程的善意研究者，我们不会追究。
+## 6. Privacy of others
 
-## 4. 处置措施
+Do not upload personal data you have no right to process. In particular, do not send us or an upstream provider special-category data — health records, biometric identifiers, precise location histories, or data about children — unless you have a lawful basis and the upstream provider permits it.
 
-对违反本政策的账号，我们可采取限流、暂停或终止措施，并可向主管机关举报违法行为。对首次且非严重的问题，我们通常会先联系您。严重违规 —— 尤其涉及未成年人或攻击基础设施 —— 将立即终止且不予退款。
+Do not use the Service to build profiles of individuals from scraped data, or to re-identify anonymised datasets.
 
-举报其他用户的滥用行为，请携证据邮件至 support@origincoder.com。
+## 7. Spam
 
+Do not use the Service to generate bulk unsolicited messages, SEO doorway pages, content farms, or comment spam.
+
+## 8. How we enforce this
+
+We do not routinely inspect the content of your requests. We do not store prompt or response bodies — see our [Privacy Policy](/legal/privacy) for exactly what we retain.
+
+We act on:
+
+- Reports from users, upstream providers or third parties.
+- Abuse signals visible in metadata, such as traffic patterns typical of credential stuffing or scraping.
+- Legal process.
+
+Depending on severity and history, we may: contact you for an explanation, rate-limit the account, suspend it pending review, or terminate it. **Child sexual abuse material results in immediate termination and a report to authorities.** For a first, non-severe issue we will normally contact you before taking action.
+
+If your account is suspended and you believe we got it wrong, reply to the notice or email support@origincoder.com. A second person will review the decision.
+
+## 9. Reporting a violation
+
+If you believe someone is using OriginCoder in breach of this policy, email **support@origincoder.com** with as much detail as you can provide. We investigate every report and will tell you the outcome where we lawfully can.
+
+## 10. Changes
+
+We may update this policy as the law, upstream provider requirements or observed abuse patterns change. Material changes are announced by email or in the dashboard at least **14 days** before they take effect.
+
+## 11. Contact
+
+Fvawi Drein INC, 1942 Broadway Ste 314C, Boulder, CO 80302, United States — **support@origincoder.com**

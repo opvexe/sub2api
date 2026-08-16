@@ -2092,7 +2092,7 @@
                       <a
                         href="https://dash.cloudflare.com/"
                         target="_blank"
-                        class="text-primary-600 hover:text-primary-500"
+                        class="text-primary-600 hover:text-primary-700"
                         >{{
                           t("admin.settings.turnstile.cloudflareDashboard")
                         }}</a
@@ -2247,7 +2247,7 @@
                       :href="tencentCaptchaLinks.console"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="text-primary-600 hover:text-primary-500"
+                      class="text-primary-600 hover:text-primary-700"
                     >
                       {{ t("admin.settings.tencentCaptcha.openCaptchaConsole") }}
                     </a>
@@ -2255,7 +2255,7 @@
                       :href="tencentCaptchaLinks.cloudKeys"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="text-primary-600 hover:text-primary-500"
+                      class="text-primary-600 hover:text-primary-700"
                     >
                       {{ t("admin.settings.tencentCaptcha.createCloudKeys") }}
                     </a>
@@ -2263,7 +2263,7 @@
                       :href="tencentCaptchaLinks.webDocs"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="text-primary-600 hover:text-primary-500"
+                      class="text-primary-600 hover:text-primary-700"
                     >
                       {{ t("admin.settings.tencentCaptcha.openWebDocs") }}
                     </a>

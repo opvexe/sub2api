@@ -501,7 +501,7 @@ function providerIconClass(provider: UserAuthProvider): string {
   if (provider === 'oidc') {
     return 'bg-gray-100 text-gray-600 dark:bg-dark-700 dark:text-dark-300'
   }
-  return 'bg-primary-100 text-primary-600 dark:bg-primary-900/20 dark:text-primary-300'
+  return 'bg-primary-100 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
 }
 
 function providerSummary(provider: UserAuthProvider): string {

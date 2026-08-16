@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
     <div class="card p-4 flex items-center gap-3">
-      <div class="rounded-lg bg-primary-100 p-2 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400">
+      <div class="rounded-lg bg-primary-100 p-2 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400">
         <Icon name="document" size="md" />
       </div>
       <div>

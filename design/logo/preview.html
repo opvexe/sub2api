@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OriginCoder — Origin Frame</title>
+<style>
+  :root {
+    --bg: #09090b; --surface: #101012; --line: #232327;
+    --fg: #fafafa; --fg-2: #d4d4d8; --muted: #7c7c86;
+    --accent: #71717a;
+    --invert-bg: #fafafa; --invert-fg: #09090b;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #fafafa; --surface: #fff; --line: #e4e4e7;
+      --fg: #09090b; --fg-2: #3f3f46; --muted: #71717a;
+      --invert-bg: #09090b; --invert-fg: #fafafa;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+
+  header { padding: 112px 0 80px; }
+  header .mono { display: block; margin-bottom: 26px; }
+  h1 { font-size: clamp(46px, 7vw, 78px); line-height: 1.03; letter-spacing: -.042em;
+       font-weight: 600; margin: 0 0 26px; max-width: 15ch; text-wrap: balance; }
+  .lede { max-width: 56ch; color: var(--muted); font-size: 19px; margin: 0; }
+  .lede b { color: var(--fg-2); font-weight: 500; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 0; }
+
+  section { padding: 68px 0; }
+  h2 { font-size: 34px; letter-spacing: -.03em; font-weight: 600; margin: 0 0 8px; }
+  section > .mono { display: block; margin-bottom: 34px; }
+
+  .grounds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .ground { border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            padding: 52px; min-height: 210px; }
+  .g-light { background: #fff; border: 1px solid var(--line); }
+  .g-dark { background: #09090b; border: 1px solid var(--line); }
+  .g-tile { background: var(--surface); border: 1px solid var(--line); }
+  .ground img { width: 116px; height: 116px; display: block; }
+  .g-tile img { width: 124px; height: 124px; border-radius: 27px; }
+  figcaption { margin-top: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+               font-size: 10.5px; color: var(--muted); text-align: center; }
+  figure { margin: 0; }
+
+  .sizes { display: flex; align-items: flex-end; gap: 30px; flex-wrap: wrap; }
+  .sizes figure { display: flex; flex-direction: column; align-items: center; }
+  .sizes img { display: block; }
+  .sizes figcaption { margin-top: 10px; }
+
+  .stack { display: flex; flex-direction: column; }
+  .band { padding: 34px 38px; display: flex; align-items: center; }
+  .band-l { background: #fff; border: 1px solid var(--line); border-radius: 14px 14px 0 0; }
+  .band-d { background: #09090b; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 14px 14px; }
+  .band img { height: 50px; }
+  .band-d img { filter: invert(1) hue-rotate(180deg) brightness(1.35) saturate(.9); }
+
+  .og img { width: 100%; border-radius: 14px; display: block; border: 1px solid var(--line); }
+
+  .ramp { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+  .ramp div { display: flex; flex-direction: column; gap: 10px; }
+  .ramp i { display: block; height: 78px; border-radius: 10px; border: 1px solid var(--line); }
+  .ramp span { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+               font-size: 10.5px; color: var(--muted); line-height: 1.5; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  td { text-align: left; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--line);
+       vertical-align: top; color: var(--muted); }
+  td:first-child { width: 42%; color: var(--fg-2); }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px; }
+
+  .flag { border-left: 2px solid var(--accent); padding: 4px 0 4px 18px; }
+  .flag p { margin: 0 0 10px; color: var(--muted); max-width: 58ch; }
+  .flag p b { color: var(--fg-2); font-weight: 500; }
+  footer { padding: 40px 0 110px; }
+
+  @media (max-width: 820px) {
+    .grounds, .ramp { grid-template-columns: 1fr 1fr; }
+    header { padding: 76px 0 56px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="mono">OriginCoder · Origin Frame · 定稿</span>
+    <h1>方框，右上角开口</h1>
+    <p class="lede">AI 产品的标记清一色是圆的，换成圆角方反而最跳出同类，气质也更接近数据库、终端这类基建工具。
+      断口开在<b>右上角</b>而不是边中间——框还是完整的框，不会读成"缺了一块"。
+      整个标记<b>只有一个颜色</b>——方核靠留白和框分开，本来就不需要靠色差区分。</p>
+  </header>
+
+  <hr/>
+
+  <section>
+    <h2>主标记</h2>
+    <span class="mono">A · 描边 84 · 核 92 · 圆角 74</span>
+    <div class="grounds">
+      <figure><div class="ground g-light"><img src="origin-frame.svg" alt="浅底"/></div>
+        <figcaption>origin-frame.svg</figcaption></figure>
+      <figure><div class="ground g-dark"><img src="origin-frame-dark.svg" alt="深底"/></div>
+        <figcaption>origin-frame-dark.svg</figcaption></figure>
+      <figure><div class="ground g-tile"><img src="../../frontend/public/apple-touch-icon.png" alt="App 图标"/></div>
+        <figcaption>apple-touch-icon · 180</figcaption></figure>
+    </div>
+  </section>
+
+  <hr/>
+
+  <section>
+    <h2>小尺寸</h2>
+    <span class="mono">favicon 用的是加粗简化稿，不是主标记缩小</span>
+    <div class="sizes">
+      <figure><img src="../../frontend/public/favicon-16.png" width="16" height="16" alt="16"/><figcaption>16</figcaption></figure>
+      <figure><img src="../../frontend/public/favicon-32.png" width="32" height="32" alt="32"/><figcaption>32</figcaption></figure>
+      <figure><img src="origin-frame-icon.svg" width="48" height="48" alt="48"/><figcaption>48</figcaption></figure>
+      <figure><img src="origin-frame-icon.svg" width="72" height="72" alt="72"/><figcaption>72</figcaption></figure>
+      <figure><img src="../../frontend/public/favicon-16.png" width="128" height="128"
+                   style="image-rendering:pixelated" alt="16 放大"/><figcaption>16 放大看像素</figcaption></figure>
+    </div>
+  </section>
+
+  <hr/>
+
+  <section>
+    <h2>组合锁定</h2>
+    <span class="mono">字重 600 · 字距 -3.6 · 单色</span>
+    <div class="stack">
+      <div class="band band-l"><img src="origin-frame-lockup.svg" alt="浅底组合"/></div>
+      <div class="band band-d"><img src="origin-frame-lockup.svg" alt="深底组合"/></div>
+    </div>
+  </section>
+
+  <hr/>
+
+  <section class="og">
+    <h2>社交卡片</h2>
+    <span class="mono">1200 × 630 · 近黑底 · 左对齐</span>
+    <img src="../../frontend/public/og-image.png" alt="OG 卡片"/>
+  </section>
+
+  <hr/>
+
+  <section>
+    <h2>底色</h2>
+    <span class="mono">zinc 中性色阶 · 全站无彩，主按钮用反色</span>
+    <div class="ramp">
+      <div><i style="background:#09090b"></i><span>#09090b<br/>zinc-950</span></div>
+      <div><i style="background:#18181b"></i><span>#18181b<br/>zinc-900</span></div>
+      <div><i style="background:#27272a"></i><span>#27272a<br/>zinc-800</span></div>
+      <div><i style="background:#71717a"></i><span>#71717a<br/>zinc-500</span></div>
+      <div><i style="background:#e4e4e7"></i><span>#e4e4e7<br/>zinc-200</span></div>
+      <div><i style="background:#fafafa"></i><span>#fafafa<br/>zinc-50</span></div>
+      <div><i style="background:#3f3f46"></i><span>#3f3f46<br/>zinc-700</span></div>
+    </div>
+  </section>
+
+  <hr/>
+
+  <section>
+    <h2>改了什么</h2>
+    <span class="mono">全部在工作区，未提交</span>
+    <table>
+      <tr><td><code>frontend/public/</code> 共 10 个文件</td>
+          <td>logo.svg / logo-dark.svg / logo-v2.png / logo-v2-dark.png / favicon.svg / favicon-32 · 16.png / favicon.ico / apple-touch-icon.png / og-image.png</td></tr>
+      <tr><td><code>tailwind.config.js</code></td>
+          <td><code>primary</code> 由靛蓝换成中性墨色阶（浅端做底色描边，500 起进墨色，主按钮为近黑），<code>dark</code> / <code>accent</code> 由 slate 换成 zinc。三个色阶合计被引用约 4700 次，全站一次到位</td></tr>
+      <tr><td><code>views/HomeView.vue</code></td>
+          <td>设计令牌换成 zinc 中性体系；hero 的靛蓝辉光改为中性 <code>--hero-glow</code>；字号整体上一档（hero 上限 64→84，区块标题 38→52，正文 13.5→15）；区块间距 104→128；标记是单色的，所以 <code>brandLogo</code> 按主题切换深浅两个文件</td></tr>
+      <tr><td><code>index.html</code></td>
+          <td>favicon 指向新的 <code>favicon.svg</code>（内嵌 <code>prefers-color-scheme</code>，浏览器标签栏跟随系统主题）；<code>theme-color</code> 拆成明暗两条</td></tr>
+      <tr><td><code>utils/seo.ts</code></td>
+          <td>上一轮的改动保留：社交卡片图与 organization logo 分开，避免 1200×630 横图被覆盖成方形 logo</td></tr>
+    </table>
+  </section>
+
+  <hr/>
+
+  <footer>
+    <div class="flag">
+      <p><b>唯一还有颜色的地方是图表。</b><code>components/charts/</code> 和 admin 看板里的分类调色板仍是彩色的——
+        那是用来区分数据系列的，转成灰阶就读不出来了；成功 / 警告 / 错误这类语义色同理也保留了。</p>
+      <p>这两处要不要一起转灰，你定。除此之外全站已无任何彩色。</p>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

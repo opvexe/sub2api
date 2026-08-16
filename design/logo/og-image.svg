@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-labelledby="t d">
+  <title id="t">OriginCoder — social card</title>
+  <desc id="d">1200x630 Open Graph card on the neutral ground.</desc>
+
+  <rect width="1200" height="630" fill="#09090b"/>
+  <rect x="0" y="628" width="1200" height="2" fill="#232327"/>
+
+  <g transform="translate(96 96) scale(0.3125)">
+    <path d="M172 98 L340 98 M414 172 L414 340 A74 74 0 0 1 340 414 L172 414 A74 74 0 0 1 98 340 L98 172 A74 74 0 0 1 172 98"
+          fill="none" stroke="#fafafa" stroke-width="84"/>
+    <rect x="210" y="210" width="92" height="92" rx="18" fill="#fafafa"/>
+  </g>
+
+  <text x="96" y="392" font-family="SF Pro Display, Helvetica Neue, Arial, sans-serif"
+        font-size="96" font-weight="600" letter-spacing="-4.2" fill="#fafafa">OriginCoder</text>
+  <text x="99" y="454" font-family="SF Pro Display, Helvetica Neue, Arial, sans-serif"
+        font-size="36" font-weight="400" letter-spacing="-0.5" fill="#7c7c86">One API. Every AI Model.</text>
+
+  <text x="99" y="536" font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+        font-size="21" letter-spacing="2.6" fill="#52525b">CLAUDE · CLAUDE CODE · GPT · CODEX</text>
+</svg>

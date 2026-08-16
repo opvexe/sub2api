@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="OriginCoder — app tile">
+  <rect width="512" height="512" fill="#09090b"/>
+  <g transform="translate(256 256) scale(0.74) translate(-256 -256)">
+    <path d="M172 98 L310 98 M414 202 L414 340 A74 74 0 0 1 340 414 L172 414 A74 74 0 0 1 98 340 L98 172 A74 74 0 0 1 172 98" fill="none" stroke="#fafafa" stroke-width="96"/>
+    <rect x="204" y="204" width="104" height="104" rx="20" fill="#fafafa"/>
+  </g>
+</svg>

@@ -3,84 +3,64 @@
     <Transition name="popup-fade">
       <div
         v-if="displayedAnnouncement"
-        class="fixed inset-0 z-[120] flex items-start justify-center overflow-y-auto bg-gradient-to-br from-black/70 via-black/60 to-black/70 p-4 pt-[8vh] backdrop-blur-md"
+        class="fixed inset-0 z-[120] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm sm:p-6"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="displayedAnnouncement.title"
       >
         <div
-          class="w-full max-w-[680px] overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 dark:bg-dark-800 dark:ring-white/10"
+          class="popup-card flex max-h-[min(80vh,700px)] w-full max-w-[600px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-gray-900/5 dark:bg-dark-800 dark:ring-white/10"
           @click.stop
         >
-          <!-- Header with warm gradient -->
-          <div class="relative overflow-hidden border-b border-primary-100/80 bg-gradient-to-br from-primary-50/80 via-primary-50/50 to-primary-50/30 px-8 py-6 dark:border-dark-700/50 dark:from-primary-900/20 dark:via-primary-900/10 dark:to-primary-900/5">
-            <!-- Decorative background -->
-            <div class="absolute right-0 top-0 h-full w-64 bg-gradient-to-l from-primary-100/30 to-transparent dark:from-primary-900/20"></div>
-            <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-primary-400/20 to-primary-500/20 blur-3xl"></div>
-            <div class="absolute -left-4 -bottom-4 h-24 w-24 rounded-full bg-gradient-to-tr from-primary-300/20 to-primary-500/20 blur-2xl"></div>
+          <!-- Header -->
+          <header class="flex items-start gap-3 border-b border-gray-100 px-5 py-4 dark:border-dark-700 sm:px-6 sm:py-5">
+            <div class="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-500/10 dark:text-primary-400">
+              <Icon name="bell" size="md" />
+            </div>
 
-            <div class="relative z-10">
-              <!-- Icon and badge -->
-              <div class="mb-3 flex items-center gap-2">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30">
-                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                  </svg>
-                </div>
-                <span class="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-primary-600 to-primary-700 px-2.5 py-1 text-xs font-medium text-white shadow-lg shadow-primary-600/30">
-                  <span class="relative flex h-2 w-2">
-                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
-                    <span class="relative inline-flex h-2 w-2 rounded-full bg-white"></span>
-                  </span>
+            <div class="min-w-0 flex-1">
+              <h2 class="text-base font-semibold leading-6 text-gray-900 dark:text-white sm:text-lg">
+                {{ displayedAnnouncement.title }}
+              </h2>
+              <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
+                <time>{{ formatRelativeWithDateTime(displayedAnnouncement.created_at) }}</time>
+                <span v-if="!preview" class="inline-flex items-center rounded-full bg-primary-50 px-2 py-0.5 font-medium text-primary-600 dark:bg-primary-500/10 dark:text-primary-400">
                   {{ t('announcements.unread') }}
                 </span>
               </div>
-
-              <!-- Title -->
-              <h2 class="mb-2 text-2xl font-bold leading-tight text-gray-900 dark:text-white">
-                {{ displayedAnnouncement.title }}
-              </h2>
-
-              <!-- Time -->
-              <div class="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <time>{{ formatRelativeWithDateTime(displayedAnnouncement.created_at) }}</time>
-              </div>
             </div>
-          </div>
+
+            <button
+              @click="handleDismiss"
+              type="button"
+              data-testid="announcement-popup-close"
+              class="-mr-1 -mt-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-dark-700 dark:hover:text-gray-300"
+              :aria-label="t('common.close')"
+            >
+              <Icon name="x" size="sm" />
+            </button>
+          </header>
 
           <!-- Body -->
-          <div class="max-h-[50vh] overflow-y-auto bg-white px-8 py-8 dark:bg-dark-800">
-            <div class="relative">
-              <div class="absolute left-0 top-0 bottom-0 w-1 rounded-full bg-gradient-to-b from-primary-500 via-primary-500 to-primary-400"></div>
-              <div class="pl-6">
-                <div
-                  class="markdown-body prose prose-sm max-w-none dark:prose-invert"
-                  v-html="renderedContent"
-                ></div>
-              </div>
-            </div>
+          <div class="popup-body flex-1 overflow-y-auto px-5 py-5 sm:px-6">
+            <div
+              class="markdown-body prose prose-sm max-w-none dark:prose-invert"
+              v-html="renderedContent"
+            ></div>
           </div>
 
           <!-- Footer -->
-          <div class="border-t border-gray-100 bg-gray-50/50 px-8 py-5 dark:border-dark-700 dark:bg-dark-900/30">
-            <div class="flex items-center justify-end">
-              <button
-                @click="handleDismiss"
-                data-testid="announcement-popup-dismiss"
-                class="rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-2.5 text-sm font-medium text-white shadow-lg shadow-primary-600/30 transition-all hover:shadow-xl hover:scale-105"
-              >
-                <span class="flex items-center gap-2">
-                  <svg v-if="preview" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  {{ preview ? t('common.close') : t('announcements.markRead') }}
-                </span>
-              </button>
-            </div>
-          </div>
+          <footer class="flex items-center justify-end border-t border-gray-100 bg-gray-50/60 px-5 py-3.5 dark:border-dark-700 dark:bg-dark-900/30 sm:px-6">
+            <button
+              @click="handleDismiss"
+              type="button"
+              data-testid="announcement-popup-dismiss"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-800"
+            >
+              <Icon :name="preview ? 'x' : 'check'" size="sm" />
+              {{ preview ? t('common.close') : t('announcements.markRead') }}
+            </button>
+          </footer>
         </div>
       </div>
     </Transition>
@@ -92,6 +72,7 @@ import { computed, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
+import Icon from '@/components/icons/Icon.vue'
 import { useAnnouncementStore } from '@/stores/announcements'
 import { formatRelativeWithDateTime } from '@/utils/format'
 import type { Announcement, UserAnnouncement } from '@/types'
@@ -137,20 +118,31 @@ function handleDismiss() {
   announcementStore.dismissPopup()
 }
 
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    handleDismiss()
+  }
+}
+
 // Manage body overflow — only set, never unset (bell component handles restore)
 watch(
   displayedAnnouncement,
   (popup) => {
     if (popup) {
       document.body.style.overflow = 'hidden'
-    } else if (props.preview) {
-      document.body.style.overflow = ''
+      document.addEventListener('keydown', handleKeydown)
+    } else {
+      document.removeEventListener('keydown', handleKeydown)
+      if (props.preview) {
+        document.body.style.overflow = ''
+      }
     }
   },
   { immediate: true },
 )
 
 onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleKeydown)
   if (props.preview) {
     document.body.style.overflow = ''
   }
@@ -158,12 +150,17 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.popup-fade-enter-active {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.popup-fade-enter-active,
+.popup-fade-leave-active {
+  transition: opacity 0.2s ease;
 }
 
-.popup-fade-leave-active {
-  transition: all 0.2s cubic-bezier(0.4, 0, 1, 1);
+.popup-fade-enter-active .popup-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.popup-fade-leave-active .popup-card {
+  transition: transform 0.15s ease-in, opacity 0.15s ease-in;
 }
 
 .popup-fade-enter-from,
@@ -171,31 +168,44 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 
-.popup-fade-enter-from > div {
-  transform: scale(0.94) translateY(-12px);
+.popup-fade-enter-from .popup-card,
+.popup-fade-leave-to .popup-card {
+  transform: scale(0.97) translateY(8px);
   opacity: 0;
 }
 
-.popup-fade-leave-to > div {
-  transform: scale(0.96) translateY(-8px);
-  opacity: 0;
+/* Scrollbar — thin and unobtrusive, only inside the scrolling body */
+.popup-body {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.gray.300') transparent;
 }
 
-/* Scrollbar Styling */
-.overflow-y-auto::-webkit-scrollbar {
-  width: 8px;
+.popup-body::-webkit-scrollbar {
+  width: 6px;
 }
 
-.overflow-y-auto::-webkit-scrollbar-track {
+.popup-body::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, theme('colors.gray.300'), theme('colors.gray.400'));
-  border-radius: 4px;
+.popup-body::-webkit-scrollbar-thumb {
+  background-color: theme('colors.gray.300');
+  border-radius: 999px;
 }
 
-.dark .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, theme('colors.dark.600'), theme('colors.dark.700'));
+.popup-body::-webkit-scrollbar-thumb:hover {
+  background-color: theme('colors.gray.400');
+}
+
+:global(.dark) .popup-body {
+  scrollbar-color: theme('colors.dark.600') transparent;
+}
+
+:global(.dark) .popup-body::-webkit-scrollbar-thumb {
+  background-color: theme('colors.dark.600');
+}
+
+:global(.dark) .popup-body::-webkit-scrollbar-thumb:hover {
+  background-color: theme('colors.dark.500');
 }
 </style>

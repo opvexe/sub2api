@@ -1,36 +1,45 @@
 /* Shared rich-text styles for announcement popup and bell detail content. */
 .markdown-body {
-  @apply text-[15px] leading-[1.75];
+  @apply text-[14px] leading-[1.7];
   @apply text-gray-700 dark:text-gray-300;
 }
 
+/* 弹窗里内容块首尾不留外边距，避免顶部一大片空白 */
+.markdown-body > :first-child {
+  @apply !mt-0;
+}
+
+.markdown-body > :last-child {
+  @apply !mb-0;
+}
+
 .markdown-body h1 {
-  @apply mb-6 mt-8 border-b border-gray-200 pb-3 text-3xl font-bold text-gray-900 dark:border-dark-600 dark:text-white;
+  @apply mb-3 mt-6 text-lg font-semibold text-gray-900 dark:text-white;
 }
 
 .markdown-body h2 {
-  @apply mb-4 mt-7 border-b border-gray-100 pb-2 text-2xl font-bold text-gray-900 dark:border-dark-700 dark:text-white;
+  @apply mb-2.5 mt-5 text-base font-semibold text-gray-900 dark:text-white;
 }
 
 .markdown-body h3 {
-  @apply mb-3 mt-6 text-xl font-semibold text-gray-900 dark:text-white;
+  @apply mb-2 mt-4 text-[15px] font-semibold text-gray-900 dark:text-white;
 }
 
 .markdown-body h4 {
-  @apply mb-2 mt-5 text-lg font-semibold text-gray-900 dark:text-white;
+  @apply mb-1.5 mt-4 text-sm font-semibold text-gray-900 dark:text-white;
 }
 
 .markdown-body p {
-  @apply mb-4 leading-relaxed;
+  @apply mb-3 leading-relaxed;
 }
 
 .markdown-body a {
-  @apply font-medium text-blue-600 underline decoration-blue-600/30 decoration-2 underline-offset-2 transition-all hover:decoration-blue-600 dark:text-blue-400 dark:decoration-blue-400/30 dark:hover:decoration-blue-400;
+  @apply font-medium text-primary-600 underline decoration-primary-600/30 underline-offset-2 transition-colors hover:decoration-primary-600 dark:text-primary-400 dark:decoration-primary-400/30 dark:hover:decoration-primary-400;
 }
 
 .markdown-body ul,
 .markdown-body ol {
-  @apply mb-4 ml-6 space-y-2;
+  @apply mb-3 ml-5 space-y-1.5;
 }
 
 .markdown-body ul {
@@ -42,45 +51,46 @@
 }
 
 .markdown-body li {
-  @apply pl-2 leading-relaxed;
+  @apply pl-1 leading-relaxed;
 }
 
 .markdown-body li::marker {
-  @apply text-blue-600 dark:text-blue-400;
+  @apply text-gray-400 dark:text-gray-500;
 }
 
 .markdown-body blockquote {
-  @apply relative my-5 border-l-4 border-blue-500 bg-blue-50/50 py-3 pl-5 pr-4 italic text-gray-700 dark:border-blue-400 dark:bg-blue-900/10 dark:text-gray-300;
+  @apply my-3 rounded-r-lg border-l-2 border-primary-400 bg-primary-50/60 py-2 pl-4 pr-3 text-gray-600 dark:border-primary-500/60 dark:bg-primary-500/5 dark:text-gray-400;
 }
 
-.markdown-body blockquote::before {
-  content: '"';
-  @apply absolute -left-1 top-0 font-serif text-5xl text-blue-500/20 dark:text-blue-400/20;
+.markdown-body blockquote p:last-child {
+  @apply mb-0;
 }
 
 .markdown-body code {
-  @apply rounded-lg bg-gray-100 px-2 py-1 font-mono text-[13px] text-pink-600 dark:bg-dark-700 dark:text-pink-400;
+  @apply rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-[12.5px] text-gray-800 dark:bg-dark-700 dark:text-gray-200;
 }
 
 .markdown-body pre {
-  @apply my-5 overflow-x-auto rounded-xl border border-gray-200 bg-gray-50 p-5 dark:border-dark-600 dark:bg-dark-900/50;
+  @apply my-3 overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-3.5 dark:border-dark-700 dark:bg-dark-900/60;
 }
 
 .markdown-body pre code {
-  @apply bg-transparent p-0 text-[13px] text-gray-800 dark:text-gray-200;
+  @apply bg-transparent p-0 text-[12.5px] leading-relaxed text-gray-800 dark:text-gray-200;
 }
 
 .markdown-body hr {
-  @apply my-8 border-0 border-t-2 border-gray-200 dark:border-dark-700;
+  @apply my-5 border-0 border-t border-gray-200 dark:border-dark-700;
 }
 
 .markdown-body table {
-  @apply mb-5 w-full overflow-hidden rounded-lg border border-gray-200 dark:border-dark-600;
+  /* 不用 display:block 做横向滚动——那样 w-full 会失效、表头背景只铺到内容宽度。
+     滚动交给 .popup-body（overflow-y:auto 会让 overflow-x 计算成 auto）。 */
+  @apply mb-3 w-full table-auto rounded-lg border border-gray-200 text-[13px] dark:border-dark-700;
 }
 
 .markdown-body th,
 .markdown-body td {
-  @apply border-b border-r border-gray-200 px-4 py-3 text-left dark:border-dark-600;
+  @apply border-b border-r border-gray-200 px-3 py-2 text-left dark:border-dark-700;
 }
 
 .markdown-body th:last-child,
@@ -93,15 +103,15 @@
 }
 
 .markdown-body th {
-  @apply bg-gradient-to-br from-blue-50 to-indigo-50 font-semibold text-gray-900 dark:from-blue-900/20 dark:to-indigo-900/10 dark:text-white;
+  @apply bg-gray-100 font-semibold text-gray-900 dark:bg-dark-700/60 dark:text-white;
 }
 
 .markdown-body tbody tr {
-  @apply transition-colors hover:bg-gray-50 dark:hover:bg-dark-700/30;
+  @apply transition-colors hover:bg-gray-50/70 dark:hover:bg-dark-700/30;
 }
 
 .markdown-body img {
-  @apply my-5 max-w-full rounded-xl border border-gray-200 shadow-md dark:border-dark-600;
+  @apply my-3 max-w-full rounded-lg border border-gray-200 dark:border-dark-700;
 }
 
 .markdown-body strong {
@@ -109,5 +119,5 @@
 }
 
 .markdown-body em {
-  @apply italic text-gray-600 dark:text-gray-400;
+  @apply italic;
 }

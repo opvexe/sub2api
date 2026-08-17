@@ -12060,6 +12060,7 @@ const allPaymentTypes = computed(() => [
   { value: "wxpay", label: t("payment.methods.wxpay") },
   { value: "stripe", label: t("payment.methods.stripe") },
   { value: "airwallex", label: t("payment.methods.airwallex") },
+  { value: "nowpayments", label: t("payment.methods.nowpayments") },
 ]);
 
 function isPaymentTypeEnabled(type: string): boolean {

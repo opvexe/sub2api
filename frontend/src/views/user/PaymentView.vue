@@ -49,8 +49,8 @@
                 <AmountInput
                   v-model="amount"
                   :amounts="[10, 20, 50, 100, 200, 500, 1000, 2000, 5000]"
-                  :min="globalMinAmount"
-                  :max="globalMaxAmount"
+                  :min="activeMinAmount"
+                  :max="activeMaxAmount"
                 />
                 <p v-if="amountError" class="mt-2 text-xs text-amber-600 dark:text-amber-300">{{ amountError }}</p>
                 <div v-if="enabledMethods.length >= 1" class="mt-7 border-t border-gray-100 pt-7 dark:border-dark-700">
@@ -59,6 +59,10 @@
                     :selected="selectedMethod"
                     @select="selectedMethod = $event"
                   />
+                  <p v-if="selectedLimitHint" class="mt-3 flex items-start gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                    <Icon name="infoCircle" size="xs" :stroke-width="2" class="mt-px shrink-0" aria-hidden="true" />
+                    <span>{{ selectedLimitHint }}</span>
+                  </p>
                 </div>
               </div>
 
@@ -582,6 +586,34 @@ const globalMaxAmount = computed(() => {
 
 // Selected method's limits (for validation and error messages)
 const selectedLimit = computed(() => visibleMethods.value[selectedMethod.value])
+
+// 快捷金额与输入框的可选区间跟随当前渠道：像 NOWPayments 这种链上收款有单笔下限，
+// 选中它时低于下限的快捷金额不该还摆在那里。渠道自身未设限时回落到全局并集。
+const activeMinAmount = computed(() => selectedLimit.value?.single_min || globalMinAmount.value)
+const activeMaxAmount = computed(() => selectedLimit.value?.single_max || globalMaxAmount.value)
+
+// 当前渠道的单笔限额备注，仅在该渠道确实配了限额时显示。
+const selectedLimitHint = computed(() => {
+  const min = selectedLimit.value?.single_min || 0
+  const max = selectedLimit.value?.single_max || 0
+  // 与 PaymentMethodSelector 的 methodLabel 同一套取名规则
+  const type = selectedMethod.value
+  const name = selectedLimit.value?.display_name || t(`payment.methods.${type}`, type)
+  if (min > 0 && max > 0) {
+    return t('payment.methodAmountRange', {
+      method: name,
+      min: formatSelectedPaymentAmount(min),
+      max: formatSelectedPaymentAmount(max),
+    })
+  }
+  if (min > 0) {
+    return t('payment.methodAmountMin', { method: name, min: formatSelectedPaymentAmount(min) })
+  }
+  if (max > 0) {
+    return t('payment.methodAmountMax', { method: name, max: formatSelectedPaymentAmount(max) })
+  }
+  return ''
+})
 const selectedCurrency = computed(() => normalizePaymentCurrency(selectedLimit.value?.currency))
 const localeCode = computed(() => {
   const raw = i18n.locale as unknown

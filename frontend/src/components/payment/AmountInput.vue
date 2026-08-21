@@ -1,46 +1,46 @@
 <template>
-  <div class="space-y-4">
-    <!-- Quick Amount Buttons -->
-    <div>
-      <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-        {{ t('payment.quickAmounts') }}
-      </label>
-      <div class="grid grid-cols-3 gap-2">
-        <button
-          v-for="amt in filteredAmounts"
-          :key="amt"
-          type="button"
-          :class="[
-            'rounded-lg border-2 px-4 py-3 text-center font-medium transition-colors',
-            modelValue === amt
-              ? 'border-primary-500 bg-primary-50 text-primary-700 dark:border-primary-400 dark:bg-primary-900/40 dark:text-primary-300'
-              : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 dark:border-dark-600 dark:bg-dark-800 dark:text-gray-200 dark:hover:border-dark-500',
-          ]"
-          @click="selectAmount(amt)"
-        >
-          {{ amt }}
-        </button>
-      </div>
+  <div>
+    <!-- 小标题走首页 eyebrow：11px / 600 / .14em 字距 / 橙 -->
+    <p class="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-600 dark:text-primary-400">
+      {{ t('payment.rechargeAmount') }}
+    </p>
+
+    <!-- 金额是全页视觉焦点，用首页 stats 那档橙色大数字 -->
+    <div
+      class="flex items-baseline gap-2.5 rounded-[14px] border px-5 py-4 transition-colors"
+      :class="focused
+        ? 'border-primary-400 bg-white dark:border-primary-400 dark:bg-dark-800'
+        : 'border-gray-200 bg-gray-50 dark:border-dark-700 dark:bg-dark-800/60'"
+    >
+      <span class="text-2xl font-bold text-gray-300 dark:text-dark-500">$</span>
+      <input
+        type="text"
+        inputmode="decimal"
+        :value="customText"
+        :placeholder="placeholderText"
+        class="w-full border-0 bg-transparent p-0 text-[38px] font-extrabold leading-none tabular-nums tracking-[-0.03em] text-primary-600 placeholder:text-lg placeholder:font-normal placeholder:tracking-normal placeholder:text-gray-400 focus:outline-none focus:ring-0 dark:text-primary-400 dark:placeholder:text-dark-500"
+        @focus="focused = true"
+        @blur="focused = false"
+        @input="handleInput"
+      />
     </div>
 
-    <!-- Custom Amount Input -->
-    <div>
-      <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-        {{ t('payment.customAmount') }}
-      </label>
-      <div class="relative">
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-dark-500">
-          $
-        </span>
-        <input
-          type="text"
-          inputmode="decimal"
-          :value="customText"
-          :placeholder="placeholderText"
-          class="input w-full py-3 pl-8 pr-4"
-          @input="handleInput"
-        />
-      </div>
+    <!-- 快捷金额沿用首页 .chips：暖灰底 pill，hover 转橙 -->
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button
+        v-for="amt in filteredAmounts"
+        :key="amt"
+        type="button"
+        :class="[
+          'rounded-full border px-4 py-[7px] text-[13px] tabular-nums transition-colors',
+          modelValue === amt
+            ? 'border-primary-500 bg-primary-500 font-medium text-white dark:border-primary-400 dark:bg-primary-500'
+            : 'border-gray-200 bg-gray-100 text-gray-500 hover:border-primary-300 hover:text-primary-600 dark:border-dark-700 dark:bg-dark-800 dark:text-gray-400 dark:hover:border-primary-500 dark:hover:text-primary-400',
+        ]"
+        @click="selectAmount(amt)"
+      >
+        ${{ amt }}
+      </button>
     </div>
   </div>
 </template>
@@ -67,6 +67,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 const customText = ref('')
+const focused = ref(false)
 
 // 0 = no limit
 const filteredAmounts = computed(() =>

@@ -2,9 +2,12 @@ import { describe, expect, it } from 'vitest'
 import type { CreateOrderResult, MethodLimit } from '@/types/payment'
 import {
   buildCreateOrderPayload,
+  buildPaymentRouteTargets,
   decidePaymentLaunch,
   getVisibleMethods,
+  planPaymentLaunch,
   readPaymentRecoverySnapshot,
+  stripeSubMethodFor,
   type PaymentRecoverySnapshot,
 } from '@/components/payment/paymentFlow'
 
@@ -489,5 +492,172 @@ describe('readPaymentRecoverySnapshot', () => {
     expect(restored?.currency).toBe('')
     expect(restored?.countryCode).toBe('')
     expect(restored?.paymentEnv).toBe('')
+  })
+})
+
+describe('stripeSubMethodFor', () => {
+  it('preselects the matching Stripe sub-method for visible alipay/wxpay buttons', () => {
+    expect(stripeSubMethodFor('alipay')).toBe('alipay')
+    expect(stripeSubMethodFor('alipay_direct')).toBe('alipay')
+    expect(stripeSubMethodFor('wxpay')).toBe('wechat_pay')
+    expect(stripeSubMethodFor('wxpay_direct')).toBe('wechat_pay')
+  })
+
+  it('leaves the sub-method unset for the dedicated Stripe button', () => {
+    expect(stripeSubMethodFor('stripe')).toBeUndefined()
+  })
+})
+
+describe('buildPaymentRouteTargets', () => {
+  it('builds a Stripe target carrying the client secret and preselected sub-method', () => {
+    const { stripe, airwallex } = buildPaymentRouteTargets(createOrderResult({
+      client_secret: 'cs_test',
+      resume_token: 'resume-1',
+    }), 'wxpay')
+
+    expect(stripe).toEqual({
+      path: '/payment/stripe',
+      query: {
+        order_id: '101',
+        client_secret: 'cs_test',
+        method: 'wechat_pay',
+        resume_token: 'resume-1',
+      },
+    })
+    expect(airwallex).toBeNull()
+  })
+
+  it('builds an Airwallex target only when an intent id is present', () => {
+    const withIntent = buildPaymentRouteTargets(createOrderResult({
+      client_secret: 'awx_cs',
+      intent_id: 'int_awx',
+      out_trade_no: 'sub2_awx',
+    }), 'airwallex')
+
+    expect(withIntent.airwallex).toEqual({
+      path: '/payment/airwallex',
+      query: { order_id: '101', out_trade_no: 'sub2_awx', resume_token: undefined },
+    })
+    // Airwallex never goes through the Stripe page even though it has a client secret.
+    expect(withIntent.stripe).toBeNull()
+
+    expect(buildPaymentRouteTargets(createOrderResult({ client_secret: 'awx_cs' }), 'airwallex').airwallex).toBeNull()
+  })
+
+  it('builds nothing without a client secret', () => {
+    expect(buildPaymentRouteTargets(createOrderResult(), 'alipay')).toEqual({ stripe: null, airwallex: null })
+  })
+})
+
+describe('planPaymentLaunch', () => {
+  function decisionOf(result: Partial<CreateOrderResult>, context: Parameters<typeof decidePaymentLaunch>[1]) {
+    return decidePaymentLaunch(createOrderResult(result), context)
+  }
+
+  it('sends the browser to WeChat OAuth without entering the paying phase', () => {
+    const decision = decisionOf(
+      { result_type: 'oauth_required', oauth: { authorize_url: 'https://open.weixin.qq.com/authorize', app_id: 'wx', scope: 'snsapi_base', redirect_url: '/cb' } },
+      { visibleMethod: 'wxpay', orderType: 'balance', isMobile: true, isWechatBrowser: true },
+    )
+
+    expect(planPaymentLaunch(decision, { isMobile: true })).toEqual({
+      enterPaying: false,
+      effect: { type: 'oauth', authorizeUrl: 'https://open.weixin.qq.com/authorize' },
+    })
+  })
+
+  it('reports unhandled responses without entering the paying phase', () => {
+    const decision = decisionOf({}, { visibleMethod: 'alipay', orderType: 'balance', isMobile: false })
+
+    expect(decision.kind).toBe('unhandled')
+    expect(planPaymentLaunch(decision, { isMobile: false })).toEqual({
+      enterPaying: false,
+      effect: { type: 'unhandled' },
+    })
+  })
+
+  it('opens desktop Stripe Alipay in a popup and mobile Stripe in the current tab', () => {
+    const desktop = decisionOf({ client_secret: 'cs_test' }, {
+      visibleMethod: 'alipay',
+      orderType: 'balance',
+      isMobile: false,
+      stripePopupUrl: '/payment/stripe?popup=1',
+      stripeRouteUrl: '/payment/stripe?route=1',
+    })
+    expect(planPaymentLaunch(desktop, { isMobile: false })).toEqual({
+      enterPaying: true,
+      effect: { type: 'popup', url: '/payment/stripe?popup=1' },
+    })
+
+    const mobile = decisionOf({ client_secret: 'cs_test' }, {
+      visibleMethod: 'wxpay',
+      orderType: 'balance',
+      isMobile: true,
+      stripeRouteUrl: '/payment/stripe?route=1',
+    })
+    expect(planPaymentLaunch(mobile, { isMobile: true })).toEqual({
+      enterPaying: true,
+      effect: { type: 'navigate', url: '/payment/stripe?route=1' },
+    })
+  })
+
+  it('navigates to the hosted Airwallex page', () => {
+    const decision = decisionOf({ client_secret: 'awx_cs', intent_id: 'int_awx' }, {
+      visibleMethod: 'airwallex',
+      orderType: 'balance',
+      isMobile: false,
+      airwallexRouteUrl: '/payment/airwallex?order_id=101',
+    })
+
+    expect(planPaymentLaunch(decision, { isMobile: false })).toEqual({
+      enterPaying: true,
+      effect: { type: 'navigate', url: '/payment/airwallex?order_id=101' },
+    })
+  })
+
+  it('hands a ready jsapi payload to the WeChat bridge', () => {
+    const jsapi = { appId: 'wx', timeStamp: '1', nonceStr: 'n', package: 'prepay_id=1', signType: 'RSA', paySign: 'sig' }
+    const decision = decisionOf({ result_type: 'jsapi_ready', jsapi }, {
+      visibleMethod: 'wxpay',
+      orderType: 'balance',
+      isMobile: true,
+      isWechatBrowser: true,
+    })
+
+    expect(planPaymentLaunch(decision, { isMobile: true })).toEqual({
+      enterPaying: true,
+      effect: { type: 'jsapi', payload: jsapi },
+    })
+  })
+
+  it('redirects the current tab on mobile but opens a popup on desktop', () => {
+    const decision = decisionOf({ pay_url: 'https://gateway.example/pay' }, {
+      visibleMethod: 'alipay',
+      orderType: 'balance',
+      isMobile: true,
+    })
+
+    expect(decision.kind).toBe('redirect_waiting')
+    expect(planPaymentLaunch(decision, { isMobile: true }).effect).toEqual({ type: 'navigate', url: 'https://gateway.example/pay' })
+    expect(planPaymentLaunch(decision, { isMobile: false }).effect).toEqual({ type: 'popup', url: 'https://gateway.example/pay' })
+  })
+
+  it('waits on the status panel for QR and deep-link flows', () => {
+    const qr = decisionOf({ qr_code: 'weixin://wxpay/bizpayurl?pr=abc' }, {
+      visibleMethod: 'wxpay',
+      orderType: 'balance',
+      isMobile: false,
+    })
+    expect(qr.kind).toBe('qr_waiting')
+    expect(planPaymentLaunch(qr, { isMobile: false })).toEqual({ enterPaying: true, effect: { type: 'await' } })
+
+    const deepLink = decisionOf({ qr_code: 'https://qr.alipay.com/abc', alipay_mobile_precreate_deep_link: true }, {
+      visibleMethod: 'alipay',
+      orderType: 'balance',
+      isMobile: true,
+      mobilePrecreateDeepLink: true,
+    })
+    expect(deepLink.kind).toBe('alipay_deep_link')
+    expect(planPaymentLaunch(deepLink, { isMobile: true })).toEqual({ enterPaying: true, effect: { type: 'await' } })
   })
 })

@@ -79,6 +79,36 @@ export interface PaymentLaunchDecision {
   jsapi?: WechatJSAPIPayload
 }
 
+/**
+ * What the caller has to *do* once a launch decision is made. Keeping this
+ * separate from PaymentLaunchDecision lets the branching stay pure and testable
+ * — the view only maps each effect onto a browser API.
+ */
+export type PaymentLaunchEffect =
+  /** No branch could handle the gateway response; show a scenario error. */
+  | { type: 'unhandled' }
+  /** Send the browser to WeChat's OAuth authorize URL (still needs view-side query building). */
+  | { type: 'oauth'; authorizeUrl: string }
+  /** Open in a popup window, falling back to same-tab navigation when blocked. */
+  | { type: 'popup'; url: string }
+  /** Navigate the current tab. */
+  | { type: 'navigate'; url: string }
+  /** Hand off to WeChat's in-app JSAPI bridge. */
+  | { type: 'jsapi'; payload: WechatJSAPIPayload }
+  /** Nothing to launch — the status panel (QR code / deep link) takes over. */
+  | { type: 'await' }
+
+export interface PaymentLaunchPlan {
+  /** Whether to show the payment status panel and persist a recovery snapshot before running the effect. */
+  enterPaying: boolean
+  effect: PaymentLaunchEffect
+}
+
+export interface PaymentRouteTarget {
+  path: string
+  query: Record<string, string | undefined>
+}
+
 export interface BuildCreateOrderPayloadInput {
   amount: number
   paymentType: string
@@ -149,6 +179,104 @@ export function buildCreateOrderPayload(input: BuildCreateOrderPayloadInput): Cr
   return payload
 }
 
+/**
+ * Which Stripe payment method the hosted page should preselect.
+ *
+ * `undefined` means the user clicked the dedicated Stripe button and should get
+ * the full Payment Element to choose for themselves. Single source of truth —
+ * the launch decision, the route query and the QR fallback all read it.
+ */
+export function stripeSubMethodFor(visibleMethod: string): StripeVisibleMethod | undefined {
+  const normalized = normalizeVisibleMethod(visibleMethod) || visibleMethod.trim()
+  if (normalized === 'stripe') return undefined
+  return normalized === 'wxpay' ? 'wechat_pay' : 'alipay'
+}
+
+/**
+ * Router targets for the gateways that finish on their own page. Returns plain
+ * route descriptors so this stays pure; the caller resolves them to hrefs.
+ */
+export function buildPaymentRouteTargets(
+  result: CreateOrderFlowResult,
+  visibleMethod: string,
+): { stripe: PaymentRouteTarget | null; airwallex: PaymentRouteTarget | null } {
+  const normalized = normalizeVisibleMethod(visibleMethod) || visibleMethod.trim()
+  const orderId = String(result.order_id)
+  const resumeToken = result.resume_token || undefined
+
+  const stripe = result.client_secret && normalized !== 'airwallex'
+    ? {
+      path: '/payment/stripe',
+      query: {
+        order_id: orderId,
+        client_secret: result.client_secret,
+        method: stripeSubMethodFor(normalized),
+        resume_token: resumeToken,
+      },
+    }
+    : null
+
+  const airwallex = result.client_secret && result.intent_id
+    ? {
+      path: '/payment/airwallex',
+      query: {
+        order_id: orderId,
+        out_trade_no: result.out_trade_no || undefined,
+        resume_token: resumeToken,
+      },
+    }
+    : null
+
+  return { stripe, airwallex }
+}
+
+/**
+ * Turns a launch decision into the single side effect the view must perform.
+ *
+ * Order matters and mirrors the gateway contract: OAuth and unhandled responses
+ * never enter the paying phase (there is no order to watch yet), everything else
+ * does before its effect runs.
+ */
+export function planPaymentLaunch(
+  decision: PaymentLaunchDecision,
+  context: { isMobile: boolean },
+): PaymentLaunchPlan {
+  if (decision.kind === 'wechat_oauth' && decision.oauth?.authorize_url) {
+    return { enterPaying: false, effect: { type: 'oauth', authorizeUrl: decision.oauth.authorize_url } }
+  }
+  if (decision.kind === 'unhandled') {
+    return { enterPaying: false, effect: { type: 'unhandled' } }
+  }
+
+  const { payUrl } = decision.paymentState
+  switch (decision.kind) {
+    case 'stripe_popup':
+      return { enterPaying: true, effect: { type: 'popup', url: payUrl } }
+    case 'stripe_route':
+    case 'airwallex_route':
+      return { enterPaying: true, effect: { type: 'navigate', url: payUrl } }
+    case 'wechat_jsapi':
+      if (decision.jsapi) {
+        return { enterPaying: true, effect: { type: 'jsapi', payload: decision.jsapi } }
+      }
+      break
+    case 'redirect_waiting':
+      if (payUrl) {
+        // Desktop keeps the checkout tab alive in a popup; mobile popups are
+        // unreliable, so the current tab goes to the gateway instead.
+        return {
+          enterPaying: true,
+          effect: context.isMobile ? { type: 'navigate', url: payUrl } : { type: 'popup', url: payUrl },
+        }
+      }
+      break
+  }
+
+  // qr_waiting, alipay_deep_link, and the degenerate cases above: the status
+  // panel renders the QR code / deep link and polls for completion.
+  return { enterPaying: true, effect: { type: 'await' } }
+}
+
 export function decidePaymentLaunch(
   result: CreateOrderFlowResult,
   context: PaymentLaunchContext,
@@ -185,12 +313,7 @@ export function decidePaymentLaunch(
   }
 
   if (baseState.clientSecret) {
-    // visibleMethod === 'stripe' means the user clicked the dedicated Stripe button
-    // and should land on the full Payment Element to choose a sub-method themselves.
-    const isStripeButton = visibleMethod === 'stripe'
-    const stripeMethod: StripeVisibleMethod | undefined = isStripeButton
-      ? undefined
-      : visibleMethod === 'wxpay' ? 'wechat_pay' : 'alipay'
+    const stripeMethod = stripeSubMethodFor(visibleMethod)
     const kind: PaymentLaunchKind = stripeMethod === 'alipay' && !context.isMobile
       ? 'stripe_popup'
       : 'stripe_route'

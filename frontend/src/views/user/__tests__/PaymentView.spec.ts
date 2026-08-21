@@ -4,6 +4,8 @@ import PaymentView from '../PaymentView.vue'
 import { PAYMENT_RECOVERY_STORAGE_KEY } from '@/components/payment/paymentFlow'
 import { formatPaymentAmount } from '@/components/payment/currency'
 import SubscriptionPlanCard from '@/components/payment/SubscriptionPlanCard.vue'
+import CheckoutSummary from '@/components/payment/CheckoutSummary.vue'
+import CheckoutSubmitButton from '@/components/payment/CheckoutSubmitButton.vue'
 import type { CheckoutInfoResponse, MethodLimit, SubscriptionPlan } from '@/types/payment'
 
 const routeState = vi.hoisted(() => ({
@@ -317,7 +319,7 @@ describe('PaymentView subscription confirmation amounts', () => {
     expect(text).not.toContain(formatPaymentAmount(9.99, 'CNY'))
     // 换算必须使用订阅汇率（×7.15），而不是余额倍率（÷0.14 = 71.36）
     expect(text).not.toContain(formatPaymentAmount(71.36, 'CNY'))
-    expect(wrapper.findAll('button').some(button => button.text().includes(convertedPrice))).toBe(true)
+    expect(wrapper.findComponent(CheckoutSubmitButton).props('amountText')).toBe(convertedPrice)
   })
 
   it('keeps plan price when the subscription rate is not configured or payment currency is not CNY', async () => {
@@ -370,15 +372,14 @@ describe('PaymentView subscription confirmation amounts', () => {
       },
     })
 
-    const text = wrapper.text()
-    const convertedPrice = formatPaymentAmount(71.43, 'CNY')
-    const fee = formatPaymentAmount(1.79, 'CNY')
-    const total = formatPaymentAmount(73.22, 'CNY')
-
-    expect(text).toContain(convertedPrice)
-    expect(text).toContain(fee)
-    expect(text).toContain(total)
-    expect(wrapper.findAll('button').some(button => button.text().includes(total))).toBe(true)
+    expect(wrapper.text()).toContain(formatPaymentAmount(71.43, 'CNY'))
+    // 手续费必须在换算之后计算：71.43 × 2.5% 向上取整 = 1.79，合计 73.22
+    expect(wrapper.findComponent(CheckoutSummary).props('amounts')).toEqual({
+      payment: 71.43,
+      fee: 1.79,
+      total: 73.22,
+    })
+    expect(wrapper.findComponent(CheckoutSubmitButton).props('amountText')).toBe(formatPaymentAmount(73.22, 'CNY'))
   })
 })
 

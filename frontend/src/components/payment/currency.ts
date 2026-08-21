@@ -31,15 +31,36 @@ export function currencySymbol(currency?: string | null): string {
   return PAYMENT_CURRENCY_SYMBOLS[normalized] || normalized
 }
 
-function paymentCurrencyFractionDigits(currency: string): number {
+/**
+ * Fraction digits the gateway charges in for a currency: 2 for most, 0 for
+ * JPY/KRW/VND…, 3 for KWD/BHD/JOD…. Mirrors the backend's
+ * payment.CurrencyMaxFractionDigits — every amount shown to the user must be
+ * rounded with this, never with a hardcoded 2.
+ */
+export function paymentCurrencyFractionDigits(currency?: string | null): number {
+  const normalized = normalizePaymentCurrency(currency)
   try {
     return new Intl.NumberFormat(undefined, {
       style: 'currency',
-      currency,
+      currency: normalized,
     }).resolvedOptions().maximumFractionDigits ?? 2
   } catch {
     return 2
   }
+}
+
+/** Round to the currency's fraction digits (backend: decimal.StringFixed). */
+export function roundPaymentAmount(value: number, currency?: string | null): number {
+  if (!Number.isFinite(value)) return 0
+  const factor = 10 ** paymentCurrencyFractionDigits(currency)
+  return Math.round(value * factor) / factor
+}
+
+/** Round up to the currency's fraction digits (backend: decimal.RoundUp). */
+export function ceilPaymentAmount(value: number, currency?: string | null): number {
+  if (!Number.isFinite(value)) return 0
+  const factor = 10 ** paymentCurrencyFractionDigits(currency)
+  return Math.ceil(value * factor) / factor
 }
 
 export function formatPaymentAmount(amount: number, currency?: string | null, locale?: string): string {

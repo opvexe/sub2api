@@ -125,6 +125,20 @@ export default {
         formatsNote: '三种请求格式自动识别并路由到对应上游，你可以继续用项目里已有的 SDK，不必重写客户端。',
         formatsCount: { value: '3', title: '种请求格式。', desc: '每次调用自动判别。' }
       },
+      payments: {
+        eyebrow: '支付方式',
+        title: '两种付款方式，随你选。',
+        lead: '所有价格以{ currency }标价并结算，不含税费。',
+        currency: '美元（USD）',
+        card: {
+          title: '银行卡',
+          desc: '由 Stripe, Inc. 安全处理，我们不接触也不存储完整卡号。订阅按月自动续费，可随时在控制台取消。'
+        },
+        usdt: {
+          title: 'USDT 稳定币',
+          desc: '手动预充值，链上确认后到账。一次性支付、不自动续费，确认后不可退款。请仅通过下列网络转入 USDT。'
+        }
+      },
       finalCta: {
         eyebrow: '准备开始',
         title: '准备好开始构建了吗？',

@@ -125,6 +125,20 @@ export default {
         formatsNote: 'All three request formats are auto-detected and routed to the correct provider, so you can keep the SDK your project already uses instead of rewriting the client layer.',
         formatsCount: { value: '3', title: 'Request formats accepted.', desc: 'Detected automatically on every call.' }
       },
+      payments: {
+        eyebrow: 'Payments',
+        title: 'Two ways to pay.',
+        lead: 'All prices are published and charged in { currency }, exclusive of taxes.',
+        currency: 'US dollars (USD)',
+        card: {
+          title: 'Credit & debit cards',
+          desc: 'Processed securely by Stripe, Inc. We never receive or store your full card number. Subscriptions renew monthly and can be cancelled at any time from the dashboard.'
+        },
+        usdt: {
+          title: 'USDT stablecoin',
+          desc: 'Manual prepaid top-up, credited after on-chain confirmation. One-time, non-recurring, and non-refundable once confirmed. Send USDT only on a listed network.'
+        }
+      },
       finalCta: {
         eyebrow: 'Ready to build?',
         title: 'Ready to build the future?',

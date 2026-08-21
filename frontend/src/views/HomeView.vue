@@ -268,6 +268,33 @@
         </div>
       </div></section>
 
+      <!-- 支付方式：放在 CTA 前，读完能力紧接着就知道怎么付钱 -->
+      <section id="payments" class="sec"><div class="section-inner">
+        <div class="sec-head">
+          <p class="eyebrow">{{ t('home.landing.payments.eyebrow') }}</p>
+          <h2 class="big">{{ t('home.landing.payments.title') }}</h2>
+          <p class="lead">{{ t('home.landing.payments.lead', { currency: t('home.landing.payments.currency') }) }}</p>
+        </div>
+        <div class="pay-grid">
+          <article class="pay-card">
+            <span class="pay-ic"><Icon name="creditCard" size="md" :stroke-width="1.9" aria-hidden="true" /></span>
+            <b>{{ t('home.landing.payments.card.title') }}</b>
+            <p>{{ t('home.landing.payments.card.desc') }}</p>
+            <ul class="pay-tags">
+              <li v-for="tag in ['Visa', 'Mastercard', 'American Express']" :key="tag">{{ tag }}</li>
+            </ul>
+          </article>
+          <article class="pay-card">
+            <span class="pay-ic"><Icon name="dollar" size="md" :stroke-width="1.9" aria-hidden="true" /></span>
+            <b>{{ t('home.landing.payments.usdt.title') }}</b>
+            <p>{{ t('home.landing.payments.usdt.desc') }}</p>
+            <ul class="pay-tags">
+              <li v-for="tag in ['TRC20', 'ERC20']" :key="tag">{{ tag }}</li>
+            </ul>
+          </article>
+        </div>
+      </div></section>
+
       <!-- Final CTA -->
       <section class="sec sec-flush"><div class="section-inner">
         <div class="final">
@@ -831,6 +858,38 @@ html.dark .hero-badges-hl b { background: #4ade80; box-shadow: 0 0 0 3px rgba(74
 .stats dt { font-size: 38px; font-weight: 800; letter-spacing: -.03em; color: var(--accent); }
 .stats dd { margin-top: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 
+/* Payments：两张并排大卡，沿用 .card 的边框/圆角/悬浮语言 */
+.pay-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 900px; margin: 32px auto 0; }
+.pay-card {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 26px;
+  background: var(--surface);
+  transition: border-color .18s ease, transform .18s ease;
+}
+.pay-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+.pay-ic {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid var(--accent-line);
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.pay-card b { display: block; margin-top: 18px; font-size: 16px; font-weight: 650; letter-spacing: -.01em; }
+.pay-card p { margin-top: 10px; color: var(--muted); font-size: 13.5px; line-height: 1.7; }
+.pay-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+.pay-tags li {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 12px;
+  background: var(--surface-2);
+  font-size: 12px;
+  color: var(--muted);
+}
+
 /* Popular paths */
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
 .card {
@@ -1133,7 +1192,7 @@ html.dark .support-panel { box-shadow: 0 16px 38px rgba(0, 0, 0, .55), 0 2px 6px
 }
 @media (max-width: 640px) {
   .section-inner { padding: 0 18px; }
-  .grid4, .stats { grid-template-columns: 1fr; }
+  .grid4, .stats, .pay-grid { grid-template-columns: 1fr; }
   .hero { padding: 56px 0 44px; }
   .hero-title { font-size: 40px; }
   .hero-cta { flex-direction: column; }

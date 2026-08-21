@@ -1,15 +1,16 @@
 <template>
   <AppLayout>
-    <div class="mx-auto max-w-4xl space-y-6">
+    <!-- 充值页要放下右侧摘要栏，容器放宽；其余分支各自限宽保持原有观感 -->
+    <div class="mx-auto space-y-6" :class="activeTab === 'recharge' && paymentPhase === 'select' ? 'max-w-6xl' : 'max-w-4xl'">
       <div v-if="loading" class="flex items-center justify-center py-20">
         <div class="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"></div>
       </div>
       <template v-else>
         <!-- Tab Switcher (hide during payment and subscription confirm) -->
-        <div v-if="tabs.length > 1 && paymentPhase === 'select' && !selectedPlan" class="flex space-x-1 rounded-xl bg-gray-100 p-1 dark:bg-dark-800">
+        <div v-if="tabs.length > 1 && paymentPhase === 'select' && !selectedPlan" class="inline-flex gap-1 rounded-full border border-gray-200 bg-gray-100 p-1 dark:border-dark-700 dark:bg-dark-800">
           <button v-for="tab in tabs" :key="tab.key"
-            class="flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition-all"
-            :class="activeTab === tab.key ? 'bg-white text-gray-900 shadow dark:bg-dark-700 dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'"
+            class="rounded-full px-6 py-2 text-sm transition-colors"
+            :class="activeTab === tab.key ? 'bg-white font-medium text-primary-600 shadow-[0_1px_2px_rgba(25,24,23,.05)] dark:bg-dark-900 dark:text-primary-400' : 'text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400'"
             @click="activeTab = tab.key">{{ tab.label }}</button>
         </div>
         <!-- Payment in progress (shared by recharge and subscription) -->
@@ -37,63 +38,74 @@
         <template v-else>
           <!-- Top-up Tab -->
           <template v-if="activeTab === 'recharge'">
-            <!-- Recharge Account Card -->
-            <div class="card p-5">
-              <p class="text-xs font-medium text-gray-400 dark:text-gray-500">{{ t('payment.rechargeAccount') }}</p>
-              <p class="mt-1 text-base font-semibold text-gray-900 dark:text-white">{{ user?.username || '' }}</p>
-              <p class="mt-0.5 text-sm font-medium text-green-600 dark:text-green-400">{{ t('payment.currentBalance') }}: {{ user?.balance?.toFixed(2) || '0.00' }}</p>
-            </div>
             <div v-if="enabledMethods.length === 0" class="card py-16 text-center">
               <p class="text-gray-500 dark:text-gray-400">{{ t('payment.notAvailable') }}</p>
             </div>
-            <template v-else>
-            <div class="card p-6">
-              <AmountInput
-                v-model="amount"
-                :amounts="[10, 20, 50, 100, 200, 500, 1000, 2000, 5000]"
-                :min="globalMinAmount"
-                :max="globalMaxAmount"
-              />
-              <p v-if="amountError" class="mt-2 text-xs text-amber-600 dark:text-amber-300">{{ amountError }}</p>
-            </div>
-            <div v-if="enabledMethods.length >= 1" class="card p-6">
-              <PaymentMethodSelector
-                :methods="methodOptions"
-                :selected="selectedMethod"
-                @select="selectedMethod = $event"
-              />
-            </div>
-            <div v-if="validAmount > 0" class="card p-6">
-              <div class="space-y-2 text-sm">
-                <div class="flex justify-between">
-                  <span class="text-gray-500 dark:text-gray-400">{{ t('payment.paymentAmount') }}</span>
-                  <span class="text-gray-900 dark:text-white">{{ formatSelectedPaymentAmount(validAmount) }}</span>
+            <!-- 两栏：左边填金额选渠道，右边常驻摘要与下单按钮，不用滚到底才看得到总额。
+                 视觉语言对齐首页：暖白底衬纯白卡、14px 圆角、淡边框、hover 上浮 2px -->
+            <div v-else class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+              <!-- 金额与渠道合成一张结账卡，中间用分隔线而不是卡片间距 -->
+              <div class="rounded-[14px] border border-gray-200 bg-white p-7 shadow-[0_1px_2px_rgba(25,24,23,.05)] transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 dark:border-dark-700 dark:bg-dark-900 dark:shadow-[0_1px_2px_rgba(0,0,0,.4)] dark:hover:border-dark-600">
+                <AmountInput
+                  v-model="amount"
+                  :amounts="[10, 20, 50, 100, 200, 500, 1000, 2000, 5000]"
+                  :min="globalMinAmount"
+                  :max="globalMaxAmount"
+                />
+                <p v-if="amountError" class="mt-2 text-xs text-amber-600 dark:text-amber-300">{{ amountError }}</p>
+                <div v-if="enabledMethods.length >= 1" class="mt-7 border-t border-gray-100 pt-7 dark:border-dark-700">
+                  <PaymentMethodSelector
+                    :methods="methodOptions"
+                    :selected="selectedMethod"
+                    @select="selectedMethod = $event"
+                  />
                 </div>
-                <div v-if="feeRate > 0" class="flex justify-between">
-                  <span class="text-gray-500 dark:text-gray-400">{{ t('payment.fee') }} ({{ feeRate }}%)</span>
-                  <span class="text-gray-900 dark:text-white">{{ formatSelectedPaymentAmount(feeAmount) }}</span>
-                </div>
-                <div v-if="feeRate > 0" class="flex justify-between border-t border-gray-200 pt-2 dark:border-dark-600">
-                  <span class="font-medium text-gray-700 dark:text-gray-300">{{ t('payment.actualPay') }}</span>
-                  <span class="text-lg font-bold text-primary-600 dark:text-primary-400">{{ formatSelectedPaymentAmount(totalAmount) }}</span>
-                </div>
-                <div v-if="balanceRechargeMultiplier !== 1" class="flex justify-between" :class="{ 'border-t border-gray-200 pt-2 dark:border-dark-600': feeRate <= 0 }">
-                  <span class="text-gray-500 dark:text-gray-400">{{ t('payment.creditedBalance') }}</span>
-                  <span class="text-gray-900 dark:text-white">${{ creditedAmount.toFixed(2) }}</span>
-                </div>
-                <p v-if="balanceRechargeMultiplier !== 1" class="border-t border-gray-200 pt-2 text-xs text-gray-500 dark:border-dark-600 dark:text-gray-400">
-                  {{ t('payment.rechargeRatePreview', { usd: balanceRechargeMultiplier.toFixed(2) }) }}
-                </p>
               </div>
+
+              <aside class="space-y-3 lg:sticky lg:top-6">
+                <!-- 摘要用暖白底，跟左侧纯白结账卡拉开层次（首页 --bg / --surface 的关系） -->
+                <div class="rounded-[14px] border border-gray-200 bg-gray-50 p-5 dark:border-dark-700 dark:bg-dark-800/60">
+                  <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-600 dark:text-primary-400">
+                    {{ t('payment.rechargeAccount') }}
+                  </p>
+                  <div class="mt-3 flex items-baseline justify-between gap-3">
+                    <span class="min-w-0 truncate text-sm text-gray-500 dark:text-gray-400">{{ user?.username || user?.email || '' }}</span>
+                    <span class="shrink-0 text-sm text-gray-500 dark:text-gray-400">{{ t('payment.currentBalance') }}</span>
+                  </div>
+                  <p class="mt-1 text-right text-[28px] font-extrabold leading-none tabular-nums tracking-[-0.03em] text-gray-900 dark:text-white">
+                    ${{ user?.balance?.toFixed(2) || '0.00' }}
+                  </p>
+
+                  <div v-if="validAmount > 0" class="mt-5 border-t border-gray-200 pt-4 dark:border-dark-700">
+                    <CheckoutSummary
+                      :amount-label="t('payment.paymentAmount')"
+                      :amounts="rechargeAmounts"
+                      :fee-rate="feeRate"
+                      :currency="selectedCurrency"
+                      :locale="localeCode"
+                    >
+                      <template #extra>
+                        <div v-if="balanceRechargeMultiplier !== 1" class="flex justify-between" :class="{ 'border-t border-gray-200 pt-2 dark:border-dark-600': feeRate <= 0 }">
+                          <span class="text-gray-500 dark:text-gray-400">{{ t('payment.creditedBalance') }}</span>
+                          <span class="text-gray-900 dark:text-white">${{ creditedAmount.toFixed(2) }}</span>
+                        </div>
+                        <p v-if="balanceRechargeMultiplier !== 1" class="border-t border-gray-200 pt-2 text-xs text-gray-500 dark:border-dark-600 dark:text-gray-400">
+                          {{ t('payment.rechargeRatePreview', { usd: balanceRechargeMultiplier.toFixed(2) }) }}
+                        </p>
+                      </template>
+                    </CheckoutSummary>
+                  </div>
+                </div>
+
+                <CheckoutSubmitButton
+                  :variant-class="paymentButtonClass"
+                  :amount-text="formatSelectedPaymentAmount(rechargeAmounts.total)"
+                  :disabled="!canSubmit"
+                  :submitting="submitting"
+                  @click="handleSubmitRecharge"
+                />
+              </aside>
             </div>
-            <button :class="['btn w-full py-3 text-base font-medium', paymentButtonClass]" :disabled="!canSubmit || submitting" @click="handleSubmitRecharge">
-              <span v-if="submitting" class="flex items-center justify-center gap-2">
-                <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-                {{ t('common.processing') }}
-              </span>
-              <span v-else>{{ t('payment.createOrder') }} {{ formatSelectedPaymentAmount(totalAmount) }}</span>
-            </button>
-            </template>
           </template>
           <!-- Subscribe Tab -->
           <template v-else-if="activeTab === 'subscription'">
@@ -159,28 +171,21 @@
                 />
               </div>
               <div v-if="feeRate > 0 && selectedPlan.price > 0" class="card p-6">
-                <div class="space-y-2 text-sm">
-                  <div class="flex justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">{{ t('payment.amountLabel') }}</span>
-                    <span class="text-gray-900 dark:text-white">{{ formatSelectedPaymentAmount(subPaymentAmount) }}</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">{{ t('payment.fee') }} ({{ feeRate }}%)</span>
-                    <span class="text-gray-900 dark:text-white">{{ formatSelectedPaymentAmount(subFeeAmount) }}</span>
-                  </div>
-                  <div class="flex justify-between border-t border-gray-200 pt-2 dark:border-dark-600">
-                    <span class="font-medium text-gray-700 dark:text-gray-300">{{ t('payment.actualPay') }}</span>
-                    <span class="text-lg font-bold text-primary-600 dark:text-primary-400">{{ formatSelectedPaymentAmount(subTotalAmount) }}</span>
-                  </div>
-                </div>
+                <CheckoutSummary
+                  :amount-label="t('payment.amountLabel')"
+                  :amounts="subscriptionAmounts"
+                  :fee-rate="feeRate"
+                  :currency="selectedCurrency"
+                  :locale="localeCode"
+                />
               </div>
-              <button :class="['btn w-full py-3 text-base font-medium', paymentButtonClass]" :disabled="!canSubmitSubscription || submitting" @click="confirmSubscribe">
-                <span v-if="submitting" class="flex items-center justify-center gap-2">
-                  <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-                  {{ t('common.processing') }}
-                </span>
-                <span v-else>{{ t('payment.createOrder') }} {{ formatSelectedPaymentAmount(subTotalAmount) }}</span>
-              </button>
+              <CheckoutSubmitButton
+                :variant-class="paymentButtonClass"
+                :amount-text="formatSelectedPaymentAmount(subscriptionAmounts.total)"
+                :disabled="!canSubmitSubscription"
+                :submitting="submitting"
+                @click="confirmSubscribe"
+              />
               <button class="btn btn-secondary w-full" @click="selectedPlan = null">{{ t('common.cancel') }}</button>
             </template>
             <!-- Plan list -->
@@ -269,7 +274,7 @@ import { paymentAPI } from '@/api/payment'
 import { extractApiErrorMessage, extractI18nErrorMessage } from '@/utils/apiError'
 import { isMobileDevice } from '@/utils/device'
 import { hasPeakRate, formatPeakRateWindow, serverTimezoneLabel, type PeakRateFields } from '@/utils/peak-rate'
-import type { SubscriptionPlan, CheckoutInfoResponse, CreateOrderResult, OrderType } from '@/types/payment'
+import type { SubscriptionPlan, CheckoutInfoResponse, CreateOrderResult, OrderType, WechatJSAPIPayload } from '@/types/payment'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import AmountInput from '@/components/payment/AmountInput.vue'
 import PaymentMethodSelector from '@/components/payment/PaymentMethodSelector.vue'
@@ -277,19 +282,25 @@ import { METHOD_ORDER, getPaymentPopupFeatures, isBuiltInAlipayMethod, isBuiltIn
 import {
   PAYMENT_RECOVERY_STORAGE_KEY,
   buildCreateOrderPayload,
+  buildPaymentRouteTargets,
   clearPaymentRecoverySnapshot,
   decidePaymentLaunch,
   getVisibleMethods,
   normalizeVisibleMethod,
+  planPaymentLaunch,
   readPaymentRecoverySnapshot,
   type PaymentRecoverySnapshot,
+  type PaymentRouteTarget,
   writePaymentRecoverySnapshot,
 } from '@/components/payment/paymentFlow'
 import { platformAccentBarClass, platformBadgeLightClass, platformBadgeClass, platformTextClass, platformLabel } from '@/utils/platformColors'
 import SubscriptionPlanCard from '@/components/payment/SubscriptionPlanCard.vue'
 import PaymentStatusPanel from '@/components/payment/PaymentStatusPanel.vue'
 import Icon from '@/components/icons/Icon.vue'
-import { DEFAULT_PAYMENT_CURRENCY, formatPaymentAmount, normalizePaymentCurrency } from '@/components/payment/currency'
+import { formatPaymentAmount, normalizePaymentCurrency } from '@/components/payment/currency'
+import { checkoutAmounts, gatewayBaseAmount, type CheckoutAmountContext, type CheckoutAmounts } from '@/components/payment/checkoutAmounts'
+import CheckoutSummary from '@/components/payment/CheckoutSummary.vue'
+import CheckoutSubmitButton from '@/components/payment/CheckoutSubmitButton.vue'
 import { planValiditySuffix as validitySuffixOf } from '@/components/payment/validity'
 import type { PaymentMethodOption } from '@/components/payment/PaymentMethodSelector.vue'
 import { buildPaymentErrorToastMessage, describePaymentScenarioError } from './paymentUx'
@@ -370,6 +381,14 @@ function emptyPaymentState(): PaymentRecoverySnapshot {
     resumeToken: '',
     alipayMobilePrecreateDeepLink: false,
     createdAt: 0,
+  }
+}
+
+/** Device/browser signals the payment flow branches on. Read once per action. */
+function browserContext(): { isMobile: boolean; isWechatBrowser: boolean } {
+  return {
+    isMobile: isMobileDevice(),
+    isWechatBrowser: typeof window !== 'undefined' && /MicroMessenger/i.test(window.navigator.userAgent),
   }
 }
 
@@ -573,33 +592,18 @@ const localeCode = computed(() => {
   return undefined
 })
 
-function currencyFractionDigits(currency: string): number {
-  try {
-    return new Intl.NumberFormat(undefined, {
-      style: 'currency',
-      currency,
-    }).resolvedOptions().maximumFractionDigits ?? 2
-  } catch {
-    return 2
+// One amount pipeline for both tabs. Pass the currency explicitly so per-method
+// option lists can price against a gateway other than the selected one.
+function amountContextFor(currency: string): CheckoutAmountContext {
+  return {
+    currency,
+    feeRate: feeRate.value,
+    subscriptionUsdToCnyRate: subscriptionUsdToCnyRate.value,
   }
 }
 
-function roundPaymentAmount(value: number, currency: string): number {
-  if (!Number.isFinite(value)) return 0
-  const factor = 10 ** currencyFractionDigits(currency)
-  return Math.round(value * factor) / factor
-}
-
-function ceilPaymentAmount(value: number, currency: string): number {
-  if (!Number.isFinite(value)) return 0
-  const factor = 10 ** currencyFractionDigits(currency)
-  return Math.ceil(value * factor) / factor
-}
-
-function subscriptionPaymentAmountForCurrency(value: number, currency: string): number {
-  const rate = subscriptionUsdToCnyRate.value
-  if (rate <= 0 || currency !== DEFAULT_PAYMENT_CURRENCY) return roundPaymentAmount(value, currency)
-  return roundPaymentAmount(value * rate, currency)
+function amountsFor(value: number, orderType: OrderType, currency = selectedCurrency.value): CheckoutAmounts {
+  return checkoutAmounts(value, orderType, amountContextFor(currency))
 }
 
 function formatSelectedPaymentAmount(value: number): string {
@@ -607,7 +611,7 @@ function formatSelectedPaymentAmount(value: number): string {
 }
 
 function formatSelectedSubscriptionPaymentAmount(value: number): string {
-  return formatSelectedPaymentAmount(subscriptionPaymentAmountForCurrency(value, selectedCurrency.value))
+  return formatSelectedPaymentAmount(gatewayBaseAmount(value, 'subscription', amountContextFor(selectedCurrency.value)))
 }
 
 const methodOptions = computed<PaymentMethodOption[]>(() =>
@@ -623,16 +627,7 @@ const methodOptions = computed<PaymentMethodOption[]>(() =>
 )
 
 const feeRate = computed(() => checkout.value?.recharge_fee_rate ?? 0)
-const feeAmount = computed(() =>
-  feeRate.value > 0 && validAmount.value > 0
-    ? Math.ceil(((validAmount.value * feeRate.value) / 100) * 100) / 100
-    : 0
-)
-const totalAmount = computed(() =>
-  feeRate.value > 0 && validAmount.value > 0
-    ? Math.round((validAmount.value + feeAmount.value) * 100) / 100
-    : validAmount.value
-)
+const rechargeAmounts = computed(() => amountsFor(validAmount.value, 'balance'))
 
 const amountError = computed(() => {
   if (validAmount.value <= 0) return ''
@@ -655,29 +650,9 @@ const canSubmit = computed(() =>
     && selectedLimit.value?.available !== false
 )
 
-const subPaymentAmount = computed(() => {
-  const price = selectedPlan.value?.price ?? 0
-  return subscriptionPaymentAmountForCurrency(price, selectedCurrency.value)
-})
+const subscriptionAmounts = computed(() => amountsFor(selectedPlan.value?.price ?? 0, 'subscription'))
 
-const subFeeAmount = computed(() => {
-  if (feeRate.value <= 0 || subPaymentAmount.value <= 0) return 0
-  return ceilPaymentAmount((subPaymentAmount.value * feeRate.value) / 100, selectedCurrency.value)
-})
-
-const subTotalAmount = computed(() => {
-  if (feeRate.value <= 0 || subPaymentAmount.value <= 0) return subPaymentAmount.value
-  return roundPaymentAmount(subPaymentAmount.value + subFeeAmount.value, selectedCurrency.value)
-})
-
-function subscriptionTotalAmountForCurrency(value: number, currency: string): number {
-  const paymentAmount = subscriptionPaymentAmountForCurrency(value, currency)
-  if (feeRate.value <= 0 || paymentAmount <= 0) return paymentAmount
-  const fee = ceilPaymentAmount((paymentAmount * feeRate.value) / 100, currency)
-  return roundPaymentAmount(paymentAmount + fee, currency)
-}
-
-// Subscription-specific: method options based on gateway pay amount
+// Subscription-specific: method options priced against each gateway's own currency
 const subMethodOptions = computed<PaymentMethodOption[]>(() => {
   const price = selectedPlan.value?.price ?? 0
   return enabledMethods.value.map((type) => {
@@ -687,14 +662,14 @@ const subMethodOptions = computed<PaymentMethodOption[]>(() => {
       type,
       display_name: ml?.display_name,
       fee_rate: ml?.fee_rate ?? 0,
-      available: ml?.available !== false && amountFitsMethod(subscriptionTotalAmountForCurrency(price, currency), type),
+      available: ml?.available !== false && amountFitsMethod(amountsFor(price, 'subscription', currency).total, type),
     }
   })
 })
 
 const canSubmitSubscription = computed(() =>
   selectedPlan.value !== null
-    && amountFitsMethod(subTotalAmount.value, selectedMethod.value)
+    && amountFitsMethod(subscriptionAmounts.value.total, selectedMethod.value)
     && selectedLimit.value?.available !== false
 )
 
@@ -705,10 +680,13 @@ watch(() => [validAmount.value, selectedMethod.value] as const, ([amt, method]) 
   if (available) selectedMethod.value = available
 })
 
-// Payment button class: follows selected payment method color
+// 下单按钮是否跟随支付商品牌色（支付宝蓝 / 微信绿 / Stripe 紫）。
+// 置 false 时统一走主题橙，与首页保持一套视觉；改成 true 即可恢复品牌色。
+const USE_PROVIDER_BRAND_BUTTON: boolean = false
+
 const paymentButtonClass = computed(() => {
   const m = selectedMethod.value
-  if (!m) return 'btn-primary'
+  if (!USE_PROVIDER_BRAND_BUTTON || !m) return 'btn-primary'
   if (isBuiltInAlipayMethod(m)) return 'btn-alipay'
   if (isBuiltInWxpayMethod(m)) return 'btn-wxpay'
   if (m === 'stripe') return 'btn-stripe'
@@ -773,6 +751,7 @@ async function createOrder(orderAmount: number, orderType: OrderType, planId?: n
   errorMessage.value = ''
   errorHintMessage.value = ''
   const requestType = normalizeVisibleMethod(options.paymentType || selectedMethod.value) || options.paymentType || selectedMethod.value
+  const browser = browserContext()
   try {
     const payload = buildCreateOrderPayload({
       amount: orderAmount,
@@ -780,8 +759,7 @@ async function createOrder(orderAmount: number, orderType: OrderType, planId?: n
       orderType,
       planId,
       origin: typeof window !== 'undefined' ? window.location.origin : '',
-      isMobile: isMobileDevice(),
-      isWechatBrowser: typeof window !== 'undefined' && /MicroMessenger/i.test(window.navigator.userAgent),
+      ...browser,
       forceQRCode: !!(checkout.value.alipay_force_qrcode && normalizeVisibleMethod(requestType) === 'alipay'),
       mobilePrecreateDeepLink: checkout.value.alipay_mobile_precreate_deep_link === true,
     })
@@ -793,53 +771,31 @@ async function createOrder(orderAmount: number, orderType: OrderType, planId?: n
     }
 
     const result = await paymentStore.createOrder(payload) as CreateOrderResult & { resume_token?: string }
-    const openWindow = (url: string) => {
-      const win = window.open(url, 'paymentPopup', getPaymentPopupFeatures())
-      if (!win || win.closed) {
-        window.location.href = url
-      }
-    }
     const visibleMethod = normalizeVisibleMethod(requestType) || requestType
-    // When user clicks the dedicated Stripe button, leave method blank so the
-    // landing page renders Stripe's full Payment Element (card/link/alipay/wxpay).
-    const stripeMethod = visibleMethod === 'stripe'
-      ? ''
-      : visibleMethod === 'wxpay' ? 'wechat_pay' : 'alipay'
-    const stripeRouteUrl = result.client_secret && visibleMethod !== 'airwallex'
-      ? router.resolve({
-        path: '/payment/stripe',
-        query: {
-          order_id: String(result.order_id),
-          client_secret: result.client_secret,
-          method: stripeMethod || undefined,
-          resume_token: result.resume_token || undefined,
-        },
-      }).href
-      : ''
-    const airwallexRouteUrl = result.client_secret && result.intent_id
-      ? router.resolve({
-        path: '/payment/airwallex',
-        query: {
-          order_id: String(result.order_id),
-          out_trade_no: result.out_trade_no || undefined,
-          resume_token: result.resume_token || undefined,
-        },
-      }).href
-      : ''
+    const fallbackContext: MobileQrFallbackContext = {
+      orderAmount,
+      orderType,
+      planId,
+      paymentType: visibleMethod,
+      attempted: options.mobileQrFallbackAttempted === true,
+    }
+    const targets = buildPaymentRouteTargets(result, visibleMethod)
+    const stripeRouteUrl = resolveRouteTarget(targets.stripe)
     const decision = decidePaymentLaunch(result, {
       visibleMethod,
       orderType,
-      isMobile: isMobileDevice(),
-      isWechatBrowser: typeof window !== 'undefined' && /MicroMessenger/i.test(window.navigator.userAgent),
+      ...browser,
       forceQRCode: !!(checkout.value.alipay_force_qrcode && visibleMethod === 'alipay'),
       mobilePrecreateDeepLink: checkout.value.alipay_mobile_precreate_deep_link === true,
       stripePopupUrl: stripeRouteUrl,
       stripeRouteUrl,
-      airwallexRouteUrl,
+      airwallexRouteUrl: resolveRouteTarget(targets.airwallex),
     })
 
-    if (decision.kind === 'wechat_oauth' && decision.oauth?.authorize_url) {
-      window.location.href = buildWechatOAuthAuthorizeUrl(decision.oauth.authorize_url, {
+    const { enterPaying, effect } = planPaymentLaunch(decision, { isMobile: browser.isMobile })
+
+    if (effect.type === 'oauth') {
+      window.location.href = buildWechatOAuthAuthorizeUrl(effect.authorizeUrl, {
         paymentType: visibleMethod,
         orderType,
         planId,
@@ -847,111 +803,124 @@ async function createOrder(orderAmount: number, orderType: OrderType, planId?: n
       })
       return
     }
-
-    if (decision.kind === 'unhandled') {
+    if (effect.type === 'unhandled') {
       applyScenarioError({ reason: 'UNHANDLED_PAYMENT_SCENARIO' }, visibleMethod)
       return
     }
 
-    paymentState.value = decision.paymentState
-    paymentPhase.value = 'paying'
-    persistRecoverySnapshot(decision.recovery)
+    if (enterPaying) {
+      paymentState.value = decision.paymentState
+      paymentPhase.value = 'paying'
+      persistRecoverySnapshot(decision.recovery)
+    }
 
-    if (decision.kind === 'stripe_popup') {
-      openWindow(decision.paymentState.payUrl)
-      return
-    }
-    if (decision.kind === 'stripe_route') {
-      window.location.href = decision.paymentState.payUrl
-      return
-    }
-    if (decision.kind === 'airwallex_route') {
-      window.location.href = decision.paymentState.payUrl
-      return
-    }
-    if (decision.kind === 'wechat_jsapi' && decision.jsapi) {
-      try {
-        const jsapiResult = await invokeWechatJsapiPayment(decision.jsapi as Record<string, unknown>)
-        const errMsg = String(jsapiResult.err_msg || '').toLowerCase()
-        if (errMsg.includes('cancel')) {
-          appStore.showInfo(t('payment.qr.cancelled'))
-          resetPayment()
-        } else if (errMsg && !errMsg.includes('ok')) {
-          resetPayment()
-          const fallbackApplied = await attemptMobileQrFallback(
-            { reason: 'WECHAT_JSAPI_FAILED', message: errMsg },
-            {
-              orderAmount,
-              orderType,
-              planId,
-              paymentType: visibleMethod,
-              attempted: options.mobileQrFallbackAttempted === true,
-            },
-          )
-          if (!fallbackApplied) {
-            applyScenarioError({ reason: 'WECHAT_JSAPI_FAILED', message: errMsg }, visibleMethod)
-          }
-        } else {
-          const resultState = { ...decision.paymentState }
-          resetPayment()
-          await redirectToPaymentResult(resultState)
-        }
-      } catch (err: unknown) {
-        resetPayment()
-        const fallbackApplied = await attemptMobileQrFallback(err, {
-          orderAmount,
-          orderType,
-          planId,
-          paymentType: visibleMethod,
-          attempted: options.mobileQrFallbackAttempted === true,
-        })
-        if (!fallbackApplied) {
-          throw err
-        }
-      }
-      return
-    }
-    if (decision.kind === 'redirect_waiting' && decision.paymentState.payUrl) {
-      if (isMobileDevice()) {
-        window.location.href = decision.paymentState.payUrl
-        return
-      }
-      openWindow(decision.paymentState.payUrl)
+    switch (effect.type) {
+      case 'popup':
+        openPaymentWindow(effect.url)
+        break
+      case 'navigate':
+        window.location.href = effect.url
+        break
+      case 'jsapi':
+        // May rethrow so the shared error handling below still applies.
+        await runWechatJsapiPayment(effect.payload, decision.paymentState, fallbackContext)
+        break
+      case 'await':
+        break
     }
   } catch (err: unknown) {
-    const apiErr = err as Record<string, unknown>
-    if (apiErr.reason === 'TOO_MANY_PENDING') {
-      const metadata = apiErr.metadata as Record<string, unknown> | undefined
-      errorMessage.value = t('payment.errors.tooManyPending', { max: metadata?.max || '' })
-      errorHintMessage.value = ''
-    } else if (apiErr.reason === 'CANCEL_RATE_LIMITED') {
-      errorMessage.value = t('payment.errors.cancelRateLimited')
-      errorHintMessage.value = ''
-    } else if (await attemptMobileQrFallback(err, {
-      orderAmount,
-      orderType,
-      planId,
-      paymentType: requestType,
-      attempted: options.mobileQrFallbackAttempted === true,
-    })) {
-      return
-    } else {
-      const handled = applyScenarioError(
-        err,
-        normalizeVisibleMethod(options.paymentType || selectedMethod.value) || selectedMethod.value,
-      )
-      if (!handled) {
-        errorMessage.value = extractI18nErrorMessage(err, t, 'payment.errors', extractApiErrorMessage(err, t('payment.result.failed')))
-        errorHintMessage.value = ''
-      }
-      if (handled) {
-        return
-      }
-    }
-    appStore.showError(buildPaymentErrorToastMessage(errorMessage.value, errorHintMessage.value))
+    await handleCreateOrderError(err, {
+      fallback: {
+        orderAmount,
+        orderType,
+        planId,
+        paymentType: requestType,
+        attempted: options.mobileQrFallbackAttempted === true,
+      },
+      scenarioMethod: normalizeVisibleMethod(options.paymentType || selectedMethod.value) || selectedMethod.value,
+    })
   } finally {
     submitting.value = false
   }
+}
+
+function openPaymentWindow(url: string) {
+  const win = window.open(url, 'paymentPopup', getPaymentPopupFeatures())
+  if (!win || win.closed) {
+    window.location.href = url
+  }
+}
+
+function resolveRouteTarget(target: PaymentRouteTarget | null): string {
+  return target ? router.resolve(target).href : ''
+}
+
+/**
+ * Drives WeChat's in-app bridge. Cancellation and bridge failures unwind the
+ * paying phase; failures additionally try the desktop-QR fallback before
+ * surfacing an error, and rethrow when even that is unavailable.
+ */
+async function runWechatJsapiPayment(
+  jsapi: WechatJSAPIPayload,
+  paidState: PaymentRecoverySnapshot,
+  fallbackContext: MobileQrFallbackContext,
+): Promise<void> {
+  try {
+    const jsapiResult = await invokeWechatJsapiPayment(jsapi as unknown as Record<string, unknown>)
+    const errMsg = String(jsapiResult.err_msg || '').toLowerCase()
+
+    if (errMsg.includes('cancel')) {
+      appStore.showInfo(t('payment.qr.cancelled'))
+      resetPayment()
+      return
+    }
+    if (errMsg && !errMsg.includes('ok')) {
+      resetPayment()
+      const failure = { reason: 'WECHAT_JSAPI_FAILED', message: errMsg }
+      if (!await attemptMobileQrFallback(failure, fallbackContext)) {
+        applyScenarioError(failure, fallbackContext.paymentType)
+      }
+      return
+    }
+
+    const resultState = { ...paidState }
+    resetPayment()
+    await redirectToPaymentResult(resultState)
+  } catch (err: unknown) {
+    resetPayment()
+    if (!await attemptMobileQrFallback(err, fallbackContext)) {
+      throw err
+    }
+  }
+}
+
+interface CreateOrderErrorContext {
+  fallback: MobileQrFallbackContext
+  /** Method used to look up a scenario-specific hint; keeps the legacy selected-method fallback. */
+  scenarioMethod: string
+}
+
+async function handleCreateOrderError(err: unknown, context: CreateOrderErrorContext): Promise<void> {
+  const apiErr = err as Record<string, unknown>
+
+  if (apiErr.reason === 'TOO_MANY_PENDING') {
+    const metadata = apiErr.metadata as Record<string, unknown> | undefined
+    setPaymentError(t('payment.errors.tooManyPending', { max: metadata?.max || '' }))
+  } else if (apiErr.reason === 'CANCEL_RATE_LIMITED') {
+    setPaymentError(t('payment.errors.cancelRateLimited'))
+  } else {
+    // Retrying as a desktop QR order, or a scenario hint, both replace the toast.
+    if (await attemptMobileQrFallback(err, context.fallback)) return
+    if (applyScenarioError(err, context.scenarioMethod)) return
+    setPaymentError(extractI18nErrorMessage(err, t, 'payment.errors', extractApiErrorMessage(err, t('payment.result.failed'))))
+  }
+
+  appStore.showError(buildPaymentErrorToastMessage(errorMessage.value, errorHintMessage.value))
+}
+
+function setPaymentError(message: string, hint = '') {
+  errorMessage.value = message
+  errorHintMessage.value = hint
 }
 
 interface MobileQrFallbackContext {
@@ -1012,18 +981,7 @@ async function attemptMobileQrFallback(err: unknown, context: MobileQrFallbackCo
       isWechatBrowser: false,
     })
     const result = await paymentStore.createOrder(payload) as CreateOrderResult & { resume_token?: string }
-    const stripeMethod = visibleMethod === 'wxpay' ? 'wechat_pay' : 'alipay'
-    const stripeRouteUrl = result.client_secret
-      ? router.resolve({
-        path: '/payment/stripe',
-        query: {
-          order_id: String(result.order_id),
-          client_secret: result.client_secret,
-          method: stripeMethod,
-          resume_token: result.resume_token || undefined,
-        },
-      }).href
-      : ''
+    const stripeRouteUrl = resolveRouteTarget(buildPaymentRouteTargets(result, visibleMethod).stripe)
     const decision = decidePaymentLaunch(result, {
       visibleMethod,
       orderType: context.orderType,
@@ -1037,8 +995,7 @@ async function attemptMobileQrFallback(err: unknown, context: MobileQrFallbackCo
       return false
     }
 
-    errorMessage.value = ''
-    errorHintMessage.value = ''
+    setPaymentError('')
     paymentState.value = decision.paymentState
     paymentPhase.value = 'paying'
     persistRecoverySnapshot(decision.recovery)
@@ -1050,18 +1007,12 @@ async function attemptMobileQrFallback(err: unknown, context: MobileQrFallbackCo
 }
 
 function applyScenarioError(err: unknown, paymentMethod: string): boolean {
-  const descriptor = describePaymentScenarioError(err, {
-    paymentMethod,
-    isMobile: isMobileDevice(),
-    isWechatBrowser: typeof window !== 'undefined' && /MicroMessenger/i.test(window.navigator.userAgent),
-  })
+  const descriptor = describePaymentScenarioError(err, { paymentMethod, ...browserContext() })
   if (!descriptor) {
-    errorMessage.value = ''
-    errorHintMessage.value = ''
+    setPaymentError('')
     return false
   }
-  errorMessage.value = t(descriptor.messageKey)
-  errorHintMessage.value = descriptor.hintKey ? t(descriptor.hintKey) : ''
+  setPaymentError(t(descriptor.messageKey), descriptor.hintKey ? t(descriptor.hintKey) : '')
   appStore.showError(buildPaymentErrorToastMessage(errorMessage.value, errorHintMessage.value))
   return true
 }

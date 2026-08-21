@@ -1060,3 +1060,39 @@ func TestExecuteSubscriptionFulfillmentDoesNotDuplicateWorkAfterLegacySuccessAud
 
 var _ AffiliateRepository = (*paymentFulfillmentAffiliateRepoStub)(nil)
 var _ SettingRepository = (*paymentFulfillmentSettingRepoStub)(nil)
+
+// 群机器人卡片里的订单字段：金额必须带上订单实际币种，订单号优先用发给
+// 支付渠道的 out_trade_no（对账时能直接搜到），缺失才回落到自增 ID。
+func TestPaymentOrderWebhookVariables(t *testing.T) {
+	order := &dbent.PaymentOrder{
+		ID:          42,
+		UserID:      7,
+		UserEmail:   "buyer@example.com",
+		UserName:    "buyer",
+		PayAmount:   72.5,
+		PaymentType: "alipay",
+		OutTradeNo:  "sub2_20260301abcd",
+	}
+
+	vars := paymentOrderWebhookVariables(order)
+
+	require.Equal(t, "72.50 CNY", vars["pay_amount"])
+	require.Equal(t, "alipay", vars["payment_type"])
+	require.Equal(t, "sub2_20260301abcd", vars["order_no"])
+	require.Equal(t, "buyer", vars["user_name"])
+	require.Equal(t, "buyer@example.com", vars["user_email"])
+	require.Equal(t, "7", vars["user_id"])
+}
+
+func TestPaymentOrderWebhookVariablesFallbacks(t *testing.T) {
+	order := &dbent.PaymentOrder{
+		ID:        42,
+		UserID:    7,
+		UserEmail: "buyer@example.com",
+	}
+
+	vars := paymentOrderWebhookVariables(order)
+
+	require.Equal(t, "42", vars["order_no"], "没有 out_trade_no 时回落到订单 ID")
+	require.Equal(t, "buyer@example.com", vars["user_name"], "没有用户名时用邮箱兜底")
+}

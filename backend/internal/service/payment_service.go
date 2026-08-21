@@ -200,6 +200,7 @@ type PaymentService struct {
 	resumeService            *PaymentResumeService
 	affiliateService         *AffiliateService
 	notificationEmailService *NotificationEmailService
+	webhookPushService       *WebhookPushService
 }
 
 func NewPaymentService(entClient *dbent.Client, registry *payment.Registry, loadBalancer payment.LoadBalancer, redeemService *RedeemService, subscriptionSvc *SubscriptionService, configService *PaymentConfigService, userRepo UserRepository, groupRepo GroupRepository, affiliateService *AffiliateService) *PaymentService {
@@ -210,6 +211,11 @@ func NewPaymentService(entClient *dbent.Client, registry *payment.Registry, load
 
 func (s *PaymentService) SetNotificationEmailService(notificationEmailService *NotificationEmailService) {
 	s.notificationEmailService = notificationEmailService
+}
+
+// SetWebhookPushService 注入购买成功群机器人推送（企业微信 / 钉钉）。
+func (s *PaymentService) SetWebhookPushService(webhookPushService *WebhookPushService) {
+	s.webhookPushService = webhookPushService
 }
 
 // --- Provider Registry ---

@@ -713,6 +713,14 @@ export interface SystemSettings {
   account_quota_notify_enabled: boolean;
   account_quota_notify_emails: NotifyEmailEntry[];
 
+  // 购买成功群机器人推送（企业微信 / 钉钉）
+  purchase_webhook_notify_enabled: boolean;
+  purchase_webhook_dingtalk_url: string;
+  purchase_webhook_dingtalk_secret_configured: boolean;
+  purchase_webhook_wecom_url: string;
+  purchase_webhook_recharge_success_enabled: boolean;
+  purchase_webhook_subscription_success_enabled: boolean;
+
   // Channel Monitor feature switch
   channel_monitor_enabled: boolean;
   channel_monitor_mode?: 'v1' | 'v2';
@@ -1012,6 +1020,14 @@ export interface UpdateSettingsRequest {
   account_quota_notify_enabled?: boolean;
   account_quota_notify_emails?: NotifyEmailEntry[];
 
+  // 购买成功群机器人推送（企业微信 / 钉钉；加签密钥留空 = 保留已存值）
+  purchase_webhook_notify_enabled?: boolean;
+  purchase_webhook_dingtalk_url?: string;
+  purchase_webhook_dingtalk_secret?: string;
+  purchase_webhook_wecom_url?: string;
+  purchase_webhook_recharge_success_enabled?: boolean;
+  purchase_webhook_subscription_success_enabled?: boolean;
+
   // Channel Monitor feature switch
   channel_monitor_enabled?: boolean;
   channel_monitor_mode?: 'v1' | 'v2';
@@ -1110,6 +1126,31 @@ export async function sendTestEmail(
 ): Promise<{ message: string }> {
   const { data } = await apiClient.post<{ message: string }>(
     "/admin/settings/send-test-email",
+    request,
+  );
+  return data;
+}
+
+/**
+ * Test webhook push request（URL / 密钥留空则回退到已保存的配置）
+ */
+export interface TestWebhookPushRequest {
+  channel: "dingtalk" | "wecom";
+  purchase_webhook_dingtalk_url?: string;
+  purchase_webhook_dingtalk_secret?: string;
+  purchase_webhook_wecom_url?: string;
+}
+
+/**
+ * Send a test message to the WeCom / DingTalk group robot
+ * @param request - Channel and webhook config to test
+ * @returns Test result message
+ */
+export async function testWebhookPush(
+  request: TestWebhookPushRequest,
+): Promise<{ message: string }> {
+  const { data } = await apiClient.post<{ message: string }>(
+    "/admin/settings/test-webhook-push",
     request,
   );
   return data;
@@ -1555,6 +1596,7 @@ export const settingsAPI = {
   updateSettings,
   testSmtpConnection,
   sendTestEmail,
+  testWebhookPush,
   getEmailTemplates,
   getEmailTemplate,
   updateEmailTemplate,

@@ -297,6 +297,14 @@ type UpdateSettingsRequest struct {
 	AccountQuotaNotifyEnabled       *bool                   `json:"account_quota_notify_enabled"`
 	AccountQuotaNotifyEmails        *[]dto.NotifyEmailEntry `json:"account_quota_notify_emails"`
 
+	// 购买成功群机器人推送（企业微信 / 钉钉）：全部指针，省略字段=保持现值。
+	PurchaseWebhookNotifyEnabled              *bool   `json:"purchase_webhook_notify_enabled"`
+	PurchaseWebhookDingTalkURL                *string `json:"purchase_webhook_dingtalk_url"`
+	PurchaseWebhookDingTalkSecret             *string `json:"purchase_webhook_dingtalk_secret"`
+	PurchaseWebhookWeComURL                   *string `json:"purchase_webhook_wecom_url"`
+	PurchaseWebhookRechargeSuccessEnabled     *bool   `json:"purchase_webhook_recharge_success_enabled"`
+	PurchaseWebhookSubscriptionSuccessEnabled *bool   `json:"purchase_webhook_subscription_success_enabled"`
+
 	// Payment configuration (integrated into settings, full replace)
 	PaymentEnabled                   *bool    `json:"payment_enabled"`
 	PaymentMinAmount                 *float64 `json:"payment_min_amount"`
@@ -1866,6 +1874,13 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 			}
 			return previousSettings.AccountQuotaNotifyEmails
 		}(),
+		PurchaseWebhookNotifyEnabled: boolSetting(req.PurchaseWebhookNotifyEnabled, previousSettings.PurchaseWebhookNotifyEnabled),
+		PurchaseWebhookDingTalkURL:   stringSetting(req.PurchaseWebhookDingTalkURL, previousSettings.PurchaseWebhookDingTalkURL),
+		// 加签密钥留空 = 保留已存值，与 SMTP 密码同一套语义（落库逻辑见 buildSettingUpdates）。
+		PurchaseWebhookDingTalkSecret:             stringSetting(req.PurchaseWebhookDingTalkSecret, ""),
+		PurchaseWebhookWeComURL:                   stringSetting(req.PurchaseWebhookWeComURL, previousSettings.PurchaseWebhookWeComURL),
+		PurchaseWebhookRechargeSuccessEnabled:     boolSetting(req.PurchaseWebhookRechargeSuccessEnabled, previousSettings.PurchaseWebhookRechargeSuccessEnabled),
+		PurchaseWebhookSubscriptionSuccessEnabled: boolSetting(req.PurchaseWebhookSubscriptionSuccessEnabled, previousSettings.PurchaseWebhookSubscriptionSuccessEnabled),
 		ChannelMonitorEnabled: func() bool {
 			if req.ChannelMonitorEnabled != nil {
 				return *req.ChannelMonitorEnabled
@@ -2321,6 +2336,12 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 		SubscriptionExpiryNotifyEnabled:                        updatedSettings.SubscriptionExpiryNotifyEnabled,
 		AccountQuotaNotifyEnabled:                              updatedSettings.AccountQuotaNotifyEnabled,
 		AccountQuotaNotifyEmails:                               dto.NotifyEmailEntriesFromService(updatedSettings.AccountQuotaNotifyEmails),
+		PurchaseWebhookNotifyEnabled:                           updatedSettings.PurchaseWebhookNotifyEnabled,
+		PurchaseWebhookDingTalkURL:                             updatedSettings.PurchaseWebhookDingTalkURL,
+		PurchaseWebhookDingTalkSecretConfigured:                updatedSettings.PurchaseWebhookDingTalkSecretConfigured,
+		PurchaseWebhookWeComURL:                                updatedSettings.PurchaseWebhookWeComURL,
+		PurchaseWebhookRechargeSuccessEnabled:                  updatedSettings.PurchaseWebhookRechargeSuccessEnabled,
+		PurchaseWebhookSubscriptionSuccessEnabled:              updatedSettings.PurchaseWebhookSubscriptionSuccessEnabled,
 		PaymentEnabled:                                         updatedPaymentCfg.Enabled,
 		PaymentMinAmount:                                       updatedPaymentCfg.MinAmount,
 		PaymentMaxAmount:                                       updatedPaymentCfg.MaxAmount,

@@ -388,34 +388,104 @@ func (s *PaymentService) markCompleted(ctx context.Context, o *dbent.PaymentOrde
 }
 
 func (s *PaymentService) dispatchPaymentFulfillmentNotification(o *dbent.PaymentOrder, auditAction string) {
-	if s == nil || s.notificationEmailService == nil || o == nil {
+	if s == nil || o == nil {
+		return
+	}
+	if s.notificationEmailService == nil && s.webhookPushService == nil {
+		return
+	}
+	switch auditAction {
+	case "RECHARGE_SUCCESS", "SUBSCRIPTION_SUCCESS":
+	default:
 		return
 	}
 	go func() {
 		ctx, cancel := context.WithTimeout(context.Background(), emailSendTimeout)
 		defer cancel()
-		var err error
-		switch auditAction {
-		case "RECHARGE_SUCCESS":
-			err = s.sendBalanceRechargeSuccessNotification(ctx, o)
-		case "SUBSCRIPTION_SUCCESS":
-			err = s.sendSubscriptionPurchaseSuccessNotification(ctx, o)
-		default:
+		if auditAction == "RECHARGE_SUCCESS" {
+			s.notifyBalanceRechargeSuccess(ctx, o)
 			return
 		}
-		if err != nil {
-			slog.Warn("payment fulfillment notification email failed", "order_id", o.ID, "action", auditAction, "err", err.Error())
-		}
+		s.notifySubscriptionPurchaseSuccess(ctx, o)
 	}()
 }
 
-func (s *PaymentService) sendBalanceRechargeSuccessNotification(ctx context.Context, o *dbent.PaymentOrder) error {
+// notifyBalanceRechargeSuccess 充值成功后同时走用户邮件与运营群机器人推送。
+// 两条链路共用一次余额查询，任一条失败都不影响另一条。
+func (s *PaymentService) notifyBalanceRechargeSuccess(ctx context.Context, o *dbent.PaymentOrder) {
 	currentBalance := ""
 	if s.userRepo != nil {
 		if user, err := s.userRepo.GetByID(ctx, o.UserID); err == nil && user != nil {
 			currentBalance = fmt.Sprintf("%.2f", user.Balance)
 		}
 	}
+	if s.notificationEmailService != nil {
+		if err := s.sendBalanceRechargeSuccessNotification(ctx, o, currentBalance); err != nil {
+			slog.Warn("payment fulfillment notification email failed", "order_id", o.ID, "action", "RECHARGE_SUCCESS", "err", err.Error())
+		}
+	}
+	if s.webhookPushService != nil {
+		variables := paymentOrderWebhookVariables(o)
+		variables["recharge_amount"] = fmt.Sprintf("%.2f", o.Amount)
+		variables["current_balance"] = currentBalance
+		if err := s.webhookPushService.SendEvent(ctx, WebhookPushEventRechargeSuccess, variables); err != nil {
+			slog.Warn("payment fulfillment webhook push failed", "order_id", o.ID, "action", "RECHARGE_SUCCESS", "err", err.Error())
+		}
+	}
+}
+
+// notifySubscriptionPurchaseSuccess 订阅购买成功后同时走用户邮件与运营群机器人推送。
+func (s *PaymentService) notifySubscriptionPurchaseSuccess(ctx context.Context, o *dbent.PaymentOrder) {
+	groupName := "Subscription"
+	subscriptionDays := ""
+	expiryTime := ""
+	if o.SubscriptionDays != nil {
+		subscriptionDays = strconv.Itoa(*o.SubscriptionDays)
+	}
+	if o.SubscriptionGroupID != nil {
+		if s.groupRepo != nil {
+			if group, err := s.groupRepo.GetByID(ctx, *o.SubscriptionGroupID); err == nil && group != nil && strings.TrimSpace(group.Name) != "" {
+				groupName = group.Name
+			}
+		}
+		if s.subscriptionSvc != nil {
+			if sub, err := s.subscriptionSvc.GetActiveSubscription(ctx, o.UserID, *o.SubscriptionGroupID); err == nil && sub != nil {
+				expiryTime = sub.ExpiresAt.Format("2006-01-02 15:04")
+			}
+		}
+	}
+	if s.notificationEmailService != nil {
+		if err := s.sendSubscriptionPurchaseSuccessNotification(ctx, o, groupName, subscriptionDays, expiryTime); err != nil {
+			slog.Warn("payment fulfillment notification email failed", "order_id", o.ID, "action", "SUBSCRIPTION_SUCCESS", "err", err.Error())
+		}
+	}
+	if s.webhookPushService != nil {
+		variables := paymentOrderWebhookVariables(o)
+		variables["subscription_group"] = groupName
+		if subscriptionDays != "" {
+			variables["subscription_days"] = subscriptionDays + " 天"
+		}
+		variables["expiry_time"] = expiryTime
+		if err := s.webhookPushService.SendEvent(ctx, WebhookPushEventSubscriptionSuccess, variables); err != nil {
+			slog.Warn("payment fulfillment webhook push failed", "order_id", o.ID, "action", "SUBSCRIPTION_SUCCESS", "err", err.Error())
+		}
+	}
+}
+
+// paymentOrderWebhookVariables 群机器人模板里两类事件共用的订单/用户字段。
+func paymentOrderWebhookVariables(o *dbent.PaymentOrder) map[string]string {
+	currency := PaymentOrderCurrency(o)
+	return map[string]string{
+		"pay_amount":   payment.FormatAmountForCurrency(o.PayAmount, currency) + " " + currency,
+		"payment_type": o.PaymentType,
+		"order_no":     firstNonEmpty(o.OutTradeNo, strconv.FormatInt(o.ID, 10)),
+		"user_name":    firstNonEmpty(o.UserName, o.UserEmail),
+		"user_email":   o.UserEmail,
+		"user_id":      strconv.FormatInt(o.UserID, 10),
+	}
+}
+
+func (s *PaymentService) sendBalanceRechargeSuccessNotification(ctx context.Context, o *dbent.PaymentOrder, currentBalance string) error {
 	return s.notificationEmailService.Send(ctx, NotificationEmailSendInput{
 		Event:          NotificationEmailEventBalanceRechargeSuccess,
 		RecipientEmail: o.UserEmail,
@@ -431,28 +501,7 @@ func (s *PaymentService) sendBalanceRechargeSuccessNotification(ctx context.Cont
 	})
 }
 
-func (s *PaymentService) sendSubscriptionPurchaseSuccessNotification(ctx context.Context, o *dbent.PaymentOrder) error {
-	variables := map[string]string{
-		"subscription_group": "Subscription",
-		"subscription_days":  "",
-		"expiry_time":        "",
-		"order_id":           strconv.FormatInt(o.ID, 10),
-	}
-	if o.SubscriptionDays != nil {
-		variables["subscription_days"] = strconv.Itoa(*o.SubscriptionDays)
-	}
-	if o.SubscriptionGroupID != nil {
-		if s.groupRepo != nil {
-			if group, err := s.groupRepo.GetByID(ctx, *o.SubscriptionGroupID); err == nil && group != nil && strings.TrimSpace(group.Name) != "" {
-				variables["subscription_group"] = group.Name
-			}
-		}
-		if s.subscriptionSvc != nil {
-			if sub, err := s.subscriptionSvc.GetActiveSubscription(ctx, o.UserID, *o.SubscriptionGroupID); err == nil && sub != nil {
-				variables["expiry_time"] = sub.ExpiresAt.Format("2006-01-02 15:04")
-			}
-		}
-	}
+func (s *PaymentService) sendSubscriptionPurchaseSuccessNotification(ctx context.Context, o *dbent.PaymentOrder, groupName, subscriptionDays, expiryTime string) error {
 	return s.notificationEmailService.Send(ctx, NotificationEmailSendInput{
 		Event:          NotificationEmailEventSubscriptionPurchaseSuccess,
 		RecipientEmail: o.UserEmail,
@@ -460,7 +509,12 @@ func (s *PaymentService) sendSubscriptionPurchaseSuccessNotification(ctx context
 		UserID:         o.UserID,
 		SourceType:     "payment_order",
 		SourceID:       strconv.FormatInt(o.ID, 10),
-		Variables:      variables,
+		Variables: map[string]string{
+			"subscription_group": groupName,
+			"subscription_days":  subscriptionDays,
+			"expiry_time":        expiryTime,
+			"order_id":           strconv.FormatInt(o.ID, 10),
+		},
 	})
 }
 

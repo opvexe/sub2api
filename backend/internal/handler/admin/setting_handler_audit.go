@@ -567,6 +567,25 @@ func diffSettings(before *service.SystemSettings, after *service.SystemSettings,
 	if !equalNotifyEmailEntries(before.AccountQuotaNotifyEmails, after.AccountQuotaNotifyEmails) {
 		changed = append(changed, "account_quota_notify_emails")
 	}
+	// 购买成功群机器人推送
+	if before.PurchaseWebhookNotifyEnabled != after.PurchaseWebhookNotifyEnabled {
+		changed = append(changed, "purchase_webhook_notify_enabled")
+	}
+	if before.PurchaseWebhookDingTalkURL != after.PurchaseWebhookDingTalkURL {
+		changed = append(changed, "purchase_webhook_dingtalk_url")
+	}
+	if before.PurchaseWebhookDingTalkSecret != after.PurchaseWebhookDingTalkSecret {
+		changed = append(changed, "purchase_webhook_dingtalk_secret")
+	}
+	if before.PurchaseWebhookWeComURL != after.PurchaseWebhookWeComURL {
+		changed = append(changed, "purchase_webhook_wecom_url")
+	}
+	if before.PurchaseWebhookRechargeSuccessEnabled != after.PurchaseWebhookRechargeSuccessEnabled {
+		changed = append(changed, "purchase_webhook_recharge_success_enabled")
+	}
+	if before.PurchaseWebhookSubscriptionSuccessEnabled != after.PurchaseWebhookSubscriptionSuccessEnabled {
+		changed = append(changed, "purchase_webhook_subscription_success_enabled")
+	}
 	if before.ChannelMonitorEnabled != after.ChannelMonitorEnabled {
 		changed = append(changed, "channel_monitor_enabled")
 	}
@@ -856,6 +875,13 @@ func equalPlatformQuotaSettings(before, after map[string]*service.DefaultPlatfor
 }
 
 func stringSetting(value *string, fallback string) string {
+	if value == nil {
+		return fallback
+	}
+	return *value
+}
+
+func boolSetting(value *bool, fallback bool) bool {
 	if value == nil {
 		return fallback
 	}

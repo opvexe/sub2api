@@ -669,6 +669,14 @@ const (
 	SettingKeyAccountQuotaNotifyEnabled = "account_quota_notify_enabled" // 全局开关
 	SettingKeyAccountQuotaNotifyEmails  = "account_quota_notify_emails"  // 管理员通知邮箱列表（JSON 数组）
 
+	// 购买成功群机器人推送（企业微信 / 钉钉）
+	SettingKeyPurchaseWebhookNotifyEnabled              = "purchase_webhook_notify_enabled"               // 总开关
+	SettingKeyPurchaseWebhookDingTalkURL                = "purchase_webhook_dingtalk_url"                 // 钉钉群机器人 Webhook（完整 URL 或 access_token）
+	SettingKeyPurchaseWebhookDingTalkSecret             = "purchase_webhook_dingtalk_secret"              // 钉钉加签密钥（可选，SEC 开头）
+	SettingKeyPurchaseWebhookWeComURL                   = "purchase_webhook_wecom_url"                    // 企业微信群机器人 Webhook（完整 URL 或 key）
+	SettingKeyPurchaseWebhookRechargeSuccessEnabled     = "purchase_webhook_recharge_success_enabled"     // 余额充值成功事件开关
+	SettingKeyPurchaseWebhookSubscriptionSuccessEnabled = "purchase_webhook_subscription_success_enabled" // 订阅购买成功事件开关
+
 	// Web Search Emulation
 	SettingKeyWebSearchEmulationConfig = "web_search_emulation_config" // JSON 配置
 )

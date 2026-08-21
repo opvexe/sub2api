@@ -880,6 +880,33 @@ export default {
         addEmail: 'Add Email',
         emailPlaceholder: 'Enter email address',
       },
+      purchaseWebhook: {
+        title: 'Purchase Success Group Robot Push',
+        description:
+          'Push a Markdown card to WeCom / DingTalk group robots when a user tops up their balance or buys a subscription.',
+        enabled: 'Enable Group Robot Push',
+        enabledHint: 'When off, no purchase event is pushed.',
+        rechargeEvent: 'Balance Recharge Success',
+        subscriptionEvent: 'Subscription Purchase Success',
+        wecomUrl: 'WeCom Group Robot Webhook',
+        wecomUrlPlaceholder: 'Full webhook URL, or just the key',
+        wecomUrlHint:
+          'Copy the webhook URL after adding a group robot in WeCom. Leave empty to skip WeCom.',
+        dingtalkUrl: 'DingTalk Group Robot Webhook',
+        dingtalkUrlPlaceholder: 'Full webhook URL, or just the access_token',
+        dingtalkUrlHint:
+          'Copy the webhook URL after adding a custom robot in the DingTalk group. Leave empty to skip DingTalk.',
+        dingtalkSecret: 'DingTalk Signing Secret',
+        dingtalkSecretPlaceholder: 'Required when the robot uses "Additional Signature" (starts with SEC)',
+        dingtalkSecretHint: 'Not needed when the robot uses keyword or IP allowlist security.',
+        dingtalkSecretConfiguredPlaceholder: 'Configured, leave empty to keep unchanged',
+        dingtalkSecretConfiguredHint:
+          'A signing secret is stored; leave empty to keep it. Clearing the DingTalk webhook also clears the secret.',
+        test: 'Test Push',
+        testing: 'Sending...',
+        testSuccess: 'Test message sent',
+        testFailed: 'Webhook push test failed',
+      },
       subscriptionExpiryNotify: {
         title: 'Subscription Expiry Reminder',
         description: 'Control whether users receive subscription expiry reminder emails.',

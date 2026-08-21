@@ -62,6 +62,7 @@ type SettingHandler struct {
 	notificationEmailService *service.NotificationEmailService
 	totpService              *service.TotpService
 	userService              *service.UserService
+	webhookPushService       *service.WebhookPushService
 }
 
 // NewSettingHandler 创建系统设置处理器
@@ -81,6 +82,12 @@ func NewSettingHandler(settingService *service.SettingService, emailService *ser
 // the constructor signature used by existing unit tests.
 func (h *SettingHandler) SetNotificationEmailService(notificationEmailService *service.NotificationEmailService) {
 	h.notificationEmailService = notificationEmailService
+}
+
+// SetWebhookPushService attaches the 企业微信 / 钉钉群机器人推送服务 without changing
+// the constructor signature used by existing unit tests.
+func (h *SettingHandler) SetWebhookPushService(webhookPushService *service.WebhookPushService) {
+	h.webhookPushService = webhookPushService
 }
 
 // SetAliyunCaptchaService attaches the Aliyun captcha credential validator without
@@ -346,6 +353,12 @@ func (h *SettingHandler) GetSettings(c *gin.Context) {
 		SubscriptionExpiryNotifyEnabled:                        settings.SubscriptionExpiryNotifyEnabled,
 		AccountQuotaNotifyEnabled:                              settings.AccountQuotaNotifyEnabled,
 		AccountQuotaNotifyEmails:                               dto.NotifyEmailEntriesFromService(settings.AccountQuotaNotifyEmails),
+		PurchaseWebhookNotifyEnabled:                           settings.PurchaseWebhookNotifyEnabled,
+		PurchaseWebhookDingTalkURL:                             settings.PurchaseWebhookDingTalkURL,
+		PurchaseWebhookDingTalkSecretConfigured:                settings.PurchaseWebhookDingTalkSecretConfigured,
+		PurchaseWebhookWeComURL:                                settings.PurchaseWebhookWeComURL,
+		PurchaseWebhookRechargeSuccessEnabled:                  settings.PurchaseWebhookRechargeSuccessEnabled,
+		PurchaseWebhookSubscriptionSuccessEnabled:              settings.PurchaseWebhookSubscriptionSuccessEnabled,
 		PaymentEnabled:                                         paymentCfg.Enabled,
 		PaymentMinAmount:                                       paymentCfg.MinAmount,
 		PaymentMaxAmount:                                       paymentCfg.MaxAmount,

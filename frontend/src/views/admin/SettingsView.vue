@@ -8631,6 +8631,180 @@
               </div>
             </div>
           </div>
+
+          <!-- Purchase Success Webhook Push (WeCom / DingTalk) -->
+          <div class="card">
+            <div
+              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+            >
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">
+                {{ t("admin.settings.purchaseWebhook.title") }}
+              </h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {{ t("admin.settings.purchaseWebhook.description") }}
+              </p>
+            </div>
+            <div class="px-6 py-6 space-y-4">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <label
+                    class="mb-0 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >{{ t("admin.settings.purchaseWebhook.enabled") }}</label
+                  >
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{ t("admin.settings.purchaseWebhook.enabledHint") }}
+                  </p>
+                </div>
+                <Toggle v-model="form.purchase_webhook_notify_enabled" />
+              </div>
+
+              <template v-if="form.purchase_webhook_notify_enabled">
+                <div class="grid gap-3 sm:grid-cols-2">
+                  <div class="flex items-center justify-between gap-4">
+                    <label
+                      class="mb-0 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                      >{{
+                        t("admin.settings.purchaseWebhook.rechargeEvent")
+                      }}</label
+                    >
+                    <Toggle
+                      v-model="form.purchase_webhook_recharge_success_enabled"
+                    />
+                  </div>
+                  <div class="flex items-center justify-between gap-4">
+                    <label
+                      class="mb-0 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                      >{{
+                        t("admin.settings.purchaseWebhook.subscriptionEvent")
+                      }}</label
+                    >
+                    <Toggle
+                      v-model="
+                        form.purchase_webhook_subscription_success_enabled
+                      "
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >{{ t("admin.settings.purchaseWebhook.wecomUrl") }}</label
+                  >
+                  <div class="flex gap-2">
+                    <input
+                      v-model="form.purchase_webhook_wecom_url"
+                      type="text"
+                      class="input flex-1"
+                      autocapitalize="off"
+                      spellcheck="false"
+                      :placeholder="
+                        t('admin.settings.purchaseWebhook.wecomUrlPlaceholder')
+                      "
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-secondary whitespace-nowrap"
+                      :disabled="
+                        testingWebhookPush !== '' ||
+                        loadFailed ||
+                        !form.purchase_webhook_wecom_url.trim()
+                      "
+                      @click="testWebhookPush('wecom')"
+                    >
+                      {{
+                        testingWebhookPush === "wecom"
+                          ? t("admin.settings.purchaseWebhook.testing")
+                          : t("admin.settings.purchaseWebhook.test")
+                      }}
+                    </button>
+                  </div>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{ t("admin.settings.purchaseWebhook.wecomUrlHint") }}
+                  </p>
+                </div>
+
+                <div>
+                  <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >{{
+                      t("admin.settings.purchaseWebhook.dingtalkUrl")
+                    }}</label
+                  >
+                  <div class="flex gap-2">
+                    <input
+                      v-model="form.purchase_webhook_dingtalk_url"
+                      type="text"
+                      class="input flex-1"
+                      autocapitalize="off"
+                      spellcheck="false"
+                      :placeholder="
+                        t(
+                          'admin.settings.purchaseWebhook.dingtalkUrlPlaceholder',
+                        )
+                      "
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-secondary whitespace-nowrap"
+                      :disabled="
+                        testingWebhookPush !== '' ||
+                        loadFailed ||
+                        !form.purchase_webhook_dingtalk_url.trim()
+                      "
+                      @click="testWebhookPush('dingtalk')"
+                    >
+                      {{
+                        testingWebhookPush === "dingtalk"
+                          ? t("admin.settings.purchaseWebhook.testing")
+                          : t("admin.settings.purchaseWebhook.test")
+                      }}
+                    </button>
+                  </div>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{ t("admin.settings.purchaseWebhook.dingtalkUrlHint") }}
+                  </p>
+                </div>
+
+                <div>
+                  <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >{{
+                      t("admin.settings.purchaseWebhook.dingtalkSecret")
+                    }}</label
+                  >
+                  <input
+                    v-model="form.purchase_webhook_dingtalk_secret"
+                    type="password"
+                    class="input"
+                    autocomplete="new-password"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    @keydown="purchaseWebhookSecretManuallyEdited = true"
+                    @paste="purchaseWebhookSecretManuallyEdited = true"
+                    :placeholder="
+                      form.purchase_webhook_dingtalk_secret_configured
+                        ? t(
+                            'admin.settings.purchaseWebhook.dingtalkSecretConfiguredPlaceholder',
+                          )
+                        : t(
+                            'admin.settings.purchaseWebhook.dingtalkSecretPlaceholder',
+                          )
+                    "
+                  />
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {{
+                      form.purchase_webhook_dingtalk_secret_configured
+                        ? t(
+                            "admin.settings.purchaseWebhook.dingtalkSecretConfiguredHint",
+                          )
+                        : t("admin.settings.purchaseWebhook.dingtalkSecretHint")
+                    }}
+                  </p>
+                </div>
+              </template>
+            </div>
+          </div>
         </div>
         <!-- /Tab: Email -->
 
@@ -8895,6 +9069,9 @@ const testingSmtp = ref(false);
 const sendingTestEmail = ref(false);
 const smtpPasswordManuallyEdited = ref(false);
 const testEmailAddress = ref("");
+// 群机器人推送：加签密钥留空 = 保留已存值，只有管理员真的敲过才随请求发送
+const purchaseWebhookSecretManuallyEdited = ref(false);
+const testingWebhookPush = ref<"" | "dingtalk" | "wecom">("");
 const registrationEmailSuffixWhitelistTags = ref<string[]>([]);
 const registrationEmailSuffixWhitelistDraft = ref("");
 const forwardedClientIpHeaderDraft = ref("");
@@ -9452,6 +9629,8 @@ type SettingsForm = Omit<
   oidc_connect_client_secret: string;
   github_oauth_client_secret: string;
   google_oauth_client_secret: string;
+  /** 钉钉加签密钥只写不回显（响应里只有 *_configured）。 */
+  purchase_webhook_dingtalk_secret: string;
   force_email_on_third_party_signup: boolean;
   openai_low_upstream_rate_priority_enabled: boolean;
   openai_oauth_scheduling_rate_multiplier: number;
@@ -9741,6 +9920,14 @@ const form = reactive<SettingsForm>({
   subscription_expiry_notify_enabled: true,
   account_quota_notify_enabled: false,
   account_quota_notify_emails: [] as NotifyEmailEntry[],
+  // 购买成功群机器人推送（企业微信 / 钉钉）
+  purchase_webhook_notify_enabled: false,
+  purchase_webhook_dingtalk_url: "",
+  purchase_webhook_dingtalk_secret: "",
+  purchase_webhook_dingtalk_secret_configured: false,
+  purchase_webhook_wecom_url: "",
+  purchase_webhook_recharge_success_enabled: true,
+  purchase_webhook_subscription_success_enabled: true,
   // Channel Monitor feature switch
   channel_monitor_enabled: true,
   channel_monitor_mode: 'v1' as 'v1' | 'v2',
@@ -10788,6 +10975,8 @@ async function loadSettings() {
     registrationEmailSuffixWhitelistDraft.value = "";
     form.smtp_password = "";
     smtpPasswordManuallyEdited.value = false;
+    form.purchase_webhook_dingtalk_secret = "";
+    purchaseWebhookSecretManuallyEdited.value = false;
     form.turnstile_secret_key = "";
     form.tencent_captcha_app_secret_key = "";
     form.tencent_captcha_cloud_secret_id = "";
@@ -11397,6 +11586,17 @@ async function saveSettings() {
       account_quota_notify_emails: (
         form.account_quota_notify_emails || []
       ).filter((e) => e.email.trim() !== ""),
+      // 购买成功群机器人推送（加签密钥未改动则不发送，后端保留已存值）
+      purchase_webhook_notify_enabled: form.purchase_webhook_notify_enabled,
+      purchase_webhook_dingtalk_url: form.purchase_webhook_dingtalk_url.trim(),
+      purchase_webhook_dingtalk_secret: purchaseWebhookSecretManuallyEdited.value
+        ? form.purchase_webhook_dingtalk_secret.trim()
+        : "",
+      purchase_webhook_wecom_url: form.purchase_webhook_wecom_url.trim(),
+      purchase_webhook_recharge_success_enabled:
+        form.purchase_webhook_recharge_success_enabled,
+      purchase_webhook_subscription_success_enabled:
+        form.purchase_webhook_subscription_success_enabled,
       // Channel Monitor feature switch
       channel_monitor_enabled: form.channel_monitor_enabled,
       channel_monitor_mode: form.channel_monitor_mode === 'v1' ? 'v1' : 'v2',
@@ -11483,6 +11683,8 @@ async function saveSettings() {
     registrationEmailSuffixWhitelistDraft.value = "";
     form.smtp_password = "";
     smtpPasswordManuallyEdited.value = false;
+    form.purchase_webhook_dingtalk_secret = "";
+    purchaseWebhookSecretManuallyEdited.value = false;
     form.turnstile_secret_key = "";
     form.aliyun_captcha_access_key_secret = "";
     form.linuxdo_connect_client_secret = "";
@@ -11619,6 +11821,33 @@ async function sendTestEmail() {
     );
   } finally {
     sendingTestEmail.value = false;
+  }
+}
+
+async function testWebhookPush(channel: "dingtalk" | "wecom") {
+  testingWebhookPush.value = channel;
+  try {
+    const result = await adminAPI.settings.testWebhookPush({
+      channel,
+      purchase_webhook_dingtalk_url: form.purchase_webhook_dingtalk_url.trim(),
+      purchase_webhook_dingtalk_secret:
+        purchaseWebhookSecretManuallyEdited.value
+          ? form.purchase_webhook_dingtalk_secret.trim()
+          : "",
+      purchase_webhook_wecom_url: form.purchase_webhook_wecom_url.trim(),
+    });
+    appStore.showSuccess(
+      result.message || t("admin.settings.purchaseWebhook.testSuccess"),
+    );
+  } catch (error: unknown) {
+    appStore.showError(
+      extractApiErrorMessage(
+        error,
+        t("admin.settings.purchaseWebhook.testFailed"),
+      ),
+    );
+  } finally {
+    testingWebhookPush.value = "";
   }
 }
 

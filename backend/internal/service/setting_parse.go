@@ -948,6 +948,15 @@ func (s *SettingService) parseSettings(settings map[string]string) *SystemSettin
 		result.AccountQuotaNotifyEmails = []NotifyEmailEntry{}
 	}
 
+	// 购买成功群机器人推送（事件开关缺省视为开启，见 WebhookPushService.Settings）
+	result.PurchaseWebhookNotifyEnabled = settings[SettingKeyPurchaseWebhookNotifyEnabled] == "true"
+	result.PurchaseWebhookDingTalkURL = strings.TrimSpace(settings[SettingKeyPurchaseWebhookDingTalkURL])
+	result.PurchaseWebhookDingTalkSecret = strings.TrimSpace(settings[SettingKeyPurchaseWebhookDingTalkSecret])
+	result.PurchaseWebhookDingTalkSecretConfigured = result.PurchaseWebhookDingTalkSecret != ""
+	result.PurchaseWebhookWeComURL = strings.TrimSpace(settings[SettingKeyPurchaseWebhookWeComURL])
+	result.PurchaseWebhookRechargeSuccessEnabled = !isFalseSettingValue(settings[SettingKeyPurchaseWebhookRechargeSuccessEnabled])
+	result.PurchaseWebhookSubscriptionSuccessEnabled = !isFalseSettingValue(settings[SettingKeyPurchaseWebhookSubscriptionSuccessEnabled])
+
 	// 系统层默认 platform quota（修复 Bug B：parseSettings 不填充导致回显恒为 nil）
 	if raw := settings[SettingKeyDefaultPlatformQuotas]; raw != "" {
 		parsed := map[string]*DefaultPlatformQuotaSetting{}

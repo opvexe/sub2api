@@ -300,6 +300,14 @@ type SystemSettings struct {
 	AccountQuotaNotifyEnabled       bool               `json:"account_quota_notify_enabled"`
 	AccountQuotaNotifyEmails        []NotifyEmailEntry `json:"account_quota_notify_emails"`
 
+	// 购买成功群机器人推送（企业微信 / 钉钉）
+	PurchaseWebhookNotifyEnabled              bool   `json:"purchase_webhook_notify_enabled"`
+	PurchaseWebhookDingTalkURL                string `json:"purchase_webhook_dingtalk_url"`
+	PurchaseWebhookDingTalkSecretConfigured   bool   `json:"purchase_webhook_dingtalk_secret_configured"`
+	PurchaseWebhookWeComURL                   string `json:"purchase_webhook_wecom_url"`
+	PurchaseWebhookRechargeSuccessEnabled     bool   `json:"purchase_webhook_recharge_success_enabled"`
+	PurchaseWebhookSubscriptionSuccessEnabled bool   `json:"purchase_webhook_subscription_success_enabled"`
+
 	// Channel Monitor feature switch
 	ChannelMonitorEnabled                bool   `json:"channel_monitor_enabled"`
 	ChannelMonitorMode                   string `json:"channel_monitor_mode"`

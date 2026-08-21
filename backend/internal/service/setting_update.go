@@ -513,6 +513,21 @@ func (s *SettingService) buildSystemSettingsUpdates(ctx context.Context, setting
 	updates[SettingKeyAccountQuotaNotifyEnabled] = strconv.FormatBool(settings.AccountQuotaNotifyEnabled)
 	updates[SettingKeyAccountQuotaNotifyEmails] = MarshalNotifyEmails(settings.AccountQuotaNotifyEmails)
 
+	// 购买成功群机器人推送（钉钉加签密钥留空 = 保留已存值）
+	updates[SettingKeyPurchaseWebhookNotifyEnabled] = strconv.FormatBool(settings.PurchaseWebhookNotifyEnabled)
+	dingTalkURL := strings.TrimSpace(settings.PurchaseWebhookDingTalkURL)
+	updates[SettingKeyPurchaseWebhookDingTalkURL] = dingTalkURL
+	if secret := strings.TrimSpace(settings.PurchaseWebhookDingTalkSecret); secret != "" {
+		updates[SettingKeyPurchaseWebhookDingTalkSecret] = secret
+	} else if dingTalkURL == "" {
+		// 清空钉钉 webhook 视为下线该渠道，顺带清掉加签密钥，
+		// 否则「留空 = 保留」会让密钥永远留在库里无法删除。
+		updates[SettingKeyPurchaseWebhookDingTalkSecret] = ""
+	}
+	updates[SettingKeyPurchaseWebhookWeComURL] = strings.TrimSpace(settings.PurchaseWebhookWeComURL)
+	updates[SettingKeyPurchaseWebhookRechargeSuccessEnabled] = strconv.FormatBool(settings.PurchaseWebhookRechargeSuccessEnabled)
+	updates[SettingKeyPurchaseWebhookSubscriptionSuccessEnabled] = strconv.FormatBool(settings.PurchaseWebhookSubscriptionSuccessEnabled)
+
 	// 系统全局 platform quota：整体替换语义（null/缺省 = 不限制）。
 	if settings.DefaultPlatformQuotas != nil {
 		if err := validateDefaultPlatformQuotaMap(settings.DefaultPlatformQuotas); err != nil {

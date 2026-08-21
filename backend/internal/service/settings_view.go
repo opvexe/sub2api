@@ -298,6 +298,15 @@ type SystemSettings struct {
 	AccountQuotaNotifyEnabled bool
 	AccountQuotaNotifyEmails  []NotifyEmailEntry
 
+	// 购买成功群机器人推送（企业微信 / 钉钉）
+	PurchaseWebhookNotifyEnabled              bool
+	PurchaseWebhookDingTalkURL                string
+	PurchaseWebhookDingTalkSecret             string
+	PurchaseWebhookDingTalkSecretConfigured   bool
+	PurchaseWebhookWeComURL                   string
+	PurchaseWebhookRechargeSuccessEnabled     bool
+	PurchaseWebhookSubscriptionSuccessEnabled bool
+
 	// 系统全局默认平台配额（key = platform，nil/缺省 = 不限制）
 	DefaultPlatformQuotas map[string]*DefaultPlatformQuotaSetting `json:"default_platform_quotas"`
 

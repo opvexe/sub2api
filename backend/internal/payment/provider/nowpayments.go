@@ -354,6 +354,9 @@ func sortedCompactJSON(raw string) (string, error) {
 	return buf.String(), nil
 }
 
+// writeSortedJSON 按键排序序列化，用于复算 IPN 签名。
+// bytes.Buffer 的 Write/WriteByte 文档保证返回的 error 恒为 nil（容量不足时直接 panic），
+// 故此处统一显式丢弃；真正会失败的只有 json.Marshal，那些错误照常向上返回。
 func writeSortedJSON(buf *bytes.Buffer, v any) error {
 	switch t := v.(type) {
 	case map[string]any:
@@ -362,41 +365,41 @@ func writeSortedJSON(buf *bytes.Buffer, v any) error {
 			keys = append(keys, k)
 		}
 		sort.Strings(keys)
-		buf.WriteByte('{')
+		_ = buf.WriteByte('{')
 		for i, k := range keys {
 			if i > 0 {
-				buf.WriteByte(',')
+				_ = buf.WriteByte(',')
 			}
 			encoded, err := json.Marshal(k)
 			if err != nil {
 				return err
 			}
-			buf.Write(encoded)
-			buf.WriteByte(':')
+			_, _ = buf.Write(encoded)
+			_ = buf.WriteByte(':')
 			if err := writeSortedJSON(buf, t[k]); err != nil {
 				return err
 			}
 		}
-		buf.WriteByte('}')
+		_ = buf.WriteByte('}')
 		return nil
 	case []any:
-		buf.WriteByte('[')
+		_ = buf.WriteByte('[')
 		for i, item := range t {
 			if i > 0 {
-				buf.WriteByte(',')
+				_ = buf.WriteByte(',')
 			}
 			if err := writeSortedJSON(buf, item); err != nil {
 				return err
 			}
 		}
-		buf.WriteByte(']')
+		_ = buf.WriteByte(']')
 		return nil
 	default:
 		encoded, err := json.Marshal(v)
 		if err != nil {
 			return err
 		}
-		buf.Write(encoded)
+		_, _ = buf.Write(encoded)
 		return nil
 	}
 }

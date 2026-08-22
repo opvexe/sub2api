@@ -79,3 +79,6 @@ jobs:
           version: v2.9
           args: --timeout=30m
           working-directory: backend
+          # config verify 需要联网拉取 golangci-lint.run 的 jsonschema，
+          # CI 网络不稳时会超时报错，这里跳过校验
+          verify: false

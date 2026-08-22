@@ -2,7 +2,10 @@
 // registry, load balancing, and shared utilities for the payment subsystem.
 package payment
 
-import "context"
+import (
+	"context"
+	"strings"
+)
 
 // PaymentType represents a supported payment method.
 type PaymentType = string
@@ -22,6 +25,19 @@ const (
 	// 下单后返回链上收款地址与精确到账金额，用户转账后由 IPN 回调确认。
 	TypeNowPayments PaymentType = "nowpayments"
 )
+
+// IsOnChainPaymentType 判断某个支付方式 / provider key 是否走链上转账。
+//
+// 链上支付和收银台支付在时限上完全不是一个量级：用户得切到钱包或交易所、
+// 手动发起提币、再等区块确认，中途还可能撞上网络拥堵。按收银台的分钟级
+// 超时去关单，地址却还在上游有效期内继续收款，就会产生「钱到了但订单已过期」
+// 的死账，只能人工捞。调用方据此放宽超时。
+func IsOnChainPaymentType(t string) bool {
+	// 多实例的 payment_type / provider_key 是 "nowpayments_<instance>" 形式，
+	// 而 GetBasePaymentType 对 nowpayments 只做精确匹配、不剥后缀，所以这里
+	// 自己按前缀判断，否则第二个实例的订单拿不到放宽后的超时。
+	return t == TypeNowPayments || strings.HasPrefix(t, TypeNowPayments+"_")
+}
 
 // Order status constants shared across payment and service layers.
 const (

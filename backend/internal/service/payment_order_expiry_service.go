@@ -17,7 +17,7 @@ const (
 	// that only one instance issues the upstream payment-provider calls per cycle.
 	paymentOrderExpiryLeaderLockKey = "payment:order:expiry:leader"
 	// paymentOrderExpiryLeaderLockTTL must exceed the combined reconcile + expiry
-	// timeouts (2 * expiryCheckTimeout) so the lock never expires mid-run.
+	// timeouts (3 * expiryCheckTimeout) so the lock never expires mid-run.
 	paymentOrderExpiryLeaderLockTTL = 3 * time.Minute
 )
 
@@ -97,14 +97,8 @@ func (s *PaymentOrderExpiryService) runOnce() {
 	}
 	defer release()
 
-	reconcileCtx, cancel := context.WithTimeout(context.Background(), expiryCheckTimeout)
-	recovered, err := s.paymentSvc.ReconcilePendingWxpayOrders(reconcileCtx)
-	cancel()
-	if err != nil {
-		slog.Warn("[PaymentOrderExpiry] failed to reconcile pending wxpay orders", "error", err)
-	} else if recovered > 0 {
-		slog.Info("[PaymentOrderExpiry] reconciled paid wxpay orders", "count", recovered)
-	}
+	s.reconcile("wxpay", s.paymentSvc.ReconcilePendingWxpayOrders)
+	s.reconcile("nowpayments", s.paymentSvc.ReconcilePendingNowPaymentsOrders)
 
 	expireCtx, cancel := context.WithTimeout(context.Background(), expiryCheckTimeout)
 	defer cancel()
@@ -115,5 +109,20 @@ func (s *PaymentOrderExpiryService) runOnce() {
 	}
 	if expired > 0 {
 		slog.Info("[PaymentOrderExpiry] expired timed-out orders", "count", expired)
+	}
+}
+
+// reconcile runs one provider's pending-order reconciliation pass, bounded by
+// expiryCheckTimeout so a slow upstream cannot hold the leader lock open.
+func (s *PaymentOrderExpiryService) reconcile(name string, fn func(context.Context) (int, error)) {
+	ctx, cancel := context.WithTimeout(context.Background(), expiryCheckTimeout)
+	defer cancel()
+	recovered, err := fn(ctx)
+	if err != nil {
+		slog.Warn("[PaymentOrderExpiry] failed to reconcile pending orders", "provider", name, "error", err)
+		return
+	}
+	if recovered > 0 {
+		slog.Info("[PaymentOrderExpiry] reconciled paid orders", "provider", name, "count", recovered)
 	}
 }

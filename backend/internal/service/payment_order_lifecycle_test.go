@@ -811,3 +811,99 @@ func newPaymentOrderLifecycleTestClient(t *testing.T) *dbent.Client {
 	t.Cleanup(func() { _ = client.Close() })
 	return client
 }
+
+func TestReconcilePendingNowPaymentsOrdersBackfillsPaidOrder(t *testing.T) {
+	// 链上支付的用户会切走到钱包/交易所操作，不会停在支付页轮询，所以 IPN
+	// 丢失时只有这个后台任务能推进订单。
+	ctx := context.Background()
+	client := newPaymentOrderLifecycleTestClient(t)
+
+	user, err := client.User.Create().
+		SetEmail("nowpayments-reconcile@example.com").
+		SetPasswordHash("hash").
+		SetUsername("nowpayments-reconcile-user").
+		Save(ctx)
+	require.NoError(t, err)
+
+	order, err := client.PaymentOrder.Create().
+		SetUserID(user.ID).
+		SetUserEmail(user.Email).
+		SetUserName(user.Username).
+		SetAmount(14).
+		SetPayAmount(14).
+		SetFeeRate(0).
+		SetRechargeCode("NOWPAYMENTS-RECONCILE").
+		SetOutTradeNo("sub2_nowpayments_reconcile").
+		SetPaymentType(payment.TypeNowPayments).
+		SetPaymentTradeNo("np-payment-4242").
+		SetOrderType(payment.OrderTypeBalance).
+		SetStatus(OrderStatusPending).
+		SetExpiresAt(time.Now().Add(6 * time.Hour)).
+		SetClientIP("127.0.0.1").
+		SetSrcHost("api.example.com").
+		Save(ctx)
+	require.NoError(t, err)
+
+	userRepo := &mockUserRepo{
+		getByIDUser: &User{
+			ID:       user.ID,
+			Email:    user.Email,
+			Username: user.Username,
+			Balance:  0,
+		},
+	}
+	userRepo.updateBalanceFn = func(ctx context.Context, id int64, amount float64) error {
+		require.Equal(t, user.ID, id)
+		if userRepo.getByIDUser != nil {
+			userRepo.getByIDUser.Balance += amount
+		}
+		return nil
+	}
+	redeemRepo := &paymentOrderLifecycleRedeemRepo{
+		codesByCode: map[string]*RedeemCode{
+			order.RechargeCode: {
+				ID:     1,
+				Code:   order.RechargeCode,
+				Type:   RedeemTypeBalance,
+				Value:  order.Amount,
+				Status: StatusUnused,
+			},
+		},
+	}
+	redeemService := NewRedeemService(redeemRepo, userRepo, nil, nil, nil, client, nil, nil)
+
+	registry := payment.NewRegistry()
+	provider := &paymentOrderLifecycleQueryProvider{
+		key: payment.TypeNowPayments,
+		resp: &payment.QueryOrderResponse{
+			TradeNo: "np-payment-4242",
+			Status:  payment.ProviderStatusPaid,
+			Amount:  14,
+			Metadata: map[string]string{
+				// 上游仍停在 confirmed：payout 还没落地，但链上已确认。
+				"payment_status": "confirmed",
+			},
+		},
+	}
+	registry.Register(provider)
+
+	svc := &PaymentService{
+		entClient:       client,
+		registry:        registry,
+		redeemService:   redeemService,
+		userRepo:        userRepo,
+		providersLoaded: true,
+	}
+
+	recovered, err := svc.ReconcilePendingNowPaymentsOrders(ctx)
+	require.NoError(t, err)
+	require.Equal(t, 1, recovered)
+	require.Equal(t, "np-payment-4242", provider.lastQueryTradeNo)
+	require.Zero(t, provider.cancelCalls)
+
+	reloaded, err := client.PaymentOrder.Get(ctx, order.ID)
+	require.NoError(t, err)
+	require.Equal(t, OrderStatusCompleted, reloaded.Status)
+	require.Equal(t, 14.0, userRepo.getByIDUser.Balance)
+	require.Len(t, redeemRepo.useCalls, 1)
+}

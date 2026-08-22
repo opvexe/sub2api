@@ -149,6 +149,20 @@ func (s *PaymentService) validateSubOrder(ctx context.Context, req CreateOrderRe
 	return plan, nil
 }
 
+// orderTimeoutMinutes 解析订单超时分钟数，并为链上支付渠道兜一个下限。
+func orderTimeoutMinutes(cfg *PaymentConfig, providerKey, paymentType string) int {
+	tm := cfg.OrderTimeoutMin
+	if tm <= 0 {
+		tm = defaultOrderTimeoutMin
+	}
+	if payment.IsOnChainPaymentType(providerKey) || payment.IsOnChainPaymentType(paymentType) {
+		if tm < onChainOrderTimeoutMinFloor {
+			tm = onChainOrderTimeoutMinFloor
+		}
+	}
+	return tm
+}
+
 func (s *PaymentService) createOrderInTx(ctx context.Context, req CreateOrderRequest, user *User, plan *dbent.SubscriptionPlan, cfg *PaymentConfig, orderAmount, limitAmount, feeRate, payAmount float64, sel *payment.InstanceSelection) (*dbent.PaymentOrder, error) {
 	tx, err := s.entClient.Tx(ctx)
 	if err != nil {
@@ -161,21 +175,17 @@ func (s *PaymentService) createOrderInTx(ctx context.Context, req CreateOrderReq
 	if err := s.checkDailyLimit(ctx, tx, req.UserID, limitAmount, cfg.DailyLimit); err != nil {
 		return nil, err
 	}
-	tm := cfg.OrderTimeoutMin
-	if tm <= 0 {
-		tm = defaultOrderTimeoutMin
-	}
-	exp := time.Now().Add(time.Duration(tm) * time.Minute)
-	outTradeNo, err := s.allocateOutTradeNo(ctx, tx)
-	if err != nil {
-		return nil, err
-	}
 	providerSnapshot := buildPaymentOrderProviderSnapshot(sel, req)
 	selectedInstanceID := ""
 	selectedProviderKey := ""
 	if sel != nil {
 		selectedInstanceID = strings.TrimSpace(sel.InstanceID)
 		selectedProviderKey = strings.TrimSpace(sel.ProviderKey)
+	}
+	exp := time.Now().Add(time.Duration(orderTimeoutMinutes(cfg, selectedProviderKey, req.PaymentType)) * time.Minute)
+	outTradeNo, err := s.allocateOutTradeNo(ctx, tx)
+	if err != nil {
+		return nil, err
 	}
 	b := tx.PaymentOrder.Create().
 		SetUserID(req.UserID).

@@ -263,8 +263,6 @@ func TestNowPaymentsVerifyNotificationIntermediateStatusesIgnored(t *testing.T) 
 	for _, status := range []string{
 		nowPaymentsStatusWaiting,
 		nowPaymentsStatusConfirming,
-		nowPaymentsStatusConfirmed,
-		nowPaymentsStatusSending,
 		nowPaymentsStatusPartiallyPaid,
 	} {
 		t.Run(status, func(t *testing.T) {
@@ -277,6 +275,38 @@ func TestNowPaymentsVerifyNotificationIntermediateStatusesIgnored(t *testing.T) 
 			}
 			if got != nil {
 				t.Fatalf("status %q must not settle the order, got %+v", status, got)
+			}
+		})
+	}
+}
+
+func TestNowPaymentsVerifyNotificationSettlesBeforePayout(t *testing.T) {
+	// confirmed / sending 都要入账：finished 要等 NOWPayments 把钱转到商户
+	// payout 钱包才置位，攒阈值的自动提现会把它拖上几小时甚至几天，期间用户
+	// 已经付过钱却一直看到「待支付」。
+	p := newTestNowPayments(t, "https://api.nowpayments.io/v1")
+
+	for _, status := range []string{
+		nowPaymentsStatusConfirmed,
+		nowPaymentsStatusSending,
+		nowPaymentsStatusFinished,
+	} {
+		t.Run(status, func(t *testing.T) {
+			body := `{"payment_id":1,"payment_status":"` + status + `","order_id":"O","price_amount":10}`
+			got, err := p.VerifyNotification(context.Background(), body, map[string]string{
+				"x-nowpayments-sig": signNowPayments(t, "test-ipn-secret", body),
+			})
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got == nil {
+				t.Fatalf("status %q must settle the order", status)
+			}
+			if got.Status != "success" {
+				t.Errorf("Status = %q, want success", got.Status)
+			}
+			if got.Amount != 10 {
+				t.Errorf("Amount = %v, want the price_amount 10", got.Amount)
 			}
 		})
 	}
@@ -344,8 +374,8 @@ func TestNowPaymentsProviderStatusMapping(t *testing.T) {
 	cases := map[string]string{
 		nowPaymentsStatusWaiting:       "pending",
 		nowPaymentsStatusConfirming:    "pending",
-		nowPaymentsStatusConfirmed:     "pending",
-		nowPaymentsStatusSending:       "pending",
+		nowPaymentsStatusConfirmed:     "paid",
+		nowPaymentsStatusSending:       "paid",
 		nowPaymentsStatusPartiallyPaid: "pending",
 		nowPaymentsStatusFinished:      "paid",
 		nowPaymentsStatusFailed:        "failed",

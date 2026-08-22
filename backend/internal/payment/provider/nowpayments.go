@@ -36,10 +36,10 @@ const (
 	// 上游状态，取自 NOWPayments 官方文档。
 	nowPaymentsStatusWaiting       = "waiting"        // 已下单，尚未收到转账
 	nowPaymentsStatusConfirming    = "confirming"     // 链上确认中
-	nowPaymentsStatusConfirmed     = "confirmed"      // 链上已确认，尚未结算给商户
-	nowPaymentsStatusSending       = "sending"        // 正在结算给商户
+	nowPaymentsStatusConfirmed     = "confirmed"      // 链上已确认，资金已计入商户 NOWPayments 余额
+	nowPaymentsStatusSending       = "sending"        // 正在结算到商户 payout 钱包
 	nowPaymentsStatusPartiallyPaid = "partially_paid" // 收到转账但金额不足
-	nowPaymentsStatusFinished      = "finished"       // 完成，唯一可入账的终态
+	nowPaymentsStatusFinished      = "finished"       // payout 落地，整条链路完成
 	nowPaymentsStatusFailed        = "failed"         // 失败
 	nowPaymentsStatusRefunded      = "refunded"       // 已退回用户
 	nowPaymentsStatusExpired       = "expired"        // 7 天内未收到转账
@@ -225,18 +225,19 @@ func (n *NowPayments) VerifyNotification(_ context.Context, rawBody string, head
 	}
 
 	status := strings.ToLower(strings.TrimSpace(out.PaymentStatus))
-	switch status {
-	case nowPaymentsStatusFinished:
-		// 唯一可入账的终态。confirmed / sending 时资金尚未结算给商户，
-		// 此时入账等于替上游承担结算失败的风险。
-	case nowPaymentsStatusFailed, nowPaymentsStatusExpired, nowPaymentsStatusRefunded:
+	switch {
+	case nowPaymentsSettled(status):
+		// confirmed / sending / finished 都入账，理由见 nowPaymentsSettled。
+	case status == nowPaymentsStatusFailed,
+		status == nowPaymentsStatusExpired,
+		status == nowPaymentsStatusRefunded:
 		// 终态失败，通知上层关单。
 	default:
-		// waiting / confirming / confirmed / sending / partially_paid 都是中间态，
-		// 返回 nil 让调用方回 200 并保持订单 pending。
+		// waiting / confirming / partially_paid 都是中间态，返回 nil 让调用方
+		// 回 200 并保持订单 pending。
 		//
 		// partially_paid 尤其要注意：用户确实付了钱但金额不足，既不能入账
-		// 也不该关单，必须人工核对后处理。上游会在补足后继续推 finished。
+		// 也不该关单，必须人工核对后处理。上游会在补足后继续推 confirmed。
 		return nil, nil
 	}
 
@@ -244,7 +245,7 @@ func (n *NowPayments) VerifyNotification(_ context.Context, rawBody string, head
 	amount, _ := priceAmount.Float64()
 
 	notifyStatus := "failed"
-	if status == nowPaymentsStatusFinished {
+	if nowPaymentsSettled(status) {
 		notifyStatus = "success"
 	}
 
@@ -287,17 +288,38 @@ func (n *NowPayments) paymentMetadata(p nowPaymentsPayment) map[string]string {
 	return meta
 }
 
+// nowPaymentsSettled 判定一个上游状态是否已经可以给用户入账。
+//
+// 只认 finished 是错的：finished 要等 NOWPayments 把钱从收款地址转到商户
+// payout 钱包并在链上确认之后才置位。开了自动提现阈值的话，一笔小额订单会
+// 停在 confirmed 直到攒够阈值——可能几小时，也可能几天，这期间用户看到的
+// 一直是「待支付」。
+//
+// confirmed 已经意味着链上达到 NOWPayments 要求的确认数、资金计入商户余额，
+// 此后回退只剩上游自身故障这一种可能，风险远低于让付过钱的用户干等。
+// sending 是 confirmed 的后继态，一并放行。
+func nowPaymentsSettled(status string) bool {
+	switch strings.ToLower(strings.TrimSpace(status)) {
+	case nowPaymentsStatusConfirmed, nowPaymentsStatusSending, nowPaymentsStatusFinished:
+		return true
+	default:
+		return false
+	}
+}
+
 // nowPaymentsProviderStatus 把上游状态映射到框架的 pending/paid/failed/refunded。
 func nowPaymentsProviderStatus(status string) string {
-	switch strings.ToLower(strings.TrimSpace(status)) {
-	case nowPaymentsStatusFinished:
+	status = strings.ToLower(strings.TrimSpace(status))
+	if nowPaymentsSettled(status) {
 		return "paid"
+	}
+	switch status {
 	case nowPaymentsStatusFailed, nowPaymentsStatusExpired:
 		return "failed"
 	case nowPaymentsStatusRefunded:
 		return "refunded"
 	default:
-		// waiting / confirming / confirmed / sending / partially_paid
+		// waiting / confirming / partially_paid
 		return "pending"
 	}
 }

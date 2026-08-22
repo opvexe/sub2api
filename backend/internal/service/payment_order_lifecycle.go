@@ -27,7 +27,13 @@ const (
 	checkPaidResultAlreadyPaid = "already_paid"
 	checkPaidResultCancelled   = "cancelled"
 
-	pendingWxpayReconcileLimit = 20
+	pendingReconcileLimit = 20
+
+	// pendingOnChainReconcileLimit 比收银台渠道大，因为链上订单的有效期是
+	// 6 小时（收银台默认 30 分钟），同一时刻堆在待支付窗口里的订单要多一个
+	// 量级，其中大部分是用户看了地址就走的僵尸单。按 created_at 升序取，
+	// 窗口太小会让僵尸单一直占满配额、把真正刚付完款的新订单饿死。
+	pendingOnChainReconcileLimit = 60
 )
 
 type checkPaidOptions struct {
@@ -306,23 +312,39 @@ func (s *PaymentService) VerifyOrderByOutTradeNo(ctx context.Context, outTradeNo
 // ReconcilePendingWxpayOrders actively checks recent pending WeChat orders so
 // missed provider notifications do not wait until order expiry to fulfill.
 func (s *PaymentService) ReconcilePendingWxpayOrders(ctx context.Context) (int, error) {
+	return s.reconcilePendingOrdersForProvider(ctx, payment.TypeWxpay, pendingReconcileLimit)
+}
+
+// ReconcilePendingNowPaymentsOrders 主动核对待支付的链上订单。
+//
+// 链上支付的用户必须切走到钱包或交易所去操作，很少会停在支付页等着轮询，
+// 所以「用户轮询触发 VerifyOrderByOutTradeNo」这条兜底路径在这里基本失效。
+// IPN 一旦丢失就没人推进订单，只能靠这个后台任务补上。
+func (s *PaymentService) ReconcilePendingNowPaymentsOrders(ctx context.Context) (int, error) {
+	return s.reconcilePendingOrdersForProvider(ctx, payment.TypeNowPayments, pendingOnChainReconcileLimit)
+}
+
+// reconcilePendingOrdersForProvider 拉取指定渠道下仍在有效期内的待支付订单，
+// 逐笔向上游查询真实状态。providerKey 同时匹配 payment_type 和 provider_key，
+// 并覆盖 "<key>_<instance>" 形式的多实例命名。
+func (s *PaymentService) reconcilePendingOrdersForProvider(ctx context.Context, providerKey string, limit int) (int, error) {
 	now := time.Now()
 	orders, err := s.entClient.PaymentOrder.Query().
 		Where(
 			paymentorder.StatusEQ(OrderStatusPending),
 			paymentorder.ExpiresAtGT(now),
 			paymentorder.Or(
-				paymentorder.PaymentTypeEQ(payment.TypeWxpay),
-				paymentorder.PaymentTypeHasPrefix(payment.TypeWxpay+"_"),
-				paymentorder.ProviderKeyEQ(payment.TypeWxpay),
-				paymentorder.ProviderKeyHasPrefix(payment.TypeWxpay+"_"),
+				paymentorder.PaymentTypeEQ(providerKey),
+				paymentorder.PaymentTypeHasPrefix(providerKey+"_"),
+				paymentorder.ProviderKeyEQ(providerKey),
+				paymentorder.ProviderKeyHasPrefix(providerKey+"_"),
 			),
 		).
 		Order(dbent.Asc(paymentorder.FieldCreatedAt)).
-		Limit(pendingWxpayReconcileLimit).
+		Limit(limit).
 		All(ctx)
 	if err != nil {
-		return 0, fmt.Errorf("query pending wxpay orders: %w", err)
+		return 0, fmt.Errorf("query pending %s orders: %w", providerKey, err)
 	}
 
 	recovered := 0

@@ -46,6 +46,14 @@ const (
 const (
 	defaultOrderTimeoutMin  = 30
 	defaultMaxPendingOrders = 3
+
+	// onChainOrderTimeoutMinFloor 是链上支付订单的超时下限（6 小时）。
+	//
+	// NOWPayments 的收款地址有效期是 7 天，而 ORDER_TIMEOUT_MINUTES 这个全局
+	// 配置是按收银台场景定的（默认 30 分钟）。用户从交易所提币慢一点，本地订单
+	// 就过期了，地址却还在收钱——转进来的钱没有订单可挂，只能人工核销。
+	// 这里给链上渠道兜一个下限，管理员配得更长时以配置为准。
+	onChainOrderTimeoutMinFloor = 360
 )
 
 // PaymentConfig holds the payment system configuration.

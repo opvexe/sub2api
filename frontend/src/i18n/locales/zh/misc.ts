@@ -327,7 +327,7 @@ export default {
       wxpay: '微信支付',
       stripe: 'Stripe',
       airwallex: 'Airwallex',
-      nowpayments: 'NOWPayments（加密货币）',
+      nowpayments: 'USDT',
       card: '银行卡',
       link: 'Link',
       alipay_direct: '支付宝（直连）',
